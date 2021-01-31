@@ -17,6 +17,7 @@ function App() {
 		// }
 		useEffect(() => {
 			   setStartDate(Date.now());
+			   document.documentElement.requestFullscreen().catch((e) => {console.log(e)})
 		  }, []);
 	// 	const  blackListedKeys = ['Control', 'Alt', 'Tab']
 	// 	window.addEventListener('keydown', function (event) {
