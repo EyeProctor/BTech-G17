@@ -3,31 +3,31 @@ import { Button } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 const useStyles = makeStyles((theme) => ({
     flaggedAttempted: {
-        height: 50,
+        height: 75,
 
         borderRadius: 10,
         background: 'linear-gradient(180deg, rgba(255,0,0,1) 20%,white 20%, white 75%, #07b257 75%)'
     },
     flaggedUnattempted: {
-        height: 50,
+        height: 75,
 
         borderRadius: 10,
         background: 'linear-gradient(180deg, rgba(255,0,0,1) 20%,white 20%, white 75%, rgba(195,195,195,1) 75%)'
     },
     attempted: {
-        height: 50,
+        height: 75,
 
         borderRadius: 10,
         background: 'linear-gradient(180deg, rgba(255,255,255,1) 75%, #07b257 25%)'
     },
     unattempted: {
-        height: 50,
+        height: 75,
 
         borderRadius: 10,
         background: 'linear-gradient(180deg, rgba(255,255,255,1) 75%, rgba(195,195,195,1) 25%)'
     },
     currentQue: {
-        height: 50,
+        height: 75,
 
         border: '1px solid black',
         borderRadius: 10,
