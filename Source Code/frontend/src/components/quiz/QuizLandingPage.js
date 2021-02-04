@@ -32,7 +32,13 @@ class WebCamScreen extends Component {
         super(props);
         this.state = {  webcamRef: createRef(null),
             videoConstraints: {facingMode: "user"},
+            camActive: false
         }
+        navigator.mediaDevices.getUserMedia({video: true}).then(
+            () => {
+                this.setState({camActive: true});
+            }
+        ).catch((err)=> console.log(err));
     }
     
 
@@ -70,7 +76,11 @@ class WebCamScreen extends Component {
                     videoConstraints={this.state.videoConstraints}
                     />
                     <br/>
-                    <Link style={{}} to="/quiz"><Button style={{background:'#03A9F4',color:'white',marginTop:10}}>Take Quiz</Button></Link>
+                    {
+                this.state.camActive?<Link style={{}} to="/quiz"><Button style={{background:'#03A9F4',color:'white',marginTop:10}}>Take Quiz</Button></Link>
+                :<Card style={{color: 'red', padding: 10}}> Please Allow Camera Permissions </Card>
+            }
+                    
                     {/* Capture Button can be triggered in Attempt quiz Button
                     <button onClick={capture}>Capture photo</button> */}
             
