@@ -90,17 +90,21 @@ function App() {
 				<Card>
 				<QuestionBody onFlagged={handleFlagged} onAttempted={handleAttempted} currentQ={questionBank.questions[currentQ - 1]} no = {currentQ} flagged={flagged} userChoice={userChoices[currentQ.toString()]} updateUserChoice={handleUserChoice}/>
 				<CardActions>
-		
-			{
+		<Grid container
+  direction="row"
+  justify="space-between"
+  alignItems="center" >
+		<Grid item>	{
 			(currentQ !== 1) ?
 				<Button variant="contained" size="small" color="primary" href="#" onClick={handlePrev}>
 				Prev
 			</Button>:<></>
-		  }
-		  {currentQ < questionBank.questions.length?<Button  variant="contained" size="small" color="primary" href="#" onClick={handleNext}>
+		  }</Grid>
+		 <Grid item> {currentQ < questionBank.questions.length?<Button  variant="contained" size="small" color="primary" href="#" onClick={handleNext}  >
           Next
         </Button>:<></>}
-        
+		</Grid>
+        </Grid>
       </CardActions>
 				</Card>
 			</Grid>
