@@ -6,6 +6,7 @@ import Countdown from 'react-countdown';
 import questionBank from './service/questions.js';
 import userData from './service/userData.js';
 import {  useState, useEffect } from 'react';
+import Quiz from './components/QuizCreation/Creator'
 
 function App() {
 
@@ -81,7 +82,7 @@ function App() {
 
   return (
     <div>
-      <Grid container justify={'center'} spacing={2}>
+      {/* <Grid container justify={'center'} spacing={2}>
         <Grid item xs={12} >
         	<QuizHeader prn={userData.prn} status="Valid"/>
         </Grid>
@@ -121,7 +122,8 @@ function App() {
 		<Grid item xs={12} >
         	<h1>Group 17</h1>
         </Grid>
-      </Grid>
+      </Grid> */}
+	  <Quiz />
       
     </div>
   );
