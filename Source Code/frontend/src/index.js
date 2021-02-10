@@ -7,13 +7,14 @@ import {createStore} from 'redux';
 import allReducer from './reducer/index';
 import {Provider} from 'react-redux';
 import QuizLandingPage from './components/quiz/QuizLandingPage';
+import TempLanding from './components/quiz/TempLanding'
 
 
 const store = createStore(allReducer);
 
 ReactDOM.render(
   <Provider store={store}>
-    <QuizLandingPage/>
+    <TempLanding/>
   </Provider>,
   document.getElementById('root')
 );
