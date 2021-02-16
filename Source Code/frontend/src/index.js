@@ -5,14 +5,15 @@ import 'typeface-roboto';
 import {createStore} from 'redux';
 import allReducer from './reducer/index';
 import {Provider} from 'react-redux';
-import TempLanding from './components/quiz/TempLanding'
+import App from './App';
+
 
 
 const store = createStore(allReducer);
 
 ReactDOM.render(
   <Provider store={store}>
-    <TempLanding/>
+    <App/>
   </Provider>,
   document.getElementById('root')
 );
