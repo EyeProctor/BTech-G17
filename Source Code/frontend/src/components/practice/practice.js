@@ -9,6 +9,7 @@ const Practice = () => {
     const [redirect, setRedirect] = useState(false);
     const onSuccess = (token) => {
         console.log(token);
+        localStorage.setItem("UserToken", token.value);
         setRedirect(true);
     }
     const submitForm = (e) => {
