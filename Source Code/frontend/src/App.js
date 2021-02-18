@@ -7,11 +7,13 @@ import {Grid} from '@material-ui/core'
 import Webcam from "react-webcam";
 import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
+import HomePage from './components/Home/HomePage'
 function App() {
 	return(
 		<Router>
             <Switch>
                 <Route path="/" exact component={Practice} />
+                <Route path="/home" exact component={HomePage} />
                 <Route path="/quiz" exact component={WebCamScreen} />
                 <Route path="/quizID" exact component={Quiz} />
             </Switch>

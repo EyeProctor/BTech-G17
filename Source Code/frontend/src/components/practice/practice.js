@@ -5,7 +5,7 @@ import { Redirect} from 'react-router-dom';
 
 const Practice = () => {
     const [email, setEmail] = useState("");
-    const [pass, setPass] = useState("");
+    const [password, setPass] = useState("");
     const [redirect, setRedirect] = useState(false);
     const onSuccess = (token) => {
         console.log(token);
@@ -15,7 +15,7 @@ const Practice = () => {
     const submitForm = (e) => {
         e.preventDefault();
         fetch(
-            "http://localhost:5000/login",
+            "http://localhost:5000/user/login",
             {
                 method: "POST",
                 mode: 'cors',
@@ -23,7 +23,7 @@ const Practice = () => {
                 body: JSON.stringify(
                     {
                         email,
-                        pass
+                        password,
                     }
                 )
             }
@@ -33,11 +33,11 @@ const Practice = () => {
     }
     return(
         <div>
-            {redirect?<Redirect to="/quiz" />
+            {redirect?<Redirect to="/home" />
             :
             <form onSubmit={ submitForm}>
                 Email: <input value={email} onChange={(e)=> { console.log(e.target.value); setEmail(e.target.value) }} type="text" /> <br/>
-                Password: <input value={pass} onChange={(e)=> {  console.log(e.target.value); setPass(e.target.value) }} type="password"/> <br/>
+                Password: <input value={password} onChange={(e)=> {  console.log(e.target.value); setPass(e.target.value) }} type="password"/> <br/>
                 <br/>
                 <input type="submit" />
             </form>
