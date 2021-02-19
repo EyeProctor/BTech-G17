@@ -65,6 +65,10 @@ router.post('/register',(req,res)=>{
 router.post('/login', (req,res)=> {
     const {email, password} = req.body;
 
+    if(!email || !password) {
+       return res.status(400).json({msg: "Please Fill All Data"});
+    }
+
     User.findOne({email}).then(
         user => {
             if(user){

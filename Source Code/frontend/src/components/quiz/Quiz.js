@@ -6,24 +6,29 @@ import Countdown from 'react-countdown';
 import questionBank from '../../service/questions.js';
 import userData from '../../service/userData.js';
 import {  useState, useEffect } from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 
 function Quiz() {
 	useEffect(() => {
 			   setStartDate(Date.now());
 			   document.documentElement.requestFullscreen().catch((e) => {console.log(e)})
 	}, []);
+	const dispatch = useDispatch();
+	const userID = useSelector(state => state.auth.user.id) || null;
 	var [attempted, updateAttempted] = useState([]);
 	const [startDate,setStartDate] = useState(Date.now());
 	const [flagged, updateFlagged] = useState([]);
 	const [currentQ, updateCurrentQ] = useState(1);
 	var endDate = startDate + questionBank.duration;
+	
 	const handleAttempted = () => {
+		attempted = [...new Set(attempted)];
 		updateAttempted(
 			arr => [...arr, currentQ]
 			
 		);
-		attempted = [...new Set(attempted)];
 		console.log('AttemptedArray',attempted);
+		
 	}
 	const handleFlagged = () => {
 		if(!flagged.includes(currentQ))
@@ -37,6 +42,9 @@ function Quiz() {
 				temp
 			)
 		}
+
+		
+		
 	}
 	const handlePrev = () => {
 		updateCurrentQ(currentQ-1);
@@ -48,10 +56,24 @@ function Quiz() {
 	const handleUserChoice = (val) => {
 
 		updateUserChoice({...userChoices, [currentQ]: val})
+		
 
 	}
 
 	var [userChoices, updateUserChoice] = useState({});
+	useEffect(()=> {
+		const data = {
+			userID: userID,
+			attempted: attempted,
+    		flagged: flagged,
+    		userChoices: userChoices,
+    		startedAt: null,
+			questions: questionBank,
+		}
+
+		dispatch({type: "SAVE_USERCHOICES", payload: data});
+
+	}, [attempted, flagged, userChoices,dispatch]);
 
   return (
     <div>

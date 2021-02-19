@@ -2,20 +2,27 @@
 
 import { useState } from "react";
 import { Redirect} from 'react-router-dom';
+import {useDispatch} from 'react-redux';
 
 const Practice = () => {
+    const dispatch = useDispatch();
     const [email, setEmail] = useState("");
     const [password, setPass] = useState("");
     const [redirect, setRedirect] = useState(false);
-    const onSuccess = (token) => {
-        console.log(token);
-        localStorage.setItem("UserToken", token.value);
+    const onSuccess = (data) => {
+        console.log(data);
+        const {msg} = data;
+        if(msg){
+            alert(msg);
+            return;
+        }
+        dispatch({type: "AUTHENTICATE", payload: data});
         setRedirect(true);
     }
     const submitForm = (e) => {
         e.preventDefault();
         fetch(
-            "http://localhost:5000/user/login",
+            "/user/login",
             {
                 method: "POST",
                 mode: 'cors',
@@ -32,7 +39,7 @@ const Practice = () => {
         ).catch((err) => {console.error(err)});
     }
     return(
-        <div>
+        <center style={{marginTop: "20%"}}>
             {redirect?<Redirect to="/home" />
             :
             <form onSubmit={ submitForm}>
@@ -43,7 +50,7 @@ const Practice = () => {
             </form>
             }           
             
-        </div>
+        </center>
     );
 }
 
