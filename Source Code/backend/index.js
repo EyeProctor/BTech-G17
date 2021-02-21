@@ -3,6 +3,7 @@ const QuizRoutes = require('./routes/quiz/quiz.js');
 var cors = require('cors')
 const mongoose = require('mongoose');
 const userRouts = require('./routes/user/userRoutes');
+const codingRouts = require('./routes/code/codingRoutes');
 
 
 // -------------------------TODO-------------------------------
@@ -17,6 +18,7 @@ app = express()
 app.use(express.json());
 app.use(cors());
 app.use("/user", userRouts);
+app.use("/code", codingRouts);
 
 
 const PORT = process.env.PORT || 5000;
