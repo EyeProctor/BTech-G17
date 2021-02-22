@@ -5,21 +5,34 @@ const CodeUI = () => {
     const [Code, setCode] = useState("");
     const [Output, setOutput] = useState("Output of Code");
 
-    function SubmitForm(e){
-        e.preventDefault();
-        
-
-        // var postData = []
-        // for (var property in data) {
-        // var encodedKey = encodeURIComponent(property);
-        // var encodedValue = encodeURIComponent(data[property]);
-        // postData.push(encodedKey + "=" + encodedValue);
-        // }
-        // postData = postData.join("&");
-
-        fetch( "/code/testOutput", 
+    function fetchResult(sid){
+        fetch( "/code/fetchResult", 
             {
                 method: 'POST',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json',
+                        },
+                body: JSON.stringify({
+                    sid
+                })
+            }
+        ).then(
+            (res) => res.json().then(resData =>{
+                if(resData.status === 'IN-QUEUE'){
+                    return fetchResult(sid);
+                }
+                setOutput(resData.output);
+                return;
+            })
+        ).catch(err=> console.log(err)).catch(err=> console.log(err))
+    }
+    function SubmitForm(e){
+        e.preventDefault();
+        fetch( "/code/compile", 
+            {
+                method: 'POST',
+                mode: 'cors',
                 headers: {
                     'Content-Type': 'application/json',
                         },
@@ -31,7 +44,7 @@ const CodeUI = () => {
                 })
             }
         ).then(
-            (res) => res.json().then(resData => console.log(resData))
+            (res) => res.json().then(resData => fetchResult(resData.sid))
         ).catch(err=> console.log(err)).catch(err=> console.log(err))
 
 

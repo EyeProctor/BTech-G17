@@ -19,10 +19,9 @@ router.get('/:id', (req,res) => {
 
 // METHOD: POST
 // desc: Test Code
-router.post('/testOutput',(req,res) => {
+router.post('/compile',(req,res) => {
     const compiler_API = "https://ide.geeksforgeeks.org/main.php";
-    const result_API = "https://ide.geeksforgeeks.org/submissionResult.php";
-
+    
     const {lang, code, input, save} = req.body;
     const data ={
         lang,code,input,save
@@ -34,25 +33,50 @@ router.post('/testOutput',(req,res) => {
         if(val !== null)
         reqData.append(property, data[property])
         else{
-            reqData.append(property, "''")
+            reqData.append(property, "padding")
         }
     }
 // reqData = reqData.join("&");
-console.log(reqData.toString());
     fetch(compiler_API, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: reqData
+    }).then((response)=> response.json().then(resData => {
+        console.log(resData);
+        return res.status(200).json(resData);
+    })).catch(err => {
+        console.log(err.message)
+        return res.status(400).json(err.message);
+        
+    })
+
+})
+
+
+router.post('/fetchResult',(req,res) => {
+
+    const {sid} = req.body;
+    const result_API = "https://ide.geeksforgeeks.org/submissionResult.php";
+    fetch(result_API, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
         },
-        body: reqData
-    }).then((response)=> response.json().then(resData => {
-        console.log(resData)
-        return res.status(200).json(resData);
-    }).catch(err => {
-        console.log(err.message)
-        return res.status(400).json(err.message);
-        
-    }))
+        body: `sid=${sid}&requestType=fetchResults`
+    }).then(
+        result => 
+            result.json().then(output => {
+            console.log(output);
+            return res.status(200).json(output);
+        }).catch(err => res.status(500).json({msg: err.message}))
+    ).catch(
+        err => {
+            console.log("err", err.message);
+            return res.status(400).json({msg: "Error while fetching results"});
+        }
+    )
 
 })
 
