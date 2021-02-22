@@ -9,11 +9,12 @@ import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
 import HomePage from './components/Home/HomePage'
 import CodeUI from './components/Coding/CodeUI';
+import Creator from './components/quiz/QuizCreation/QuizCreator'
 function App() {
 	return(
 		<Router>
             <Switch>
-                <Route path="/" exact component={CodeUI} />
+                <Route path="/" exact component={Creator} />
                 <Route path="/home" exact component={HomePage} />
                 <Route path="/quiz" exact component={WebCamScreen} />
                 <Route path="/quizID" exact component={Quiz} />
