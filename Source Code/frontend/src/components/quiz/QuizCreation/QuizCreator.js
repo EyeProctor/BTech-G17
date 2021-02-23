@@ -56,6 +56,8 @@ const QuizCreator = () => {
 										name={queId}
 										data-id={idx}
 										id={queId}
+										value= {val.question}
+										onChange = {(e)=> dispatch({type: "ADD_QUESTION", payload: {QIndex: idx, question: e.target.value}})}
 										className="question-text"
 										variant="outlined"
 										/>
@@ -66,15 +68,17 @@ const QuizCreator = () => {
 									</Grid>
 									</div>
                                     {
-							state.questions[idx].options.map((val, idx)=> {
+							state.questions[idx].options.map((val, oIdx)=> {
 								
 								return (
-									<div key={idx}>
+									<div key={oIdx}>
 										<Grid item xs={2}>
                                         <FormControlLabel control={
-                                        <Checkbox color="primary" inputProps={{ 'aria-label': 'secondary checkbox' }} />
+                                        <Checkbox checked={val.ans} onChange={()=> dispatch({type: "SET_ANSWER", payload: {QIndex: idx, OIndex: oIdx}})} color="primary" inputProps={{ 'aria-label': 'secondary checkbox' }} />
                                         
-                                        } label={"Option:" + idx} />
+                                        } label={
+											<TextField fullWidth label={`Option No.${oIdx+1}`} value={val.qs} onChange={(e)=> {dispatch({type:"ADD_OPTION", payload:{QIndex: idx, OIndex: oIdx, option: e.target.value}})}}/>
+										} />
 											
 										</Grid>
 									</div>
