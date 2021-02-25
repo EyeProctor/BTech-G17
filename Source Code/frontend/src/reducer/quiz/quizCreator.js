@@ -2,7 +2,7 @@ const initialState = {
     subject: null,
     proctored: false,
     startDate: null,
-    endData: null,
+    endDate: null,
     duration: null,
     questions: []
 }
@@ -70,6 +70,15 @@ const quizCreatorReducer = (state= initialState, action) => {
             
             QArray[QIndex].options[OIndex] = {...op.options[OIndex], ans: true}
             return {...state, questions: QArray}
+        
+        case "SET_QUIZ_SUBJECT":
+            return {...state, subject: action.payload}
+        case "SET_STARTDATE":
+            return {...state, startDate: action.payload}
+        case "SET_ENDDATE":
+            return {...state, endDate: action.payload}
+        case "SET_DURATION":
+            return {...state, duration: action.payload}
         default:
             return state;
     }

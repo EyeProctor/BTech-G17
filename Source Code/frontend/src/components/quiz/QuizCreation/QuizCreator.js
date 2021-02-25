@@ -8,6 +8,20 @@ const QuizCreator = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+		// Do Simple for Check
+
+		// Sending Request to backend
+
+		fetch("/quiz/addQuiz", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(state)
+		}).then(data => data.json().then(
+			console.log(data)
+		)).catch(err => console.log(err))
+
     }
 
     const addQuestion = () => {
@@ -20,7 +34,7 @@ const QuizCreator = () => {
         <form  onSubmit={handleSubmit} noValidate autoComplete="off" center="true" margin="20px">
 				<Grid container spacing={3} alignItems="center" style={{padding:50 ,backgroundColor:"beige"}}>
 					<Grid item xs={12}>
-						<TextField id="quizsub" label="Quiz Subject" variant="outlined" fullWidth/>
+						<TextField onChange = {(e)=> {dispatch({type:"SET_QUIZ_SUBJECT", payload: e.target.value})}} id="quizsub" label="Quiz Subject" variant="outlined" fullWidth/>
 					</Grid>
 					<Grid item xs={6}>
 						<TextField fullWidth
@@ -28,6 +42,7 @@ const QuizCreator = () => {
 							label="Start Date Time"
 							type="datetime-local"
 							defaultValue="2017-05-24T00:00"
+							onChange = {(e)=> {dispatch({type:"SET_STARTDATE", payload: new Date(e.target.value)})}}
 							InputLabelProps={{
 							shrink: true,}}/>
 					</Grid>
@@ -37,11 +52,12 @@ const QuizCreator = () => {
 							label="End Date Time"
 							type="datetime-local"
 							defaultValue="2020-01-24T00:00"
+							onChange = {(e)=> {dispatch({type:"SET_ENDDATE", payload: new Date(e.target.value)})}}
 							InputLabelProps={{
 							shrink: true,}}/>
 					</Grid>
 					<Grid item xs={6}>
-						<TextField type="number" id="dur" label="Duration in minutes" variant="outlined" fullWidth/>
+						<TextField onChange = {(e)=> {dispatch({type:"SET_DURATION", payload: e.target.value})}} type="number" id="dur" label="Duration in minutes" variant="outlined" fullWidth/>
 					</Grid>
 						{
 							state.questions.map((val, idx)=> {
