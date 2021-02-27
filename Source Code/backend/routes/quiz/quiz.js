@@ -13,8 +13,20 @@ router.get('/',(req,res)=>{
 
 // METHOD: GET
 // desc : Get Particular Quiz from Quiz ID
-router.get('/:id', (req,res) => {
-    res.send(`Fetching ${req.params.id} Quiz`);
+router.get('/getQuiz/:id', (req,res) => {
+    console.log(`Fetching ${req.params.id} Quiz`);
+    const id = "6037deb6df07ce0ad83200f6";
+
+    MainQuiz.findById(id).then(quizData => 
+        {
+            console.log(quizData); 
+            return res.status(200).json(quizData)
+        }).catch(err => {
+            console.log(err)
+            return res.status(500).json({err})
+        });
+
+    
 
 })
 
@@ -49,9 +61,9 @@ router.post('/addQuiz',(req,res) => {
     console.log("Duration", duration)
     newQuiz.save().then(data => {
         console.log(data);
-        res.status(200).json(data);
+        return res.status(200).json(data);
     }).catch((err)=> {
-        res.status(500).json({msg: err.message});
+        return res.status(500).json({msg: err.message});
     })
     
 })

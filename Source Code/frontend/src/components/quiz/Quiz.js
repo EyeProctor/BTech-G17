@@ -7,14 +7,18 @@ import questionBank from '../../service/questions.js';
 import userData from '../../service/userData.js';
 import {  useState, useEffect } from 'react';
 import {useDispatch, useSelector} from 'react-redux';
+import {getQuiz} from '../../action/quiz/quiz';
 
 function Quiz() {
 	useEffect(() => {
 			   setStartDate(Date.now());
+			   dispatch(getQuiz());
 			   document.documentElement.requestFullscreen().catch((e) => {console.log(e)})
 	}, []);
 	const dispatch = useDispatch();
-	const userID = useSelector(state => state.auth.user.id) || null;
+	const userID = "1234";
+	// const userID = useSelector(state => state.auth.user.id) || null;
+	// const questionBank = useSelector(state => state.quiz.questions)
 	var [attempted, updateAttempted] = useState([]);
 	const [startDate,setStartDate] = useState(Date.now());
 	const [flagged, updateFlagged] = useState([]);

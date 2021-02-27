@@ -6,11 +6,21 @@ import {Grid} from '@material-ui/core'
 import Webcam from "react-webcam";
 import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
-
+import {getQuiz} from '../../action/quiz/quiz';
+import { useEffect } from 'react'
+import {useDispatch} from 'react-redux'
 
 
 
 const QuizLandingPage = () => {
+
+    const dispatch = useDispatch()
+
+    useEffect(
+        () => {
+            dispatch(getQuiz());
+        }, []
+    );
 
     return(
         <Router>

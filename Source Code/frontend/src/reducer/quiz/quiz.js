@@ -12,8 +12,10 @@ const quizReducer = (state = initialState, action) => {
     switch (action.type) {
         case "SAVE_USERCHOICES":
             return action.payload;
+        case "SET_QUIZDATA":
+            return {...state, questions: {...action.payload}}
         default:
-            return state;
+           return state;
     }
 }
 
