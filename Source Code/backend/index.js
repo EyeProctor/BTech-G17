@@ -1,7 +1,9 @@
 const express = require('express');
 const QuizRoutes = require('./routes/quiz/quiz.js');
 var cors = require('cors')
+const http = require('http')
 const mongoose = require('mongoose');
+const socket = require('socket.io')
 const userRouts = require('./routes/user/userRoutes');
 const codingRouts = require('./routes/code/codingRoutes');
 
@@ -12,6 +14,8 @@ const codingRouts = require('./routes/code/codingRoutes');
 
 // Setting up Express
 app = express()
+const server = http.createServer(app)
+const io = socket(server)
 
 
 // Middlewares
@@ -26,7 +30,7 @@ const PORT = process.env.PORT || 5000;
 // Connecting MongoDB
 const MONGODB_URL = "mongodb+srv://btech:root@cluster0.xohwh.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 mongoose.connect(MONGODB_URL, {useNewUrlParser: true, useUnifiedTopology: true})
-.then(() => app.listen(PORT, () => console.log(`Server running on PORT ${PORT}`)))
+.then(() => server.listen(PORT, () => console.log(`Server running on PORT ${PORT}`)))
 .catch((err) => console.log(err.message) );
 
 mongoose.set('useFindAndModify', false);
@@ -42,3 +46,5 @@ app.post('/login', (req,res)=>{
     console.log(email);
     res.status(200).send({value: "Logged IN"});
 });
+
+module.exports = io;
