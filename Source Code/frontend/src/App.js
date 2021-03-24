@@ -14,6 +14,7 @@ import CreateRoom from './components/OE/CreateRoom'
 import Room from "./components/OE/Room";
 import AdminHome from "./components/admin/AdminHome"
 import CreateStudent from './components/admin/CreateStudent/CreateStudent'
+
 function App() {
 	return(
 		<Router>
@@ -111,7 +112,6 @@ class WebCamScreen extends Component {
                         </Typography>
 
                 </Grid>
-
             </Grid>
         </>
       );
