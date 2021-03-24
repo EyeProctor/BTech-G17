@@ -10,6 +10,7 @@ import Card from '@material-ui/core/Card';
 import HomePage from './components/Home/HomePage'
 import CodeUI from './components/Coding/CodeUI';
 import Creator from './components/quiz/QuizCreation/QuizCreator'
+
 function App() {
 	return(
 		<Router>
@@ -103,7 +104,6 @@ class WebCamScreen extends Component {
                         </Typography>
 
                 </Grid>
-
             </Grid>
         </>
       );
