@@ -1,8 +1,9 @@
 import StudentHome from './Student/StudentHome';
 import TeacherHome from './Teacher/TeacherHome';
+import { useSelector } from 'react-redux'
 
-const HomePage = (props) => {
-    const userType = props;
+const HomePage = () => {
+    const userType =  useSelector(state => state.auth.user.userType);
     if(userType === "Student")
         return <StudentHome />
     else 
