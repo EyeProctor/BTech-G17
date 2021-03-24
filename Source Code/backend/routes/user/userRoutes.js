@@ -4,62 +4,104 @@ const UserChoices = require('../../schema/UserChoices');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const Student = require('../../schema/users/StudentSchema')
+const Teacher = require('../../schema/users/TeacherSchema')
+
 
 
 
 router.post('/register',(req,res)=>{
-    const {userName, email , password} =  req.body;
+    const {userName, email , password, userType , studentData, teacherData} =  req.body;
 
-    if(!userName || !email || !password)
+    if(!userName || !email || !password || type)
        return res.status(400).json({msg: "Please enter all fields"});
-    
        User.findOne({email}).then(user => {
            if(user){
                return res.status(400).json({msg: "User Already Exists"});
            }
        });
-    const newUser = User({
-        userName, email, password
-    });
+       if(userType === "Teacher"){
+        const newTeacher = Teacher(
+            {
+                firstName: teacherData.firstName,
+                lastName: teacherData.lastName,
+                middleName: teacherData.middleName,
+                branch: teacherData.branch,
+                courses : teacherData.courses
+            }
+        );
 
-    // Create SALT HASH
-    bcrypt.genSalt(10, (err,salt)=> {
-        bcrypt.hash(newUser.password, salt, (err,hash)=>{
-            if(err) throw err;
-            newUser.password = hash;
+        newTeacher.save().then(teacherDoc =>
 
-            newUser.save().then(
-                user => {
-                    jwt.sign({id: user.id}, "SAAKB", {expiresIn:3600},
-                    (err,token)=>{
+            {
+                const newUser = User({
+                    userName, email, password , userType, studentData, teacherData: teacherDoc
+                });
 
-                        if(err) throw err;
+                registerUser(newUser);
+            }
 
-                        res.json(
-                            {
-                                token,
-                                user: {
-                                    id: user.id,
-                                    name: user.userName,
-                                    email: user.email,
-                                    
-                                }
-                            }
-                        );
+        );
+    }
+    else if(userType === "Student"){
+        const newStudent = Student(
+            {
+                firstName: studentData.firstName,
+                lastName: studentData.lastName,
+                middleName: studentData.middleName,
+                branch: studentData.branch,
+                class: studentData.class
+            }
+        );
 
-                    }
-                    
-                    )
-                    
-                }
-            ).catch(
-                error => console.log("Register Error MongoDB", error.message)
-            );
+        newStudent.save().then(studentDoc =>{
+            const newUser = User({
+                userName, email, password , userType, studentData: studentDoc, teacherData
+            });
+            registerUser(newUser);
         })
-    })
+    }
 
+    function registerUser(newUser){
+
+        
+
+        // Create SALT HASH
+        bcrypt.genSalt(10, (err,salt)=> {
+            bcrypt.hash(newUser.password, salt, (err,hash)=>{
+                if(err) throw err;
+                newUser.password = hash;
     
-
+                newUser.save().then(
+                    user => {
+                        jwt.sign({id: user.id}, "SAAKB", {expiresIn:3600},
+                        (err,token)=>{
+    
+                            if(err) throw err;
+    
+                            res.json(
+                                {
+                                    token,
+                                    user: {
+                                        id: user.id,
+                                        name: user.userName,
+                                        email: user.email,
+                                        
+                                    }
+                                }
+                            );
+    
+                        }
+                        
+                        )
+                        
+                    }
+                ).catch(
+                    error => console.log("Register Error MongoDB", error.message)
+                );
+            })
+        })
+    }    
 })
 
 router.post('/login', (req,res)=> {
@@ -87,7 +129,7 @@ router.post('/login', (req,res)=> {
                                     id: user.id,
                                     name: user.userName,
                                     email: user.email,
-                                    
+                                    userType: user.userType,
                                 }
                             }
                         );

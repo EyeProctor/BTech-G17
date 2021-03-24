@@ -10,6 +10,10 @@ import Card from '@material-ui/core/Card';
 import HomePage from './components/Home/HomePage'
 import CodeUI from './components/Coding/CodeUI';
 import Creator from './components/quiz/QuizCreation/QuizCreator'
+import CreateRoom from './components/OE/CreateRoom'
+import Room from "./components/OE/Room";
+import AdminHome from "./components/admin/AdminHome"
+import CreateStudent from './components/admin/CreateStudent/CreateStudent'
 function App() {
 	return(
 		<Router>
@@ -18,6 +22,10 @@ function App() {
                 <Route path="/home" exact component={HomePage} />
                 <Route path="/quiz" exact component={WebCamScreen} />
                 <Route path="/quizID" exact component={Quiz} />
+                <Route path="/OE" exact component={CreateRoom}/>
+                <Route path="/room/:roomID" component={Room}/>
+                <Route path="/admin" component={AdminHome} />
+                <Route path="/student" component={CreateStudent} />
             </Switch>
         </Router>
 	);
