@@ -1,22 +1,32 @@
 import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 import {Component, createRef} from 'react';
-import App from '../../App';
+import Quiz from './Quiz';
 import {Button, CardContent} from '@material-ui/core'
 import {Grid} from '@material-ui/core'
 import Webcam from "react-webcam";
 import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
-
+import {getQuiz} from '../../action/quiz/quiz';
+import { useEffect } from 'react'
+import {useDispatch} from 'react-redux'
 
 
 
 const QuizLandingPage = () => {
 
+    const dispatch = useDispatch()
+
+    useEffect(
+        () => {
+            dispatch(getQuiz());
+        }, []
+    );
+
     return(
         <Router>
             <Switch>
                 <Route path="/" exact component={WebCamScreen} />
-                <Route path="/quiz" exact component={App} />
+                <Route path="/quiz" exact component={Quiz} />
             </Switch>
         </Router>
         
@@ -32,7 +42,13 @@ class WebCamScreen extends Component {
         super(props);
         this.state = {  webcamRef: createRef(null),
             videoConstraints: {facingMode: "user"},
+            camActive: false
         }
+        navigator.mediaDevices.getUserMedia({video: true}).then(
+            () => {
+                this.setState({camActive: true});
+            }
+        ).catch((err)=> console.log(err));
     }
     
 
@@ -70,7 +86,11 @@ class WebCamScreen extends Component {
                     videoConstraints={this.state.videoConstraints}
                     />
                     <br/>
-                    <Link style={{}} to="/quiz"><Button style={{background:'#03A9F4',color:'white',marginTop:10}}>Take Quiz</Button></Link>
+                    {
+                this.state.camActive?<Link style={{}} to="/quiz"><Button style={{background:'#03A9F4',color:'white',marginTop:10}}>Take Quiz</Button></Link>
+                :<Card style={{color: 'red', padding: 10}}> Please Allow Camera Permissions </Card>
+            }
+                    
                     {/* Capture Button can be triggered in Attempt quiz Button
                     <button onClick={capture}>Capture photo</button> */}
             
