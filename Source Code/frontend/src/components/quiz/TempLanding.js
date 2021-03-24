@@ -5,7 +5,7 @@ import {Grid} from '@material-ui/core'
 import Webcam from "react-webcam";
 import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
-import App from './../../App'
+import Quiz from './Quiz';
 import Creator from './QuizCreation/Creator'
 
 const TempLanding = () => {
@@ -17,7 +17,7 @@ const TempLanding = () => {
                 <Route path="/" exact component={Temp}/>
                 <Route path="/createQuiz" exact component={Creator}/>
                 <Route path="/quizLandingPage" exact component={WebCamScreen} />
-                <Route path="/quiz" exact component={App} />
+                <Route path="/quiz" exact component={Quiz} />
             </Switch>
         </Router>
     );

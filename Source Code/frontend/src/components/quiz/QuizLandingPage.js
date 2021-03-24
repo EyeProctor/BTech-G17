@@ -1,22 +1,32 @@
 import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 import {Component, createRef} from 'react';
-import App from '../../App';
+import Quiz from './Quiz';
 import {Button, CardContent} from '@material-ui/core'
 import {Grid} from '@material-ui/core'
 import Webcam from "react-webcam";
 import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
-
+import {getQuiz} from '../../action/quiz/quiz';
+import { useEffect } from 'react'
+import {useDispatch} from 'react-redux'
 
 
 
 const QuizLandingPage = () => {
 
+    const dispatch = useDispatch()
+
+    useEffect(
+        () => {
+            dispatch(getQuiz());
+        }, []
+    );
+
     return(
         <Router>
             <Switch>
                 <Route path="/" exact component={WebCamScreen} />
-                <Route path="/quiz" exact component={App} />
+                <Route path="/quiz" exact component={Quiz} />
             </Switch>
         </Router>
         
