@@ -10,19 +10,17 @@ import Card from '@material-ui/core/Card';
 import HomePage from './components/Home/HomePage'
 import CodeUI from './components/Coding/CodeUI';
 import Creator from './components/quiz/QuizCreation/QuizCreator'
-<<<<<<< HEAD
-
-=======
 import CreateRoom from './components/OE/CreateRoom'
 import Room from "./components/OE/Room";
 import AdminHome from "./components/admin/AdminHome"
 import CreateStudent from './components/admin/CreateStudent/CreateStudent'
->>>>>>> 157162f464ad68a70e86087d68e1f28a77605cd5
+import Login from './components/Login/Login'
 function App() {
 	return(
 		<Router>
             <Switch>
-                <Route path="/" exact component={Creator} />
+                <Route path="/" exact component={Login} />
+                {/* <Route path="/" exact component={Creator} /> */}
                 <Route path="/home" exact component={HomePage} />
                 <Route path="/quiz" exact component={WebCamScreen} />
                 <Route path="/quizID" exact component={Quiz} />
