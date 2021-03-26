@@ -1,5 +1,10 @@
-import {TextField,Grid,Button,Checkbox,FormControlLabel,Paper} from '@material-ui/core';
+import {TextField,Grid,Button,Checkbox,FormControlLabel,Paper, CircularProgress} from '@material-ui/core';
 import logo from './logo_trans.png';
+import {useState} from 'react';
+import {useDispatch} from 'react-redux';
+import {useHistory} from 'react-router-dom';
+import {Alert, AlertTitle} from '@material-ui/lab'
+
 
 const style = {
                 maxWidth:'40%',
@@ -16,8 +21,51 @@ const style = {
             };
 
 const Login = () =>  {
+    
+    const [userName, setUserName] = useState("");
+    const [password, setPassword] = useState("");
+    const [isLoading, setLoading] = useState(false);
+    const [isBad,setBad] = useState(false);
+    const [errMessage, setErrMessage] = useState("");
+    const history = useHistory();
+    const dispatch = useDispatch();
+
+    function onSuccess(resData){setLoading(false);
+        if(resData.msg){
+            setBad(true);
+            setErrMessage(resData.msg);
+        }
+        else{
+            dispatch({type: "AUTHENTICATE", payload: resData});
+            history.replace("/home");
+        }
+    }
+
+    const handleSubmit = (e) => {
+        setBad(false);
+        setLoading(true);
+        e.preventDefault();
+        // alert(userName + " " + password);
+        fetch(
+            "/user/login",
+            {
+                method: "POST",
+                mode: 'cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(
+                    {
+                        userName,
+                        password,
+                    }
+                )
+            }
+        ).then(
+            response => response.json().then( data => onSuccess(data))
+        ).catch((err) => {console.error(err)});
+    }
+
     return(
-        <div style={{height:'100vh',width:'100vw', background: 'linear-gradient(135deg, #364755 50%, #182835 50%)',position:'absolute',top:'0',left:'0'}}>
+        <form onSubmit={handleSubmit} style={{height:'100vh',width:'100vw', background: 'linear-gradient(135deg, #364755 50%, #182835 50%)',position:'absolute',top:'0',left:'0'}}>
             <img src={logo} style={{maxWidth:'100px'}} />
             <div style={style}>
                 <Grid container spacing={8} alignItems="center">
@@ -28,14 +76,15 @@ const Login = () =>  {
                 <Grid container spacing={8} alignItems="flex-end">
                     {/* <Grid item md={3}>Username</Grid> */}
                     <Grid item md={12} sm={12} xs={12}>
-                        <TextField id="usrn" margin="normal" variant="outlined" label="Username" type="text" fullWidth required />
+                        <TextField onChange={(e)=> {setUserName(e.target.value)}} value={userName} id="usrn" margin="normal" variant="outlined" label="Username" type="text" fullWidth required />
+
                     </Grid>
                 </Grid>
                 <Grid container spacing={8} alignItems="flex-end">
                     {/* <Grid item md={3}>Password</Grid> */}
                     <Grid item md={12} sm={12} xs={12}>
-                        <TextField id="pswd" margin="normal" variant="outlined" label="Password" type="password" fullWidth required />
-                    </Grid>
+                        <TextField onChange={(e)=> {setPassword(e.target.value)}} value={password} id="pswd" margin="normal" variant="outlined" label="Password" type="password" fullWidth required />
+     </Grid>
                 </Grid>
                 <Grid container alignItems="center" justify="space-between" style={{marginTop:'5vh'}}>
                     <Grid item>
@@ -51,11 +100,20 @@ const Login = () =>  {
                 </Grid>
                 <Grid container justify="center" style={{ marginTop: '2%' }}>
                     <Grid item md={4} fullWidth>
-                        <Button variant="contained" style={{ textTransform: "none", backgroundColor:"#fec14e",color:"white",minWidth:"100px",fontWeight:'bolder',fontSize:'medium',borderRadius:'5pt'}}>Login</Button>
+                        {isLoading ?
+                        <CircularProgress />
+                        :<Button  type="submit" variant="contained" style={{ textTransform: "none", backgroundColor:"#fec14e",color:"white",minWidth:"100px",fontWeight:'bolder',fontSize:'medium',borderRadius:'5pt'}}>Login</Button>}
+                        
                     </Grid>
                 </Grid>
+                <Grid container justify="center" style={{ marginTop: '2%' }}>
+                    <Grid item md={4} fullWidth>
+                        {isBad ?<Alert severity="error"><AlertTitle>Error</AlertTitle>{errMessage}</Alert>:<></>}
+                    </Grid>
+                </Grid>
+                
             </div>
-        </div>
+        </form>
     );
 }
 

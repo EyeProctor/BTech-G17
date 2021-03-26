@@ -9,10 +9,31 @@ import thunk from 'redux-thunk';
 import App from './App';
 
 
+function saveToLocalStorage(state){
+  try {
+    const serializedState = JSON.stringify(state)
+    localStorage.setItem('iProctorState', serializedState)
+  } catch (error) {
+    console.log(error);
+  }
+}
 
-const store = createStore(allReducer,compose(applyMiddleware(thunk),window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()));
+function loadFromLocalStorage(){
+  try {
+    const serializedState =localStorage.getItem("iProctorState")
+    if(serializedState === null) return undefined
+    return JSON.parse(serializedState);
+  } catch (error) {
+    console.log(error)
+    return undefined;
+  }
+}
 
-// window.__REDUX_DEVTOOLS_EXTENSION__? window.__REDUX_DEVTOOLS_EXTENSION__(): f => f
+const persistedState = loadFromLocalStorage();
+
+const store = createStore(allReducer,persistedState,compose(applyMiddleware(thunk),window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()));
+
+store.subscribe(()=> saveToLocalStorage(store.getState()))
 
 ReactDOM.render(
   <Provider store={store}>

@@ -3,11 +3,12 @@ const mongoose = require('mongoose');
 const courseSchema = mongoose.Schema(
     {
         courseName: String,
-        class: String,
+        Class: String,
         branch: String,
-        quizes: [String],
-        poes: [String],
-        oes: [String],
+        sem: String,
+        quizes: Array,
+        poes: Array,
+        oes: Array,
     }
 );
 
