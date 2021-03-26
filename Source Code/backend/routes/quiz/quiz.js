@@ -2,6 +2,7 @@ const express = require('express');
 const MainQuiz = require('../../schema/quiz/MainQuiz');
 const QuizAnswer = require('../../schema/quiz/QuizAnswer');
 const QuizQuestion = require('../../schema/quiz/QuizQuestions');
+const Course = require('../../schema/course/CourseSchema')
 
 const router = express.Router();
 
@@ -14,9 +15,8 @@ router.get('/',(req,res)=>{
 // METHOD: GET
 // desc : Get Particular Quiz from Quiz ID
 router.get('/getQuiz/:id', (req,res) => {
-    console.log(`Fetching ${req.params.id} Quiz`);
-    const id = "6037deb6df07ce0ad83200f6";
-
+    const id = req.params.id;
+    console.log(id);
     MainQuiz.findById(id).then(quizData => 
         {
             console.log(quizData); 
@@ -25,17 +25,15 @@ router.get('/getQuiz/:id', (req,res) => {
             console.log(err)
             return res.status(500).json({err})
         });
-
-    
-
 })
 
 
 // METHOD: POST
 // desc: Add Quiz
 router.post('/addQuiz',(req,res) => {
-    const {subject, proctored, startDate, endDate, duration, questions} = req.body;
+    const {courseID,subject, proctored, startDate, endDate, duration, questions} = req.body;
 
+    console.log(courseID);
     var questionsArray = []
     questions.forEach(que => {
         var optionsArray = []
@@ -59,12 +57,24 @@ router.post('/addQuiz',(req,res) => {
     console.log("Start", startDate)
     console.log("End", endDate)
     console.log("Duration", duration)
+    
     newQuiz.save().then(data => {
         console.log(data);
-        return res.status(200).json(data);
+        const toadd = {quizID: data._id, subject}
+        Course.findByIdAndUpdate({_id: courseID}, 
+            { $addToSet: { quizes : toadd } },
+            function (err, updatedDoc) {
+                if (err) {
+                    console.log(err);
+                    return res.status(500).json({msg : "Server Error"});
+                }
+            console.log(updatedDoc);
+            return res.status(200).json(updatedDoc)
+        })
     }).catch((err)=> {
         return res.status(500).json({msg: err.message});
     })
+
     
 })
 

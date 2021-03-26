@@ -1,5 +1,6 @@
 import {AppBar, Box, Button, Grid, Toolbar} from '@material-ui/core'
 import { useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom'
 // import CustomBox from '../../Helper/CustomBox'
 import {Alert} from '@material-ui/lab'
 const TeacherCourseHome = (props) => {
@@ -9,6 +10,7 @@ const TeacherCourseHome = (props) => {
     const quizes = course.quizes;
     const poes = course.poes;
     const oes = course.oes;
+    const history = useHistory();
     console.log(course);
     return(
         <div>
@@ -25,7 +27,7 @@ const TeacherCourseHome = (props) => {
                 </Grid>
                 {(quizes.length === 0)?<Grid  item xs={12}><Alert severity="error" >No Active Quizes</Alert></Grid>:<></>}
                 <Grid container justify="center" alignContent="center" alignItems="center" item xs={12}>
-                    <Button variant="contained" color="primary">Create New Quiz</Button>
+                    <Button onClick={()=>{ history.push(`/teacher/createQuiz/${courseID}`) }} variant="contained" color="primary">Create New Quiz</Button>
                 </Grid>
                 <Box border={1}/>
                 <Grid item xs={12} style={{textAlign: 'center'}}>
@@ -35,7 +37,7 @@ const TeacherCourseHome = (props) => {
                 </Grid>
                 {(poes.length === 0)?<Grid  item xs={12}><Alert severity="error" >No Active Practicals</Alert></Grid>:<></>}
                 <Grid container justify="center" alignContent="center" alignItems="center" item xs={12}>
-                    <Button variant="contained" color="primary">Create New Practical</Button>
+                    <Button onClick={()=>{ history.push('/teacher/createPOE') }} variant="contained" color="primary">Create New Practical</Button>
                 </Grid>
                 <Box border={1} />
                 

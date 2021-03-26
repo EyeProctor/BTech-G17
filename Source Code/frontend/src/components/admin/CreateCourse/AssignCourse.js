@@ -1,5 +1,6 @@
-import {FormControl,Select, MenuItem, InputLabel, Grid, Button, Box} from '@material-ui/core'
+import {FormControl,Select, MenuItem, InputLabel, Grid, Button, Box, CircularProgress} from '@material-ui/core'
 import {useEffect, useState} from 'react';
+import {Alert, AlertTitle} from '@material-ui/lab'
 const AssignCourse = () => {
 
     const [teacherID, setTeacherID] = useState("");
@@ -7,6 +8,10 @@ const AssignCourse = () => {
     const [teachers, setTeachers] = useState([]);
     const [courses, setCourses] = useState([]);
     const [branchCourses, setBranchCourses] = useState([]);
+    const [isLoading, setLoading] = useState(false);
+    const [isBad,setBad] = useState(false);
+    const [isSuccess, setSuccess] = useState(false);
+    const [errMessage, setErrMessage] = useState("");
 
     useEffect(()=>{
         fetch('/admin/allTeachers').then(data => data.json().then(teachers => {setTeachers(teachers);})).catch(err => console.log(err))
@@ -15,12 +20,40 @@ const AssignCourse = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        setBad(false);
+        setLoading(true);
+        setSuccess(false);
+        setErrMessage("");
 
         const reqBody = {
             teacherID,courseID
         }
 
-        console.log(JSON.stringify(reqBody));
+        fetch(
+            "/admin/assignTeacher",
+            {
+                method: "POST",
+                mode: 'cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(reqBody)
+            }
+        ).then(
+            response => response.json().then( data => {
+                console.log(JSON.stringify(data));
+                setLoading(false);
+                if(data.msg){
+                    setBad(true);
+                    setErrMessage(data.msg);
+                }else
+                    setSuccess(true);
+            })
+        ).catch((err) => {
+            console.error(err); 
+            setLoading(false);
+            setBad(true);
+            setErrMessage("Bad Request");
+        }
+            );
         
     }
 
@@ -70,8 +103,14 @@ const AssignCourse = () => {
 
                     <Grid container item justify="center" alignItems="center">
                         <Box p={5}>
-                        <Button type="submit" variant="contained" color="primary">Assign</Button>
+                        {isLoading ?<CircularProgress />:<Button type="submit" variant="contained" color="primary">Assign</Button>}
                         </Box>
+                    </Grid>
+                    <Grid container item xs={12} justify="center" alignItems="center">
+                            {isBad ?<Alert severity="error"><AlertTitle>Error</AlertTitle>{errMessage}</Alert>:<></>}
+                    </Grid>
+                    <Grid container item justify="center" alignItems="center">
+                            {isSuccess ?<Alert variant="filled" severity="success">Assigned!</Alert>:<></>}
                     </Grid>
                 </Grid>
             </form>

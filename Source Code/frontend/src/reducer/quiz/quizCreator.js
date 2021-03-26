@@ -1,4 +1,5 @@
 const initialState = {
+    courseID: "",
     subject: null,
     proctored: false,
     startDate: null,
@@ -26,6 +27,9 @@ var QIndex, OIndex, QArray;
 const quizCreatorReducer = (state= initialState, action) => {
 
     switch (action.type) {
+        case "SET_QUIZCOURSE":
+            return {...state, courseID: action.payload}
+
         case "ADD_QUESTION_TEMPLATE":
             QArray = [...state.questions];
             const newQuestionState = {...questionState, qNo: QArray.length+1 }

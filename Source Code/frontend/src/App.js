@@ -20,24 +20,29 @@ import AssignCourse from './components/admin/CreateCourse/AssignCourse'
 import Login from './components/Login/Login'
 import CourseHome from './components/Home/Student/CourseHome'
 import TeacherCourseHome from './components/Home/Teacher/TeacherCourse'
+import QuizLandingPage from './components/quiz/QuizLandingPage';
 function App() {
 	return(
 		<Router>
             <Switch>
                 <Route path="/" exact component={Login} />
                 <Route path="/home" exact component={HomePage} />
+
                 <Route path="/quiz" exact component={WebCamScreen} />
+                <Route path="/course/quiz/:quizID" exact component={QuizLandingPage} />
                 <Route path="/quizID" exact component={Quiz} />
                 <Route path="/OE" exact component={CreateRoom}/>
                 <Route path="/room/:roomID" component={Room}/>
+
                 <Route path="/admin" exact component={AdminHome} />
                 <Route path="/createStudent" exact component={CreateStudent} />
                 <Route path="/createTeacher" exact component={CreateTeacher} />
                 <Route path="/createCourse" exact component={CreateCourse} />
                 <Route path="/assignCourse" exact component={AssignCourse} />
+
                 <Route path="/course/:courseName" exact component={CourseHome} />
                 <Route path="/course/teacher/:courseName" exact component={TeacherCourseHome} />
-                <Route path="/teacher/createQuiz/:teacherID" exact component={Creator} />
+                <Route path="/teacher/createQuiz/:courseID" exact component={Creator} />
             </Switch>
         </Router>
 	);
