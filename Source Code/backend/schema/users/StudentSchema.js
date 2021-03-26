@@ -7,6 +7,7 @@ const studentSchema = mongoose.Schema(
         middleName: String,
         branch: String,
         class: String,
+        sem: String,
     }
 );
 

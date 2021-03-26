@@ -14,18 +14,30 @@ import CreateRoom from './components/OE/CreateRoom'
 import Room from "./components/OE/Room";
 import AdminHome from "./components/admin/AdminHome"
 import CreateStudent from './components/admin/CreateStudent/CreateStudent'
+import CreateTeacher from './components/admin/CreateTeacher/CreateTeacher'
+import CreateCourse from './components/admin/CreateCourse/CreateCourse'
+import AssignCourse from './components/admin/CreateCourse/AssignCourse'
+import Login from './components/Login/Login'
+import CourseHome from './components/Home/Student/CourseHome'
+import TeacherCourseHome from './components/Home/Teacher/TeacherCourse'
 function App() {
 	return(
 		<Router>
             <Switch>
-                <Route path="/" exact component={Creator} />
+                <Route path="/" exact component={Login} />
                 <Route path="/home" exact component={HomePage} />
                 <Route path="/quiz" exact component={WebCamScreen} />
                 <Route path="/quizID" exact component={Quiz} />
                 <Route path="/OE" exact component={CreateRoom}/>
                 <Route path="/room/:roomID" component={Room}/>
-                <Route path="/admin" component={AdminHome} />
-                <Route path="/student" component={CreateStudent} />
+                <Route path="/admin" exact component={AdminHome} />
+                <Route path="/createStudent" exact component={CreateStudent} />
+                <Route path="/createTeacher" exact component={CreateTeacher} />
+                <Route path="/createCourse" exact component={CreateCourse} />
+                <Route path="/assignCourse" exact component={AssignCourse} />
+                <Route path="/course/:courseName" exact component={CourseHome} />
+                <Route path="/course/teacher/:courseName" exact component={TeacherCourseHome} />
+                <Route path="/teacher/createQuiz/:teacherID" exact component={Creator} />
             </Switch>
         </Router>
 	);

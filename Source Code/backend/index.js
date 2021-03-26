@@ -4,8 +4,11 @@ var cors = require('cors')
 const http = require('http')
 const mongoose = require('mongoose');
 const socket = require('socket.io')
-const userRouts = require('./routes/user/userRoutes');
-const codingRouts = require('./routes/code/codingRoutes');
+const userRoutes = require('./routes/user/userRoutes');
+const adminRoutes = require('./routes/admin/adminRoutes');
+const codingRoutes = require('./routes/code/codingRoutes');
+const courseRoutes = require('./routes/course/courseRoutes');
+const teacherRoutes = require('./routes/teacher/teacherRoutes');
 
 
 // -------------------------TODO-------------------------------
@@ -21,9 +24,12 @@ const io = socket(server)
 // Middlewares
 app.use(express.json());
 app.use(cors());
-app.use("/user", userRouts);
-app.use("/code", codingRouts);
+app.use("/user", userRoutes);
+app.use("/code", codingRoutes);
 app.use('/quiz',QuizRoutes );
+app.use('/admin',adminRoutes );
+app.use('/course',courseRoutes );
+app.use('/teacher',teacherRoutes );
 
 
 const PORT = process.env.PORT || 5000;
