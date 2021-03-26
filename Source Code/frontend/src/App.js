@@ -20,6 +20,7 @@ import AssignCourse from './components/admin/CreateCourse/AssignCourse'
 import Login from './components/Login/Login'
 import CourseHome from './components/Home/Student/CourseHome'
 import TeacherCourseHome from './components/Home/Teacher/TeacherCourse'
+
 function App() {
 	return(
 		<Router>
@@ -123,7 +124,6 @@ class WebCamScreen extends Component {
                         </Typography>
 
                 </Grid>
-
             </Grid>
         </>
       );
