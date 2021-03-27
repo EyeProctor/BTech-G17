@@ -11,12 +11,16 @@ const CourseHome = (props) => {
     const oes = course.oes;
     console.log(course);
     return(
-        <div>
-            <AppBar>
-                <Toolbar stype={{backgroundColor: "black" }}>
-                {course.courseName}
-                </Toolbar>
-            </AppBar>
+        <div className='ch-container'>
+            <div style={{padding:'5px'}}>
+                <AppBar position='static' className='Appbar'>
+                    <Grid container style={{justifyContent:'center',position:'relative'}}>
+                        <Grid item style={{fontSize:'30px',fontWeight:'bold',padding:'20px'}}>
+                            {course.courseName}
+                        </Grid>
+                    </Grid>
+                </AppBar>
+            </div>
             <Grid style={{marginTop: 60}} container spacing={2}>
                 <Grid item xs={12} style={{textAlign: 'center'}}>
                     <Box p={2} boxShadow={3} bgcolor="background.paper" borderBottom={1}>

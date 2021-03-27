@@ -1,5 +1,4 @@
 import {TextField,Grid,Button,Checkbox,FormControlLabel,Paper, CircularProgress} from '@material-ui/core';
-import logo from './logo_trans.png';
 import {useState} from 'react';
 import {useDispatch} from 'react-redux';
 import {useHistory} from 'react-router-dom';
@@ -66,7 +65,10 @@ const Login = () =>  {
 
     return(
         <form onSubmit={handleSubmit} style={{height:'100vh',width:'100vw', background: 'linear-gradient(135deg, #364755 50%, #182835 50%)',position:'absolute',top:'0',left:'0'}}>
-            <img src={logo} style={{maxWidth:'100px'}} />
+            <img src="logo_trans.png" style={{maxWidth:'100px'}} />
+            <div style={{display:'inline-block',position:'absolute',top:'30px',textAlign:'center',color:'#fec14e'}}>
+                <h1>Proctor</h1>
+            </div>
             <div style={style}>
                 <Grid container spacing={8} alignItems="center">
                     <Grid item md={2} sm={true} xs={true}>

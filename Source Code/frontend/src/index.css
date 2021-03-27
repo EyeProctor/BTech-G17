@@ -7,3 +7,58 @@
 #root{
     font-family: 'Roboto';
 }
+
+.logo{
+	width: 70px;
+	height: auto;
+    margin: 5px;
+}
+
+.Appbar{
+    position: fixed;
+    width: 95vw;
+    box-shadow: 0 0 5px 5px black;
+    border-radius: 3pt;
+    background-color: #364755 !important;
+}
+
+.Appbar .MuiButtonBase-root,.Appbar .MuiButton-label{
+    background-color: #fec14e !important;
+    font-weight: bolder;
+}
+.Appbar .MuiButtonBase-root{
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.cor .MuiGrid-root .MuiButtonBase-root,.cor .MuiGrid-root .MuiButton-label{
+    background-color: #fec14e;
+    margin: 5px;
+}
+
+#customized-menu svg.MuiSvgIcon-root{
+    height: 30px;
+    width: 30px;
+}
+
+.MuiButtonBase-root.MuiIconButton-root{
+    padding: 5px;
+}
+
+.ch-container{
+    width: 100vw;
+    height: 100vh;
+    background-color:#182835;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.ch-container .MuiBox-root,.ch-container .MuiButton-label{
+    background-color: #4c5f7a;
+    color: white;
+    border-radius: 3pt;
+    border: none;
+    min-width: 110px;
+}
