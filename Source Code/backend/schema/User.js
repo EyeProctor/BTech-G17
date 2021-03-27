@@ -8,6 +8,7 @@ const userSchema = mongoose.Schema(
         userType: {type: String, default: "Student"},
         studentData: String,
         teacherData: String,
+        otherData: String,
     }
 );
 

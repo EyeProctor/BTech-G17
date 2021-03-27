@@ -6,7 +6,7 @@ const studentSchema = mongoose.Schema(
         lastName: String,
         middleName: String,
         branch: String,
-        class: String,
+        Class: String,
         sem: String,
     }
 );

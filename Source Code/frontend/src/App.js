@@ -28,9 +28,9 @@ function App() {
                 <Route path="/" exact component={Login} />
                 <Route path="/home" exact component={HomePage} />
 
-                <Route path="/quiz" exact component={WebCamScreen} />
                 <Route path="/course/quiz/:quizID" exact component={QuizLandingPage} />
-                <Route path="/quizID" exact component={Quiz} />
+                <Route path="/course/quiz/:quizID/:userID" exact component={WebCamScreen} />
+                <Route path="/quiz/:quizID/:userID" exact component={Quiz} />
                 <Route path="/OE" exact component={CreateRoom}/>
                 <Route path="/room/:roomID" component={Room}/>
 
@@ -55,15 +55,14 @@ class WebCamScreen extends Component {
         super(props);
         this.state = {  webcamRef: createRef(null),
             videoConstraints: {facingMode: "user"},
-            camActive: false
+            camActive: false,
+            quizPage: `/quiz/${this.props.match.params.quizID}/${this.props.match.params.userID}` 
         }
         navigator.mediaDevices.getUserMedia({video: true}).then(
             () => {
                 this.setState({camActive: true});
             }
         ).catch((err)=> console.log(err));
-
-        console.log("IN App JS",localStorage.getItem("UserToken"));
     }
     
 
@@ -102,7 +101,9 @@ class WebCamScreen extends Component {
                         />
                         <br/>
                         {
-                    this.state.camActive?<Link style={{}} to="/quizID"><Button style={{background:'#03A9F4',color:'white',marginTop:10}}>Take Quiz</Button></Link>
+                    this.state.camActive?<Link style={{}} to={this.state.quizPage}><Button onClick={()=> {
+                        
+                    }} style={{background:'#03A9F4',color:'white',marginTop:10}}>Take Quiz</Button></Link>
                     :<Card style={{color: 'red', padding: 10}}> Please Allow Camera Permissions </Card>
                 }
                         

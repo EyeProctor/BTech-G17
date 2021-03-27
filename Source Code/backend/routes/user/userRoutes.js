@@ -35,7 +35,7 @@ router.post('/register',(req,res)=>{
 
             {
                 const newUser = User({
-                    userName, email, password , userType, studentData: "Null", teacherData: teacherDoc.id
+                    userName, email, password , userType, studentData: "Null", teacherData: teacherDoc.id, otherData: `${Class} ${branch}`
                 });
 
                 registerUser(newUser);
@@ -50,14 +50,14 @@ router.post('/register',(req,res)=>{
                 lastName: studentData.lastName,
                 middleName: studentData.middleName,
                 branch: studentData.branch,
-                class: studentData.class,
+                Class: studentData.Class,
                 sem: studentData.sem
             }
         );
 
         newStudent.save().then(studentDoc =>{
             const newUser = User({
-                userName, email, password , userType, studentData: studentDoc.id, teacherData: "Null"
+                userName, email, password , userType, studentData: studentDoc.id, teacherData: "Null", otherData: `${Class} ${branch} ${sem}`
             });
             registerUser(newUser);
         })
