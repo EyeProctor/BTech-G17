@@ -8,11 +8,13 @@ import userData from '../../service/userData.js';
 import {  useState, useEffect } from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import { saveUserChoices } from '../../reducer/quiz/quiz'
+import { useHistory } from 'react-router';
 
 function Quiz(props) {
 	const quizDataFromStore = useSelector(state => state.quiz);
-	const userName = useSelector(state => state.auth.user)
+	const userName = useSelector(state => state.auth)
 	var startDate = 0;
+	const history = useHistory();
 	console.log(JSON.stringify(quizDataFromStore))
 	if(quizDataFromStore.startedAt === null)
 		startDate = Date.now()
@@ -95,7 +97,9 @@ function Quiz(props) {
 	}, [attempted, flagged, userChoices,dispatch]);
 
 	const handleSubmit = (e) => {
-		console.log(userName);
+		const {firstName, lastName, middleName} = userName.studentDoc;
+		const quizName = quizDataFromStore.questions.subject;
+		const startedAt = startDate;
 		e.preventDefault();
 		if (window.confirm('Confirm Submission'))
 		{
@@ -103,17 +107,18 @@ function Quiz(props) {
 				method: "POST",
 				mode: 'cors',
 				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({userID, qID: quizID, userChoices, questions: questionBank.questions})
+				body: JSON.stringify({userID, qID: quizID, userChoices, questions: questionBank.questions, firstName, middleName, lastName, startedAt, quizName})
 			 }).then(data => data.json().then(newData => {
-				 console.log(JSON.stringify(newData));
+				console.log(JSON.stringify(newData));
+				 if(newData.msg){
+
+				 }else{
+					 history.replace('/home');
+					 return;
+				 }
 			 })).catch(err => console.log(err))
 
-			console.log(JSON.stringify({userID, qID: quizID, userChoices, questions: questionBank.questions}));
-
 		}
-
-
-		
 	}
 
   return (
@@ -151,7 +156,7 @@ function Quiz(props) {
         </Button>
 				</Grid>
 				<Grid item xs={8}>
-				<Countdown date={endDate} />
+				<Countdown onComplete={handleSubmit} date={endDate} />
 				</Grid>
 			</Grid>
         </Grid>

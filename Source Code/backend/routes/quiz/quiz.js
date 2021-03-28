@@ -53,20 +53,20 @@ router.post('/addQuiz',(req,res) => {
         subject,proctored, startDate, endDate, duration, questions: questionsArray
     });
 
-    console.log("Question",questions)
-    console.log("Subject", subject)
-    console.log("Start", startDate)
-    console.log("End", endDate)
-    console.log("Duration", duration)
+    // console.log("Question",questions)
+    // console.log("Subject", subject)
+    // console.log("Start", startDate)
+    // console.log("End", endDate)
+    // console.log("Duration", duration)
     
     newQuiz.save().then(data => {
         console.log(data);
         const toadd = {quizID: data._id, subject}
-        Course.findByIdAndUpdate({_id: courseID}, 
+        Course.findByIdAndUpdate(courseID, 
             { $addToSet: { quizes : toadd } },
             function (err, updatedDoc) {
                 if (err) {
-                    console.log(err);
+                    //console.log(err);
                     return res.status(500).json({msg : "Server Error"});
                 }
             console.log(updatedDoc);
@@ -143,7 +143,7 @@ router.get('/userChoices/:userID/:quizID', (req,res)=> {
 })
 
 router.post("/submitQuiz", (req,res)=>{
-    const {userID,studentID, qID ,userChoices,questions, firstName, lastName, middleName} = req.body;
+    const {userID,studentID, qID ,userChoices,questions, firstName, lastName, middleName, quizName, startedAt} = req.body;
 
     var correct = 0, incorrect = 0;
     const qArray = questions;
@@ -161,7 +161,7 @@ router.post("/submitQuiz", (req,res)=>{
     }
     // Take Result Schema
     const quizResult = new QuizResult({
-        qID, correct, incorrect, userID, firstName, lastName, middleName, finishedAt
+        qID, correct, incorrect, userID, firstName, lastName, middleName, startedAt, quizName ,finishedAt
     })
     // Store The Result
 

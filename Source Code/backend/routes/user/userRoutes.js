@@ -35,7 +35,7 @@ router.post('/register',(req,res)=>{
 
             {
                 const newUser = User({
-                    userName, email, password , userType, studentData: "Null", teacherData: teacherDoc.id, otherData: `${Class} ${branch}`
+                    userName, email, password , userType, studentData: "Null", teacherData: teacherDoc.id
                 });
 
                 registerUser(newUser);
@@ -57,7 +57,7 @@ router.post('/register',(req,res)=>{
 
         newStudent.save().then(studentDoc =>{
             const newUser = User({
-                userName, email, password , userType, studentData: studentDoc.id, teacherData: "Null", otherData: `${Class} ${branch} ${sem}`
+                userName, email, password , userType, studentData: studentDoc.id, teacherData: "Null"
             });
             registerUser(newUser);
         })
@@ -118,19 +118,38 @@ router.post('/login', (req,res)=> {
 
                         if(err) throw err;
 
-                        res.json(
-                            {
-                                token,
-                                user: {
-                                    id: user.id,
+                        if(user.studentData === "Null"){
+                            Teacher.findOne({_id: user.teacherData}).then(teacherDoc =>{
+                                res.status(200).json({
+                                    token,
+                                    user:{
+                                        id: user.id,
                                     name: user.userName,
                                     email: user.email,
                                     userType: user.userType,
                                     studentData: user.studentData,
                                     teacherData: user.teacherData
-                                }
-                            }
-                        );
+                                    },
+                                    teacherDoc
+                                })
+                            })
+                        }
+                        else{
+                            Student.findOne({_id: user.studentData}).then(studentDoc => {
+                                res.status(200).json({
+                                    token,
+                                    user:{
+                                        id: user.id,
+                                    name: user.userName,
+                                    email: user.email,
+                                    userType: user.userType,
+                                    studentData: user.studentData,
+                                    teacherData: user.teacherData
+                                    },
+                                    studentDoc
+                                })
+                            })
+                        }
 
                     }
                     

@@ -9,6 +9,8 @@ const quizResult = mongoose.Schema(
         firstName: String,
         lastName: String,
         middleName: String,
+        startedAt: Number,
+        quizName: String,
         finishedAt:{type: Date, default: Date.now()},
         
     }

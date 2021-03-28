@@ -1,4 +1,5 @@
-import { Box, Button, Grid, Typography } from '@material-ui/core';
+import { Box, Button, Grid, Typography, AppBar } from '@material-ui/core';
+import { Alert } from '@material-ui/lab';
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
@@ -7,8 +8,9 @@ import { useHistory } from 'react-router';
 
 const QuizLandingPage = (props) => {
     const quizID = props.match.params.quizID;
-    console.log(quizID)
+    //console.log(quizID)
     const [quizData,setQuizData] = useState({})
+    const [isAvailable, setAvailable] = useState(true);
     const dispatch = useDispatch();
     const quizState = useSelector(state => state.quiz);
     const fromStore = quizState.userChoices;
@@ -20,8 +22,15 @@ const QuizLandingPage = (props) => {
         () => {
             fetch(`/quiz/getQuiz/${quizID}`).then(
                 data => data.json().then(newData => {
-                    console.log(JSON.stringify(newData));
+                    //console.log(JSON.stringify(newData));
                     setQuizData(newData);
+                    const endDate = new Date(newData.endDate).getTime();
+                    const startDate = new Date(newData.startDate).getTime();
+                    console.log();
+                    if(startDate > Date.now() || endDate < Date.now())
+                    {
+                        setAvailable(false);
+                    }
                 })
             );
             
@@ -47,7 +56,6 @@ const QuizLandingPage = (props) => {
             console.log("database Check")
             fetch(`/quiz/userChoices/${userID}/${quizID}`).then(data=>{
                 data.json().then(newData => {
-
                     // No Saved Instance on Database
                     // New Attempt starts
                     if(newData.msg){
@@ -79,40 +87,37 @@ const QuizLandingPage = (props) => {
                 })
             });
         }else{
-            // Continue from localStore
-            // if(Object.keys(fromStore).length ===0){
-            //     const newUserChoices = {
-            //         userID: userID,
-            //         quizID: quizID,
-            //         attempted: [],
-            //         flagged: [],
-            //         userChoices: {},
-            //         startedAt: null,
-            //         questions: quizData,
-            // }
-            // dispatch({type: "SAVE_USERCHOICES", payload: newUserChoices})
-            // }
             console.log("From Store");
             console.log(JSON.stringify(quizState));
             history.push(`${quizID}/${userID}`);
         }
     }
     return(
-        <Grid container >
-            <Grid item xs={12}>
-                <Box p={2}>
-                    <Typography variant='h4'>
+        <div className='ch-container'>
+        <div style={{padding:'5px'}}>
+                <AppBar position='static' className='Appbar'>
+                    <Grid container style={{justifyContent:'center',position:'relative'}}>
+                        <Grid item style={{fontSize:'30px',fontWeight:'bold',padding:'20px'}}>
+                            Proctored Quiz
+                        </Grid>
+                    </Grid>
+                </AppBar>
+        </div>
+    <Grid className='cor' style={{margin:'0'}} container >
+            <Grid item xs={12} style={{textAlign: 'center',marginTop:'5vh'}}>
+                <Box p={2} boxShadow={5} borderBottom={1}>
                     {quizData.subject}
-                    </Typography>
                 </Box>
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} style={{textAlign: 'center',marginTop:'5vh'}}>
                 {
-                  status?<>Cannot Take Quiz</> 
-                  :<Button variant='contained' onClick={takeQuiz}>Take Quiz</Button>
+                  status || !isAvailable ?<Alert severity='warning'> Quiz Not Available </Alert>
+                  :<Button variant='contained' color='primary' onClick={takeQuiz}>Take Quiz</Button>
                 }
             </Grid>
         </Grid>
+  </div>
+        
     );
 }
 

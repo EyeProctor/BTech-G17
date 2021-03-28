@@ -12,29 +12,36 @@ const CourseHome = (props) => {
     const history = useHistory();
     const oes = course.oes;
     return(
-        <div>
-            <AppBar>
-                <Toolbar stype={{backgroundColor: "black" }}>
-                {course.courseName}
-                </Toolbar>
-            </AppBar>
-            <Grid style={{marginTop: 60}} container spacing={2}>
-                <Grid item xs={12} style={{textAlign: 'center'}}>
-                    <Box p={2} boxShadow={3} bgcolor="background.paper" borderBottom={1}>
+        <div className='ch-container'>
+            <div style={{padding:'5px'}}>
+                <AppBar position='static' className='Appbar'>
+                    <Grid container style={{justifyContent:'center',position:'relative'}}>
+                        <Grid item style={{fontSize:'30px',fontWeight:'bold',padding:'20px'}}>
+                            {course.courseName}
+                        </Grid>
+                    </Grid>
+                </AppBar>
+            </div>
+            <Grid className='cor' style={{margin:'0'}} container>
+                <Grid item xs={12} style={{textAlign: 'center',marginTop:'5vh'}}>
+                    <Box p={2} boxShadow={5} borderBottom={1}>
                         Quizes
                     </Box>
                 </Grid>
                 {(quizes.length === 0)?<Grid  item xs={12}><Alert severity="error" >Nothing Here</Alert></Grid>:
                 quizes.map((quizObj)=> <CustomBox key={quizObj.quizID} innerText={quizObj.subject} onClick={()=> {history.push(`quiz/${quizObj.quizID}`)}}/>)}
-                <Grid item xs={12} style={{textAlign: 'center'}}>
-                    <Box p={2} boxShadow={3} bgcolor="background.paper" borderBottom={1}>
+                <Grid item xs={12} style={{textAlign: 'center',marginTop:'5vh'}}>
+                    <Box p={2} boxShadow={5} borderBottom={1}>
                         Practicals
                     </Box>
                 </Grid>
                 {(poes.length === 0)?<Grid  item xs={12}><Alert severity="error" >Nothing Here</Alert></Grid>:<></>}
+
             </Grid>
         </div>
     );
 }
 
 export default CourseHome;
+
+

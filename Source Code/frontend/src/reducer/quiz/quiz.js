@@ -19,6 +19,8 @@ const quizReducer = (state = initialState, action) => {
             return {...state, questions: {...action.payload}}
         case "SET_STARTDATE":
             return {...state, startedAt: action.payload}
+        case "QUIZ_RESET":
+            return initialState;
         default:
            return state;
     }

@@ -1,9 +1,9 @@
 import {TextField,Grid,Button,Checkbox,FormControlLabel,Paper, CircularProgress} from '@material-ui/core';
-import logo from './logo_trans.png';
 import {useState} from 'react';
 import {useDispatch} from 'react-redux';
 import {useHistory} from 'react-router-dom';
 import {Alert, AlertTitle} from '@material-ui/lab'
+
 
 const style = {
                 maxWidth:'40%',
@@ -65,7 +65,10 @@ const Login = () =>  {
 
     return(
         <form onSubmit={handleSubmit} style={{height:'100vh',width:'100vw', background: 'linear-gradient(135deg, #364755 50%, #182835 50%)',position:'absolute',top:'0',left:'0'}}>
-            <img src={logo} style={{maxWidth:'100px'}} />
+            <img src="logo_trans.png" style={{maxWidth:'100px'}} />
+            <div style={{display:'inline-block',position:'absolute',top:'30px',textAlign:'center',color:'#fec14e'}}>
+                <h1>Proctor</h1>
+            </div>
             <div style={style}>
                 <Grid container spacing={8} alignItems="center">
                     <Grid item md={2} sm={true} xs={true}>
@@ -76,13 +79,14 @@ const Login = () =>  {
                     {/* <Grid item md={3}>Username</Grid> */}
                     <Grid item md={12} sm={12} xs={12}>
                         <TextField onChange={(e)=> {setUserName(e.target.value)}} value={userName} id="usrn" margin="normal" variant="outlined" label="Username" type="text" fullWidth required />
+
                     </Grid>
                 </Grid>
                 <Grid container spacing={8} alignItems="flex-end">
                     {/* <Grid item md={3}>Password</Grid> */}
                     <Grid item md={12} sm={12} xs={12}>
                         <TextField onChange={(e)=> {setPassword(e.target.value)}} value={password} id="pswd" margin="normal" variant="outlined" label="Password" type="password" fullWidth required />
-                    </Grid>
+     </Grid>
                 </Grid>
                 <Grid container alignItems="center" justify="space-between" style={{marginTop:'5vh'}}>
                     <Grid item>

@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { useSelector,useDispatch } from "react-redux";
 import { useHistory } from "react-router";
 import CustomBox from '../../Helper/CustomBox';
+import ProfileMenu from "../../Login/ProfileMenu.js";
+
 
 const TeacherHome = () => {
     const user = useSelector(state => state.auth.user)
@@ -22,24 +24,36 @@ const TeacherHome = () => {
 
     return(
         <>
-                <AppBar>
-                    <Toolbar stype={{backgroundColor: "black" }}>
-                    </Toolbar>
-                </AppBar>
-                <Grid style={{marginTop: 100}} container spacing={2}>
-                {
-                    courseList.map((val,idx) => {
-                        return(
-                            <Grid item xs={4} key={idx}>
-                                <CustomBox innerText={val.courseName} onClick={()=>{
-                                    history.push(`/course/teacher/${val._id}`)
-                                }}/>
+            <div className='ch-container'>
+                <div style={{padding:'5px'}}>
+                    <AppBar position='static' className='Appbar'>
+                        <Grid container style={{justifyContent:'space-between',position:'relative'}}>
+                            <Grid item style={{display:'flex',justifyContent:'space-between'}}>
+                                <img src='logo_trans.png' className='logo'></img>
+                                <div style={{display:'inline-block',verticalAlign:'middle',textAlign:'center',color:'#fec14e'}}>
+                                    <h1 style={{position:'relative',top:'50%',transform: 'translateY(-50%)'}}>Proctor</h1>
+                                </div>
                             </Grid>
-                        );
-                    })
-                }
-                
+                            <Grid item style={{justifyContent:'space-between',position:'relative'}}>
+                                <ProfileMenu />
+                            </Grid>
+                        </Grid>
+                    </AppBar>
+                </div>
+                <Grid style={{marginTop: '10vh'}} container>
+                    {
+                        courseList.map((val,idx) => {
+                            return(
+                                <Grid item xs={4} key={idx}>
+                                    <CustomBox innerText={val.courseName} onClick={()=>{
+                                        history.push(`/course/teacher/${val._id}`)
+                                    }}/>
+                                </Grid>
+                            );
+                        })
+                    }
                 </Grid>
+            </div>
         </>
     );
 }
