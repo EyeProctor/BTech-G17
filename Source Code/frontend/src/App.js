@@ -1,12 +1,5 @@
-import {BrowserRouter as Router, Route, Switch, Link} from 'react-router-dom';
-import Practice from './components/practice/practice';
+import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import Quiz from "./components/quiz/Quiz";
-import {Component, createRef} from 'react';
-import {Button, CardContent} from '@material-ui/core'
-import {Grid} from '@material-ui/core'
-import Webcam from "react-webcam";
-import Typography from '@material-ui/core/Typography';
-import Card from '@material-ui/core/Card';
 import HomePage from './components/Home/HomePage'
 import CodeUI from './components/Coding/CodeUI';
 import Creator from './components/quiz/QuizCreation/QuizCreator'
@@ -20,6 +13,12 @@ import AssignCourse from './components/admin/CreateCourse/AssignCourse'
 import Login from './components/Login/Login'
 import CourseHome from './components/Home/Student/CourseHome'
 import TeacherCourseHome from './components/Home/Teacher/TeacherCourse'
+import QuizLandingPage from './components/quiz/QuizLandingPage';
+import TempLanding from './components/quiz/TempLanding';
+import QuizDownload from './components/quiz/QuizDownload';
+import StudentProfile from './components/Profile/StudentProfile';
+import TeacherProfile from './components/Profile/TeacherProfile';
+import { Alert } from '@material-ui/lab';
 
 function App() {
 	return(
@@ -27,23 +26,54 @@ function App() {
             <Switch>
                 <Route path="/" exact component={Login} />
                 <Route path="/home" exact component={HomePage} />
-                <Route path="/quiz" exact component={WebCamScreen} />
-                <Route path="/quizID" exact component={Quiz} />
+
+                {/* QUIZ */}
+                <Route path="/course/quiz/:quizID" exact component={QuizLandingPage} />
+                <Route path="/course/quiz/:quizID/:userID" exact component={TempLanding} />
+                <Route path="/quiz/:quizID/:userID" exact component={Quiz} />
+                <Route path="/teacher/quiz/:quizID" exact component={QuizDownload} />
+
+                {/* Student */}
+                <Route path="/student/profile" exact component={StudentProfile}/>
+
+                {/* Video Calling */}
                 <Route path="/OE" exact component={CreateRoom}/>
                 <Route path="/room/:roomID" component={Room}/>
+
+                {/* Create POE */}
+                <Route path="/teacher/createPOE" exact component={CommingSoon} />
+                <Route path="/test" exact component={CodeUI} />
+
+                {/* Admin */}
                 <Route path="/admin" exact component={AdminHome} />
                 <Route path="/createStudent" exact component={CreateStudent} />
                 <Route path="/createTeacher" exact component={CreateTeacher} />
                 <Route path="/createCourse" exact component={CreateCourse} />
                 <Route path="/assignCourse" exact component={AssignCourse} />
+
+                {/* Teacher */}
+                <Route path="/teacher/profile" exact component={TeacherProfile}/>
                 <Route path="/course/:courseName" exact component={CourseHome} />
                 <Route path="/course/teacher/:courseName" exact component={TeacherCourseHome} />
-                <Route path="/teacher/createQuiz/:teacherID" exact component={Creator} />
+                <Route path="/teacher/createQuiz/:courseID" exact component={Creator} />
             </Switch>
         </Router>
 	);
 }
-
+const CommingSoon = () => {
+    return(
+        <div
+    style={{
+        position: 'absolute', left: '50%', top: '50%',
+        transform: 'translate(-50%, -50%)'
+    }}
+    >
+    <Alert severity="error" > 404 Not Found </Alert>
+  </div>
+            
+    );
+}
+export default App;
 
 class WebCamScreen extends Component {
     // webcamRef: React.useRef(null),

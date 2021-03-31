@@ -50,7 +50,7 @@ router.post('/register',(req,res)=>{
                 lastName: studentData.lastName,
                 middleName: studentData.middleName,
                 branch: studentData.branch,
-                class: studentData.class,
+                Class: studentData.Class,
                 sem: studentData.sem
             }
         );
@@ -118,19 +118,38 @@ router.post('/login', (req,res)=> {
 
                         if(err) throw err;
 
-                        res.json(
-                            {
-                                token,
-                                user: {
-                                    id: user.id,
+                        if(user.studentData === "Null"){
+                            Teacher.findOne({_id: user.teacherData}).then(teacherDoc =>{
+                                res.status(200).json({
+                                    token,
+                                    user:{
+                                        id: user.id,
                                     name: user.userName,
                                     email: user.email,
                                     userType: user.userType,
                                     studentData: user.studentData,
                                     teacherData: user.teacherData
-                                }
-                            }
-                        );
+                                    },
+                                    teacherDoc
+                                })
+                            })
+                        }
+                        else{
+                            Student.findOne({_id: user.studentData}).then(studentDoc => {
+                                res.status(200).json({
+                                    token,
+                                    user:{
+                                        id: user.id,
+                                    name: user.userName,
+                                    email: user.email,
+                                    userType: user.userType,
+                                    studentData: user.studentData,
+                                    teacherData: user.teacherData
+                                    },
+                                    studentDoc
+                                })
+                            })
+                        }
 
                     }
                     

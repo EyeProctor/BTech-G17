@@ -1,18 +1,20 @@
 import { AppBar, Grid } from "@material-ui/core";
 import React from 'react';
 import CustomBox from '../../Helper/CustomBox';
-import {useDispatch} from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux'
 
 import {useEffect,useState} from 'react';
 import {useHistory} from 'react-router-dom'
+import ProfileMenu from "../../Login/ProfileMenu.js";
 import ProfileMenu from "../../Login/profile_menu.js";
 
 const StudentHome = () => {
-    const branch = "cse"
+    const studentData = useSelector(state => state.auth.studentDoc);
+    const branch = studentData.branch;
     const dispatch = useDispatch();
     const history = useHistory();
-    const sem = "Sem 8"
-    const Class = "Btech"
+    const sem = studentData.sem;
+    const Class = studentData.Class;
     const[courseList, setCourseList] = useState([])
     useEffect(()=>{
         fetch('/course/student/getAll',{

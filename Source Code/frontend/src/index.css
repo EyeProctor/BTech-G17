@@ -1,3 +1,4 @@
+  
 *{
     margin: 0;
     padding: 0;
@@ -61,4 +62,13 @@
     border-radius: 3pt;
     border: none;
     min-width: 110px;
+}
+
+.terminal-textArea {
+        background-color: #000;
+        border: 1px solid #000;
+        color: #00ff00;
+        padding: 8px;
+        font-family: courier new;
+        resize: none;
 }

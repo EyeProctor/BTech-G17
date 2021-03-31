@@ -65,7 +65,8 @@ router.post('/assignTeacher', (req,res)=>{
         { $addToSet: { courses :courseID } },
         function (err, updatedDoc) {
             if (err) {
-                return res.status(500).json({msg : err});}
+                return res.status(500).json({msg : err});
+            }
         console.log(updatedDoc);
         res.status(200).send(updatedDoc)
     })
