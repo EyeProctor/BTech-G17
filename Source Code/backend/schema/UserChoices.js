@@ -2,15 +2,15 @@ const mongoose = require('mongoose');
 
 const userChoices = mongoose.Schema(
     {
-        userName: String,
-        email: String,
-        choices: {} ,
+        userID: String,
+        quizID: String,
+        userChoices: {},
         attempted: [Number],
         flagged: [Number],
         status: String,
-        warnings: Number,
-        startTime: Date,
-        estimatedTime: Date,
+        warnings: {type: Number, default: 0},
+        startedAt: Number,
+        questions: Array
         
     }
 );
