@@ -1,16 +1,29 @@
 import {useState, useEffect} from "react"
 import {useDispatch, useSelector} from 'react-redux';
-import {TextField,Grid,Button,Checkbox,FormControlLabel} from '@material-ui/core';
+import {TextField,Grid,Button,Checkbox,FormControlLabel, CircularProgress} from '@material-ui/core';
+import {Alert, AlertTitle} from '@material-ui/lab'
 
-const QuizCreator = () => {
+const QuizCreator = (props) => {
     const dispatch = useDispatch();
     const state = useSelector(state => state.quizCreator);
+	const courseID = props.match.params.courseID;
+	const [isLoading, setLoading] = useState(false);
+    const [isBad,setBad] = useState(false);
+    const [isSuccess, setSuccess] = useState(false);
+    const [errMessage, setErrMessage] = useState("");
+	console.log(courseID);
 
     const handleSubmit = (e) => {
         e.preventDefault();
-		// Do Simple for Check
+		setBad(false);
+		setSuccess(false);
+		setLoading(true);
+		setErrMessage("");
+		// Do Simple form Check
 
-		// Sending Request to backend
+		dispatch({type: "SET_QUIZCOURSE", payload: courseID})
+
+		console.log(JSON.stringify(state));
 
 		fetch("/quiz/addQuiz", {
 			method: "POST",
@@ -18,8 +31,19 @@ const QuizCreator = () => {
 				"Content-Type": "application/json",
 			},
 			body: JSON.stringify(state)
-		}).then(data => data.json().then(
-			console.log(data)
+		}).then(data => data.json().then( (newData)=>
+			{
+				console.log(JSON.stringify(newData));
+				if(newData.msg){
+					setBad(true);
+					setLoading(false);
+					setErrMessage(newData.msg);
+				}
+				else{
+					setSuccess(true);
+					setLoading(false);
+				}
+			}
 		)).catch(err => console.log(err))
 
     }
@@ -108,8 +132,14 @@ const QuizCreator = () => {
 						
 						<Button variant="outlined" onClick={addQuestion}>+ Add Question</Button>
 					<Grid item xs={12}>
-						<Button variant="outlined" type="submit">Submit</Button>
+					{isLoading ?<CircularProgress />:<Button type="submit" variant="contained" color="primary">Create Quiz</Button>}
 					</Grid>
+					<Grid container item xs={12} justify="center" alignItems="center">
+                            {isBad ?<Alert severity="error"><AlertTitle>Error</AlertTitle>{errMessage}</Alert>:<></>}
+                    </Grid>
+                    <Grid container item justify="center" alignItems="center">
+                            {isSuccess ?<Alert variant="filled" severity="success">Quiz Created!</Alert>:<></>}
+                    </Grid>
 				</Grid>
 			</form>
     );

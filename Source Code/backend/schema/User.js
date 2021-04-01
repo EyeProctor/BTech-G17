@@ -1,6 +1,4 @@
 const mongoose = require('mongoose');
-const Student = require('./users/StudentSchema')
-const Teacher = require('./users/TeacherSchema')
 
 const userSchema = mongoose.Schema(
     {

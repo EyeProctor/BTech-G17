@@ -53,17 +53,11 @@ const QuizHeader = (props) => {
     const faceProcessingFunction = (faceData) => {
       console.log(faceData.length)
       if(faceData.length === 0){
-        warn("No Face Detected");
-        //logMalpracticeImage(userID, ImgSrc);
+        warn("No Face Detected")
       }
       else if(faceData.length > 1){
-        warn("Multiple Face Detected");
-        //logMalpracticeImage(userID, ImgSrc);
+        warn("Multiple Face Detected")
       }
-    }
-
-    const logMalpracticeImage = (userID, img) => {
-      //save img, user ID, quiz id, timestamp as well
     }
 
     const userPRN = props.prn;
@@ -73,7 +67,7 @@ const QuizHeader = (props) => {
     const [ImgSrc,setImgSrc]= useState("");
     const updateImgSrc = (img) => {
       setImgSrc(img);
-      faceapi.detectAllFaces("input", new faceapi.TinyFaceDetectorOptions()).then((data) => faceProcessingFunction(data)).catch((err)=> console.error(err));
+      faceapi.detectAllFaces("input", new faceapi.TinyFaceDetectorOptions()).then((data) => faceProcessingFunction(data)).catch((err)=> console.error(err))
     }
 
     return(

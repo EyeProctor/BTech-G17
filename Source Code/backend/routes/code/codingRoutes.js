@@ -36,6 +36,7 @@ router.post('/compile',(req,res) => {
             reqData.append(property, "padding")
         }
     }
+    console.log(reqData);
 // reqData = reqData.join("&");
     fetch(compiler_API, {
         method: 'POST',

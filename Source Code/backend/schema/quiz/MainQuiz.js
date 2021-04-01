@@ -5,7 +5,7 @@ const mainQuiz = mongoose.Schema(
         subject: String,
         proctored: {type: Boolean, default: false},
         startDate: Date,
-        endData: Date,
+        endDate: Date,
         duration: Number,
         questions: Array,
     }

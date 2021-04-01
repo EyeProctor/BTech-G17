@@ -1,123 +1,125 @@
-import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
-import {Component, createRef} from 'react';
-import Quiz from './Quiz';
-import {Button, CardContent} from '@material-ui/core'
-import {Grid} from '@material-ui/core'
-import Webcam from "react-webcam";
-import Typography from '@material-ui/core/Typography';
-import Card from '@material-ui/core/Card';
-import {getQuiz} from '../../action/quiz/quiz';
-import { useEffect } from 'react'
-import {useDispatch} from 'react-redux'
+import { Box, Button, Grid, Typography, AppBar } from '@material-ui/core';
+import { Alert } from '@material-ui/lab';
+import { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router';
 
 
 
-const QuizLandingPage = () => {
-
-    const dispatch = useDispatch()
+const QuizLandingPage = (props) => {
+    const quizID = props.match.params.quizID;
+    //console.log(quizID)
+    const [quizData,setQuizData] = useState({})
+    const [isAvailable, setAvailable] = useState(true);
+    const dispatch = useDispatch();
+    const quizState = useSelector(state => state.quiz);
+    const fromStore = quizState.userChoices;
+    const userID = useSelector(state => state.auth.user.id);
+    const [status, setStatus] = useState(false);
+    const history = useHistory();
 
     useEffect(
         () => {
-            dispatch(getQuiz());
+            fetch(`/quiz/getQuiz/${quizID}`).then(
+                data => data.json().then(newData => {
+                    //console.log(JSON.stringify(newData));
+                    setQuizData(newData);
+                    const endDate = new Date(newData.endDate).getTime();
+                    const startDate = new Date(newData.startDate).getTime();
+                    console.log();
+                    if(startDate > Date.now() || endDate < Date.now())
+                    {
+                        setAvailable(false);
+                    }
+                })
+            );
+            
+            fetch('/quiz/quizStatusCheck',{
+                method: "POST",
+                mode: 'cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({qID: quizID, userID})
+             }).then(data => data.json().then(newData => {
+                 setStatus(newData.status);
+             })).catch(err => console.log(err))
         }, []
     );
+    const takeQuiz = () => {
+        // Save Current Quiz Data to Store
+        dispatch({type:"SET_QUIZDATA", payload: quizData});
 
+        // Check if UserData StartTime Exists
+        // If store does not have any saved Instances of userChoices
+        if(!fromStore){
+
+            //Check from Database
+            console.log("database Check")
+            fetch(`/quiz/userChoices/${userID}/${quizID}`).then(data=>{
+                data.json().then(newData => {
+                    // No Saved Instance on Database
+                    // New Attempt starts
+                    if(newData.msg){
+
+                        const newUserChoices = {
+                                userID: userID,
+                                quizID: quizID,
+			                    attempted: [],
+    		                    flagged: [],
+                                userChoices: {},
+                                startedAt: null,
+                                questions: quizData,
+                        }
+                        dispatch({type: "SAVE_USERCHOICES", payload: newUserChoices})
+                        history.push(`${quizID}/${userID}`);
+
+
+                    }
+
+                    // Saved Instance on Database
+                    else{
+                        
+                        console.log(JSON.stringify(newData));
+                        history.push(`${quizID}/${userID}`);
+                        // Set Start Date from Database
+                        dispatch({type: "SAVE_USERCHOICES", payload: newData})
+
+                    }
+                })
+            });
+        }else{
+            console.log("From Store");
+            console.log(JSON.stringify(quizState));
+            history.push(`${quizID}/${userID}`);
+        }
+    }
     return(
-        <Router>
-            <Switch>
-                <Route path="/" exact component={WebCamScreen} />
-                <Route path="/quiz" exact component={Quiz} />
-            </Switch>
-        </Router>
+        <div className='ch-container'>
+        <div style={{padding:'5px'}}>
+                <AppBar position='static' className='Appbar'>
+                    <Grid container style={{justifyContent:'center',position:'relative'}}>
+                        <Grid item style={{fontSize:'30px',fontWeight:'bold',padding:'20px'}}>
+                            Proctored Quiz
+                        </Grid>
+                    </Grid>
+                </AppBar>
+        </div>
+    <Grid className='cor' style={{margin:'0'}} container >
+            <Grid item xs={12} style={{textAlign: 'center',marginTop:'5vh'}}>
+                <Box p={2} boxShadow={5} borderBottom={1}>
+                    {quizData.subject}
+                </Box>
+            </Grid>
+            <Grid item xs={12} style={{textAlign: 'center',marginTop:'5vh'}}>
+                {
+                  status || !isAvailable ?<Alert severity='warning'> Quiz Not Available </Alert>
+                  :<Button variant='contained' color='primary' onClick={takeQuiz}>Take Quiz</Button>
+                }
+            </Grid>
+        </Grid>
+  </div>
         
     );
 }
 
-
-
-
-class WebCamScreen extends Component {
-    // webcamRef: React.useRef(null),
-    constructor(props) {
-        super(props);
-        this.state = {  webcamRef: createRef(null),
-            videoConstraints: {facingMode: "user"},
-            camActive: false
-        }
-        navigator.mediaDevices.getUserMedia({video: true}).then(
-            () => {
-                this.setState({camActive: true});
-            }
-        ).catch((err)=> console.log(err));
-    }
-    
-
-    render() {
-      return (
-        <>
-    <Grid container spacing={2}>
-
-            <Grid item xs={6} style={{marginTop:100}}>
-                <Card style={{marginLeft:150,marginRight:100,background:'#1e88e5'}}>
-                    <CardContent style={{marginTop:15,color:'white'}}>
-                    <Typography display="inline" variant="h5" style={{fontWeight:800}}>
-                        Subject :
-                    </Typography>
-
-                    <Typography display="inline" variant="h5" style={{fontWeight:500,marginLeft:10}}>
-                        Operating System
-                    </Typography>
-                    <br/>
-                    <Typography display="inline" variant="h5" style={{fontWeight:800}}>
-                        Time :
-                    </Typography>
-
-                    <Typography display="inline" variant="h5" style={{fontWeight:500,marginLeft:10}}>
-                        10 Minutes
-                    </Typography>
-                    </CardContent>
-                    </Card>
-            </Grid>
-
-            <Grid item xs={6}>
-                    <Webcam  style={{width:550,marginTop:20}}
-                    audio={false}
-                    ref={this.state.webcamRef}
-                    videoConstraints={this.state.videoConstraints}
-                    />
-                    <br/>
-                    {
-                this.state.camActive?<Link style={{}} to="/quiz"><Button style={{background:'#03A9F4',color:'white',marginTop:10}}>Take Quiz</Button></Link>
-                :<Card style={{color: 'red', padding: 10}}> Please Allow Camera Permissions </Card>
-            }
-                    
-                    {/* Capture Button can be triggered in Attempt quiz Button
-                    <button onClick={capture}>Capture photo</button> */}
-            
-            </Grid>
-            <hr/>
-            <Grid item xs={12} style={{background:'#274056',paddingBottom:'25%'}}>
-                <br/>
-
-                    <Typography display="inline" variant="h5" style={{fontWeight:600,marginLeft:200,color:'white'}}>
-                        Instructions :
-                    </Typography>
-                    <Typography style={{fontWeight:300,marginLeft:215,color:'white'}}>
-                        <ul>
-                        <li>Select an answer for every question. Unanswered questions will be scored as incorrect.</li>
-                        <li>Timing - You will need to complete each of your attempts in one sitting, as you are allotted 10 minutes to complete each attempt.</li>
-                        <li>Answers - You may review your answer-choices and compare them to the correct answers after your final attempt.</li>
-                        <li>To start, click the "Take the Quiz" button. When finished, click the "Submit Quiz" button.</li>
-                        <li>Click on the Submit button at the bottom of the page to have your answers graded.</li>
-                        </ul>
-                    </Typography>
-
-            </Grid>
-
-        </Grid>
-        </>
-      );
-    }
-}
 
 export default QuizLandingPage;
