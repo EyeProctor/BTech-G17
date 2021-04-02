@@ -63,7 +63,7 @@ router.post('/addQuiz',(req,res) => {
         console.log(data);
         const toadd = {quizID: data._id, subject}
         Course.findByIdAndUpdate(courseID, 
-            { $addToSet: { quizes : toadd } },
+            { $addToSet: { "quizes" : toadd } },
             function (err, updatedDoc) {
                 if (err) {
                     //console.log(err);
@@ -150,6 +150,8 @@ router.post("/submitQuiz", (req,res)=>{
     const attemptedQ = Object.keys(userChoices)
     const finishedAt = Date.now();
     console.log(attemptedQ);
+    console.log(userChoices)
+    console.log(qArray[0].options);
     for (let i = 0; i < attemptedQ.length; i++) {
         const optionsArray = qArray[parseInt(attemptedQ[i])-1].options;
         const correctAnswer = optionsArray.filter((e)=> e.ans)[0].qs;
@@ -203,7 +205,9 @@ router.get('/getAll/:quizID', (req,res)=>{
 });
 
 
-
+router.post('/deleteQuiz',(req,res)=>{
+    const { quizID, courseID } = req.body;
+})
 
 module.exports = router;
 

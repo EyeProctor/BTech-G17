@@ -8,6 +8,8 @@ import { useState, useEffect } from 'react';
 import * as faceapi from 'face-api.js';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css'; 
+import blankProfile from './blankProfile';
+import { useSelector } from 'react-redux';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -32,6 +34,8 @@ const useStyles = makeStyles((theme) => ({
   }));
 
 const QuizHeader = (props) => {
+  const userData = useSelector(state => state.auth.user);
+  const quizSubject = useSelector(state => state.quiz.questions.subject);
   useEffect(() => {
     faceapi.nets.tinyFaceDetector.loadFromUri('/models').then(()=> {console.log(
       "Face API Started"
@@ -64,7 +68,7 @@ const QuizHeader = (props) => {
     const status = props.status;
     //const profile = props.profile;
     const classes = useStyles();
-    const [ImgSrc,setImgSrc]= useState("");
+    const [ImgSrc,setImgSrc]= useState(blankProfile);
     const updateImgSrc = (img) => {
       setImgSrc(img);
       faceapi.detectAllFaces("input", new faceapi.TinyFaceDetectorOptions()).then((data) => faceProcessingFunction(data)).catch((err)=> console.error(err))
@@ -78,7 +82,7 @@ const QuizHeader = (props) => {
             
             <Grid item xs={4}>
               <Typography variant="h5" style={{fontWeight:500,margin:10}}>
-               Operating System
+               {quizSubject}
               </Typography>
             </Grid>
 
@@ -87,8 +91,8 @@ const QuizHeader = (props) => {
             </Grid>
 
             <Grid item xs={3} style={{marginTop:'0.3%'}}>
-              <Typography display="inline" style={{marginLeft:15}} varient="h6">PRN : </Typography>
-              <Typography display="inline" style={{marginLeft:5}} varient="h6">{userPRN}</Typography>
+              <Typography display="inline" style={{marginLeft:15}} varient="h6">username : </Typography>
+              <Typography display="inline" style={{marginLeft:5}} varient="h6">{userData.name}</Typography>
               <br/>
               <Typography display="inline" style={{marginLeft:15}} varient="h6">Status : </Typography>
               <Typography display="inline" style={{marginLeft:5,color:'#22D400',fontWeight:600}} varient="h6">{status}</Typography>

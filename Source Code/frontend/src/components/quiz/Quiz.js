@@ -3,7 +3,7 @@ import {Grid, Card, CardActions, Button } from '@material-ui/core';
 import QuestionsPanel from './rightPanel/RightPanel.js';
 import QuestionBody, {  } from "./questions/QuestionBody";
 import Countdown from 'react-countdown';
-import questionBank from '../../service/questions.js';
+// import questionBank from '../../service/questions.js';
 import userData from '../../service/userData.js';
 import {  useState, useEffect } from 'react';
 import {useDispatch, useSelector} from 'react-redux';
@@ -72,7 +72,6 @@ function Quiz(props) {
 	const handleUserChoice = (val) => {
 
 		updateUserChoice({...userChoices, [currentQ]: val})
-		
 
 	}
 
@@ -111,10 +110,11 @@ function Quiz(props) {
 			 }).then(data => data.json().then(newData => {
 				console.log(JSON.stringify(newData));
 				 if(newData.msg){
-
+					 alert("Error");
 				 }else{
-					 history.replace('/home');
-					 return;
+					//dispatch({type: "QUIZ_RESET"})
+					history.go(-2);
+					 
 				 }
 			 })).catch(err => console.log(err))
 
@@ -161,7 +161,7 @@ function Quiz(props) {
 			</Grid>
         </Grid>
 		<Grid item xs={12} >
-        	<h1>Group 17</h1>
+        	<h1> © Eye Procotor</h1>
         </Grid>
       </Grid>
       

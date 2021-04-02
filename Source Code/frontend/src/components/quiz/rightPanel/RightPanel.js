@@ -21,7 +21,7 @@ const QuestionsPanel = (props) => {
     }
     return(
         <div>
-            <Grid container spacing={1}>
+            <Grid container item spacing={1} justify='space-around'>
                     {QIcons}
             </Grid>
         </div>
