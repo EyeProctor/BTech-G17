@@ -8,7 +8,7 @@ import currentCourseReducer from './course/currentCourseReducer';
 import {combineReducers} from 'redux';
 
 
-const allReducer = combineReducers({
+const appReducer = combineReducers({
     quiz: quizReducer,
     auth: authReducer,
     ui: uiReducer,
@@ -16,5 +16,12 @@ const allReducer = combineReducers({
     course: courseReducer,
     currentCourse: currentCourseReducer,
 });
+
+const allReducer = (state, action) => {
+    if (action.type === "RESET_STORE") {
+      state = undefined;
+    }
+    return appReducer(state, action)
+  }
 
 export default allReducer;

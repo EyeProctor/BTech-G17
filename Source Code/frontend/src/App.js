@@ -19,6 +19,7 @@ import TeacherQuizLanding from './components/quiz/TeacherQuizLanding';
 import StudentProfile from './components/Profile/StudentProfile';
 import TeacherProfile from './components/Profile/TeacherProfile';
 import { Alert } from '@material-ui/lab';
+import MalpracticeGallary from './components/quiz/MalpracticeGallary';
 function App() {
 	return(
 		<Router>
@@ -31,6 +32,7 @@ function App() {
                 <Route path="/course/quiz/:quizID/:userID" exact component={TempLanding} />
                 <Route path="/quiz/:quizID/:userID" exact component={Quiz} />
                 <Route path="/teacher/quiz/:quizID" exact component={TeacherQuizLanding} />
+                <Route path="/teacher/quiz/malpractices/:quizID/:userID" exact component={MalpracticeGallary} />
 
                 {/* Student */}
                 <Route path="/student/profile" exact component={StudentProfile}/>

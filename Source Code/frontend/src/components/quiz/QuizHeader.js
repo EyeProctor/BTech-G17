@@ -18,13 +18,9 @@ const useStyles = makeStyles((theme) => ({
   menuButton: {
     marginRight: theme.spacing(2),
   },
-
-
   appBar: {
   margin: 0,
   },
-
-
   userIcon:{
     width: theme.spacing(7),
     height: theme.spacing(7),
@@ -36,6 +32,7 @@ const useStyles = makeStyles((theme) => ({
 const QuizHeader = (props) => {
   const userData = useSelector(state => state.auth.user);
   const quizSubject = useSelector(state => state.quiz.questions.subject);
+  const quizID = useSelector(state => state.quiz.quizID);
   useEffect(() => {
     faceapi.nets.tinyFaceDetector.loadFromUri('/models').then(()=> {console.log(
       "Face API Started"
@@ -54,13 +51,36 @@ const QuizHeader = (props) => {
         ]
       });
     };
-    const faceProcessingFunction = (faceData) => {
+    function saveLog(img){
+      const userID = userData.id;
+      const reqBody = {
+        image: img,
+        userID,
+        quizID
+      }
+
+      fetch('/quiz/malpracticeLog', {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(reqBody)
+      }).then( data => {
+        console.log(data);
+      }).catch(err => {
+        console.error(err);
+      })
+
+    }
+    const faceProcessingFunction = (faceData,img) => {
       console.log(faceData.length)
       if(faceData.length === 0){
         warn("No Face Detected")
+        saveLog(img);
       }
       else if(faceData.length > 1){
         warn("Multiple Face Detected")
+        saveLog(img);
       }
     }
 
@@ -71,7 +91,7 @@ const QuizHeader = (props) => {
     const [ImgSrc,setImgSrc]= useState(blankProfile);
     const updateImgSrc = (img) => {
       setImgSrc(img);
-      faceapi.detectAllFaces("input", new faceapi.TinyFaceDetectorOptions()).then((data) => faceProcessingFunction(data)).catch((err)=> console.error(err))
+      faceapi.detectAllFaces("input", new faceapi.TinyFaceDetectorOptions()).then((data) => faceProcessingFunction(data,img)).catch((err)=> console.error(err))
     }
 
     return(

@@ -1,11 +1,11 @@
-import {Link, useHistory } from "react-router-dom";
+import {useHistory } from "react-router-dom";
 import {useEffect, useRef, useState} from 'react';
 import {Button, CardContent, Card, Typography, Grid} from '@material-ui/core';
 import Webcam from "react-webcam";
 import { Alert } from "@material-ui/lab";
 import { useSelector } from "react-redux";
 
-const TempLanding = (props) => {
+const TempLanding = (props) => {    
     const quizData = useSelector(state => state.quiz.questions)
     const webCamRef = useRef(null);
     const videoConstraints = {facingMode: 'user'};
@@ -15,8 +15,10 @@ const TempLanding = (props) => {
 
     useEffect(()=>{
         navigator.mediaDevices.getUserMedia({video: true}).then(
-            () => {
+            (stream) => {
                 setCamActive(true);
+                stream.oninactive = () => {history.go(0)}
+                stream.onremovetrack = () => {history.go(0)}
             }
         ).catch((err)=> console.log(err));
     },[]);

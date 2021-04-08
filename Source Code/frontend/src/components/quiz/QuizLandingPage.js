@@ -80,6 +80,8 @@ const QuizLandingPage = (props) => {
                     else{
                         
                         console.log(JSON.stringify(newData));
+                        const questions = newData.questions[0];
+                        newData = {...newData, questions: questions};
                         history.push(`${quizID}/${userID}`);
                         // Set Start Date from Database
                         dispatch({type: "SAVE_USERCHOICES", payload: newData})

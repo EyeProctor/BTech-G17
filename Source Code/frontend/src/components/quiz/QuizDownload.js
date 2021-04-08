@@ -22,6 +22,7 @@ function QuizDownload(props) {
                 <ExcelColumn label="Incorrect" value="incorrect"/>
                 <ExcelColumn label="Started At" value="startedAt"/>
                 <ExcelColumn label="Finished At" value="finishedAt"/>
+                <ExcelColumn label="Malpractice Log" value="logs"/>
             </ExcelSheet>
         </ExcelFile>
     );
