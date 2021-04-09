@@ -19,11 +19,7 @@ import TeacherQuizLanding from './components/quiz/TeacherQuizLanding';
 import StudentProfile from './components/Profile/StudentProfile';
 import TeacherProfile from './components/Profile/TeacherProfile';
 import { Alert } from '@material-ui/lab';
-<<<<<<< HEAD
-
-=======
 import MalpracticeGallary from './components/quiz/MalpracticeGallary';
->>>>>>> 41549d73dc04f1c5de0b2809e0694ff8cebaf93f
 function App() {
 	return(
 		<Router>
