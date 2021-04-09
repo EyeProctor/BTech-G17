@@ -47,7 +47,8 @@ const TeacherHome = () => {
                             return(
                                 <Grid item xs={4} key={idx}>
                                     <CustomBox innerText={val.courseName} onClick={()=>{
-                                        history.push(`/course/teacher/${val._id}`)
+                                        dispatch({type: "SET_CURRENT_COURSE", payload: val});
+                                        history.push(`/course/teacher/${val._id}`);
                                     }}/>
                                 </Grid>
                             );

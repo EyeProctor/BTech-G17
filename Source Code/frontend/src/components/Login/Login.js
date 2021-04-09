@@ -1,5 +1,5 @@
 import {TextField,Grid,Button,Checkbox,FormControlLabel,Paper, CircularProgress} from '@material-ui/core';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 import {useHistory} from 'react-router-dom';
 import {Alert, AlertTitle} from '@material-ui/lab'
@@ -28,6 +28,10 @@ const Login = () =>  {
     const [errMessage, setErrMessage] = useState("");
     const history = useHistory();
     const dispatch = useDispatch();
+
+    useEffect(()=>{
+        dispatch({ type:"RESET_STORE"});
+    },[])
 
     function onSuccess(resData){setLoading(false);
         if(resData.msg){

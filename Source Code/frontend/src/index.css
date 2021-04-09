@@ -72,3 +72,10 @@
         font-family: courier new;
         resize: none;
 }
+
+.center {
+	display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: translateY(50vh);
+}

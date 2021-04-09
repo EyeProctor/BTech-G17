@@ -15,11 +15,15 @@ import CourseHome from './components/Home/Student/CourseHome'
 import TeacherCourseHome from './components/Home/Teacher/TeacherCourse'
 import QuizLandingPage from './components/quiz/QuizLandingPage';
 import TempLanding from './components/quiz/TempLanding';
-import QuizDownload from './components/quiz/QuizDownload';
+import TeacherQuizLanding from './components/quiz/TeacherQuizLanding';
 import StudentProfile from './components/Profile/StudentProfile';
 import TeacherProfile from './components/Profile/TeacherProfile';
 import { Alert } from '@material-ui/lab';
+<<<<<<< HEAD
 
+=======
+import MalpracticeGallary from './components/quiz/MalpracticeGallary';
+>>>>>>> 41549d73dc04f1c5de0b2809e0694ff8cebaf93f
 function App() {
 	return(
 		<Router>
@@ -31,7 +35,8 @@ function App() {
                 <Route path="/course/quiz/:quizID" exact component={QuizLandingPage} />
                 <Route path="/course/quiz/:quizID/:userID" exact component={TempLanding} />
                 <Route path="/quiz/:quizID/:userID" exact component={Quiz} />
-                <Route path="/teacher/quiz/:quizID" exact component={QuizDownload} />
+                <Route path="/teacher/quiz/:quizID" exact component={TeacherQuizLanding} />
+                <Route path="/teacher/quiz/malpractices/:quizID/:userID" exact component={MalpracticeGallary} />
 
                 {/* Student */}
                 <Route path="/student/profile" exact component={StudentProfile}/>
@@ -62,13 +67,11 @@ function App() {
 }
 const CommingSoon = () => {
     return(
-        <div
-    style={{
+        <div className="ch-container">
+    <Alert style={{
         position: 'absolute', left: '50%', top: '50%',
         transform: 'translate(-50%, -50%)'
-    }}
-    >
-    <Alert severity="error" > 404 Not Found </Alert>
+    }} severity="error" > 404 Not Found </Alert>
   </div>
             
     );
