@@ -1,9 +1,15 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, React } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { TextField, Grid, Button, Box, FormControl, CircularProgress } from '@material-ui/core';
 import { border } from '@material-ui/system';
+import Checkbox from "@material-ui/core/Checkbox";
 import { Alert, AlertTitle } from '@material-ui/lab'
 import { useHistory } from 'react-router-dom'
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import FormLabel from "@material-ui/core/FormLabel";
+import FormGroup from "@material-ui/core/FormGroup";
+import FormHelperText from "@material-ui/core/FormHelperText";
+
 /**
  * Question
  */
@@ -53,12 +59,28 @@ const CreateCodingQuetion = (props) => {
 
     }
 
+
     const addQuestion = () => {
         dispatch({ type: "ADD_QUESTION_TEMPLATE" });
     }
     const addOption = (QIndex) => {
         dispatch({ type: "ADD_OPTION_TEMPLATE", payload: { QIndex } });
     }
+
+
+
+    // Checkbox Group
+    const [language, setLanguages] = useState({
+        c: true,
+        cpp: true,
+        java: true,
+        python: true,
+    });
+
+    const handleChange = (event) => {
+        setLanguages({ ...language, [event.target.name]: event.target.checked });
+    };
+
     return (
         <form onSubmit={handleSubmit} noValidate autoComplete="off" center="true" margin="20px">
             <Grid container spacing={3} alignItems="center" style={{ padding: 50, backgroundColor: "beige" }} xs={12}>
@@ -95,18 +117,18 @@ const CreateCodingQuetion = (props) => {
                         let queId = `que-${idx + 1}`
                         return (
                             <Grid item xs={12}>
-                                
+
                                 <Box border={1} padding={3}>
-                                <div key={idx}>
-                                    <Grid container spacing={3} alignItems="center" border={1}>
-                                        
-                                        <Grid item xs={12}>
-                                            <TextField onChange={(e) => { dispatch({ type: "SET_QUIZ_SUBJECT", payload: e.target.value }) }} id="quizsub" label="Problem title" variant="outlined" fullWidth />
-                                        </Grid>
-                                        <Grid item xs={12}>
-                                            <TextField onChange={(e) => { dispatch({ type: "SET_QUIZ_SUBJECT", payload: e.target.value }) }} id="quizsub" label="Problem Statement" variant="outlined" fullWidth />
-                                        </Grid>
-                                        <Grid item xs={10}><TextField fullWidth
+                                    <div key={idx}>
+                                        <Grid container spacing={3} alignItems="center" border={1}>
+
+                                            <Grid item xs={12}>
+                                                <TextField onChange={(e) => { dispatch({ type: "SET_QUIZ_SUBJECT", payload: e.target.value }) }} id="quizsub" label="Problem title" variant="outlined" fullWidth />
+                                            </Grid>
+                                            <Grid item xs={12}>
+                                                <TextField onChange={(e) => { dispatch({ type: "SET_QUIZ_SUBJECT", payload: e.target.value }) }} id="quizsub" label="Problem Statement" variant="outlined" fullWidth />
+                                            </Grid>
+                                            {/* <Grid item xs={10}><TextField fullWidth
                                             label={"Languages" + idx}
                                             type="text"
                                             name={queId}
@@ -116,31 +138,80 @@ const CreateCodingQuetion = (props) => {
                                             onChange={(e) => dispatch({ type: "ADD_QUESTION", payload: { QIndex: idx, question: e.target.value } })}
                                             className="question-text"
                                             variant="outlined"
-                                        />
-                                        </Grid>
-                                        
-                                    </Grid>
-                               
-                                {
-                                    state.questions[idx].options.map((val, oIdx) => {
+                                        /> */}
+                                            <Grid item xs={12}>
+                                                <FormControl component="fieldset">
+                                                    <FormLabel component="legend">Pick Languages</FormLabel>
+                                                    <FormGroup row>
+                                                        <FormControlLabel
+                                                            control={
+                                                                <Checkbox
+                                                                    checked={state.cpp}
+                                                                    onChange={handleChange}
+                                                                    name="cpp"
+                                                                />
+                                                            }
+                                                            label="cpp"
+                                                        />
+                                                        <FormControlLabel
+                                                            control={
+                                                                <Checkbox
+                                                                    checked={state.python}
 
-                                        return (
-                                                <Grid container spacing={3} alignItems="center" border={1}>
-                                                    <Grid item xs={12}  spacing={3} key={oIdx}>
-                                                            <TextField fullWidth label={`Input: ${oIdx+1}`} value={val.qs} variant='outlined' onChange={(e) => { dispatch({ type: "ADD_INPUT", payload: { QIndex: idx, OIndex: oIdx, option: e.target.value } }) }} /><br/><br/>
-                                                            <TextField fullWidth label={`Output: ${oIdx+1}`} value={val.qs} variant='outlined' onChange={(e) => { dispatch({ type: "ADD_OUTPUT", payload: { QIndex: idx, OIndex: oIdx, option: e.target.value } }) }} />
-                                                    </Grid>
-                                                </Grid>
-                                        
-                                        )
-                                    })
-                                }
-                                </div>
-                                < br />
-                                <Grid item xs={12}>
-                                            <Button label="+Add Option" variant="outlined"   onClick={() => addOption(idx)}>+ Add Test Case</Button>
+                                                                    onChange={handleChange}
+                                                                    name="python"
+                                                                />
+                                                            }
+                                                            label="python"
+                                                        />
+                                                        <FormControlLabel
+                                                            control={
+                                                                <Checkbox
+                                                                    checked={state.c}
+
+                                                                    onChange={handleChange}
+                                                                    name="c"
+                                                                />
+                                                            }
+                                                            label="c"
+                                                        />
+                                                        <FormControlLabel
+                                                            control={
+                                                                <Checkbox
+                                                                    checked={state.java}
+
+                                                                    onChange={handleChange}
+                                                                    name="java"
+                                                                />
+                                                            }
+                                                            label="java"
+                                                        />
+                                                    </FormGroup>
+                                                </FormControl>
+                                            </Grid>
+
                                         </Grid>
-                                    </Box>
+
+                                        {
+                                            state.questions[idx].options.map((val, oIdx) => {
+
+                                                return (
+                                                    <Grid container spacing={3} alignItems="center" border={1}>
+                                                        <Grid item xs={12} spacing={3} key={oIdx}>
+                                                            <TextField fullWidth label={`Input: ${oIdx + 1}`} value={val.qs} variant='outlined' onChange={(e) => { dispatch({ type: "ADD_INPUT", payload: { QIndex: idx, OIndex: oIdx, option: e.target.value } }) }} /><br /><br />
+                                                            <TextField fullWidth label={`Output: ${oIdx + 1}`} value={val.qs} variant='outlined' onChange={(e) => { dispatch({ type: "ADD_OUTPUT", payload: { QIndex: idx, OIndex: oIdx, option: e.target.value } }) }} />
+                                                        </Grid>
+                                                    </Grid>
+
+                                                )
+                                            })
+                                        }
+                                    </div>
+                                    < br />
+                                    <Grid item xs={12}>
+                                        <Button label="+Add Option" variant="outlined" onClick={() => addOption(idx)}>+ Add Test Case</Button>
+                                    </Grid>
+                                </Box>
                             </Grid>
                         )
                     })
@@ -148,7 +219,7 @@ const CreateCodingQuetion = (props) => {
 
 
                 <Grid item xs={12}>
-                    <Button variant="contained"  color="secondary" onClick={addQuestion}>+ Add Question</Button>
+                    <Button variant="contained" color="secondary" onClick={addQuestion}>+ Add Question</Button>
                     {isLoading ? <CircularProgress /> : <Button type="submit" variant="contained" color="primary">Create Quiz</Button>}
                 </Grid>
                 <Grid container item xs={12} justify="center" alignItems="center">
