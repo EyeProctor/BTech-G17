@@ -16,7 +16,7 @@ class Capture extends Component {
         this.capture = setInterval(() => {
             const imageSrc = this.state.webcamRef.current.getScreenshot();
             this.props.setImgSrc(imageSrc);
-            }, 5000);
+            }, 1000);
     }
   
     componentWillUnmount() {

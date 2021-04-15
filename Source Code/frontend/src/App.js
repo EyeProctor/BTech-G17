@@ -1,129 +1,76 @@
-import QuizHeader from './components/quiz/QuizHeader';
-import {Grid, Card, CardActions, Button } from '@material-ui/core';
-import QuestionsPanel from './components/quiz/rightPanel/RightPanel.js';
-import QuestionBody, {  } from "./components/quiz/questions/QuestionBody";
-import Countdown from 'react-countdown';
-import questionBank from './service/questions.js';
-import userData from './service/userData.js';
-import {  useState, useEffect } from 'react';
-
+import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
+import Quiz from "./components/quiz/Quiz";
+import HomePage from './components/Home/HomePage'
+import CodeUI from './components/Coding/CodeUI';
+import Creator from './components/quiz/QuizCreation/QuizCreator'
+import CreateRoom from './components/OE/CreateRoom'
+import Room from "./components/OE/Room";
+import AdminHome from "./components/admin/AdminHome"
+import CreateStudent from './components/admin/CreateStudent/CreateStudent'
+import CreateTeacher from './components/admin/CreateTeacher/CreateTeacher'
+import CreateCourse from './components/admin/CreateCourse/CreateCourse'
+import AssignCourse from './components/admin/CreateCourse/AssignCourse'
+import Login from './components/Login/Login'
+import CourseHome from './components/Home/Student/CourseHome'
+import TeacherCourseHome from './components/Home/Teacher/TeacherCourse'
+import QuizLandingPage from './components/quiz/QuizLandingPage';
+import TempLanding from './components/quiz/TempLanding';
+import TeacherQuizLanding from './components/quiz/TeacherQuizLanding';
+import StudentProfile from './components/Profile/StudentProfile';
+import TeacherProfile from './components/Profile/TeacherProfile';
+import { Alert } from '@material-ui/lab';
+import MalpracticeGallary from './components/quiz/MalpracticeGallary';
 function App() {
+	return(
+		<Router>
+            <Switch>
+                <Route path="/" exact component={Login} />
+                <Route path="/home" exact component={HomePage} />
 
-		// var userChoice = {
-		// 	prn: userData.prn,
-		// 	startDate : 'dd-mm-yyy',
-		// 	choices: {},
-		// 	current: currentQ,
-		// }
-		useEffect(() => {
-			   setStartDate(Date.now());
-		  }, []);
-	// 	const  blackListedKeys = ['Control', 'Alt', 'Tab']
-	// 	window.addEventListener('keydown', function (event) {
+                {/* QUIZ */}
+                <Route path="/course/quiz/:quizID" exact component={QuizLandingPage} />
+                <Route path="/course/quiz/:quizID/:userID" exact component={TempLanding} />
+                <Route path="/quiz/:quizID/:userID" exact component={Quiz} />
+                <Route path="/teacher/quiz/:quizID" exact component={TeacherQuizLanding} />
+                <Route path="/teacher/quiz/malpractices/:quizID/:userID" exact component={MalpracticeGallary} />
 
-	// 		// if the keyCode is 16 ( shift key was pressed )
-		
-	// 			// prevent default behaviour
-	// 			if(blackListedKeys.includes(event.key)){
-	// 				event.preventDefault();
-	// 			return false;
-	// 			}
-				
-		
-				
-			
-		
-	// })
-	var [attempted, updateAttempted] = useState([]);
-	const [startDate,setStartDate] = useState(Date.now());
-	const [flagged, updateFlagged] = useState([]);
-	const [currentQ, updateCurrentQ] = useState(1);
-	var endDate = startDate + questionBank.duration;
-	const handleAttempted = () => {
-		updateAttempted(
-			arr => [...arr, currentQ]
-			
-		);
-		attempted = [...new Set(attempted)];
-		console.log('AttemptedArray',attempted);
-	}
-	const handleFlagged = () => {
-		if(!flagged.includes(currentQ))
-			updateFlagged(
-				arr => [...arr, currentQ]
-			)
-		else{
-			var temp = [...flagged]
-			temp.splice(temp.indexOf(currentQ));
-			updateFlagged(
-				temp
-			)
-		}
-		// console.log('FlaggedArray',flagged);
-		// console.log('CurrentQ',currentQ);
-	}
-	const handlePrev = () => {
-		updateCurrentQ(currentQ-1);
-	}
-	const handleNext = () => {
-		updateCurrentQ(currentQ+1);
-	}
+                {/* Student */}
+                <Route path="/student/profile" exact component={StudentProfile}/>
 
-	const handleUserChoice = (val) => {
+                {/* Video Calling */}
+                <Route path="/OE" exact component={CreateRoom}/>
+                <Route path="/room/:roomID" component={Room}/>
 
-		updateUserChoice({...userChoices, [currentQ]: val})
+                {/* Create POE */}
+                <Route path="/teacher/createPOE" exact component={CommingSoon} />
+                <Route path="/test" exact component={CodeUI} />
 
-		// console.log(JSON.stringify(userChoices));
-	}
+                {/* Admin */}
+                <Route path="/admin" exact component={AdminHome} />
+                <Route path="/createStudent" exact component={CreateStudent} />
+                <Route path="/createTeacher" exact component={CreateTeacher} />
+                <Route path="/createCourse" exact component={CreateCourse} />
+                <Route path="/assignCourse" exact component={AssignCourse} />
 
-	var [userChoices, updateUserChoice] = useState({});
-
-  return (
-    <div>
-      <Grid container justify={'center'} spacing={2}>
-        <Grid item xs={12} >
-        	<QuizHeader prn={userData.prn} status="Valid"/>
-        </Grid>
-		<Grid item container spacing={2} xs={12}>
-			<Grid item xs={8}>
-				<Card>
-				<QuestionBody onFlagged={handleFlagged} onAttempted={handleAttempted} currentQ={questionBank.questions[currentQ - 1]} no = {currentQ} flagged={flagged} userChoice={userChoices[currentQ.toString()]} updateUserChoice={handleUserChoice}/>
-				<CardActions>
-		
-			{
-			(currentQ !== 1) ?
-				<Button variant="contained" size="small" color="primary" href="#" onClick={handlePrev}>
-				Prev
-			</Button>:<></>
-		  }
-		  {currentQ < questionBank.questions.length?<Button  variant="contained" size="small" color="primary" href="#" onClick={handleNext}>
-          Next
-        </Button>:<></>}
-        
-      </CardActions>
-				</Card>
-			</Grid>
-			<Grid item xs={4}>
-				<Grid item xs={12} container>
-					<QuestionsPanel updateNav={(val)=> updateCurrentQ(val) } qNo={questionBank.questions.length} attemptedQ={attempted} flagged={flagged} current={currentQ}/>
-				</Grid>
-				<Grid item xs={12}>
-				<Button onClick={()=>{alert(JSON.stringify(userChoices))}} variant="contained" style={{background:'green',color: 'white', marginTop: 10}}>
-          Submit
-        </Button>
-				</Grid>
-				<Grid item xs={8}>
-				<Countdown date={endDate} />
-				</Grid>
-			</Grid>
-        </Grid>
-		<Grid item xs={12} >
-        	<h1>Group 17</h1>
-        </Grid>
-      </Grid>
-      
-    </div>
-  );
+                {/* Teacher */}
+                <Route path="/teacher/profile" exact component={TeacherProfile}/>
+                <Route path="/course/:courseName" exact component={CourseHome} />
+                <Route path="/course/teacher/:courseName" exact component={TeacherCourseHome} />
+                <Route path="/teacher/createQuiz/:courseID" exact component={Creator} />
+            </Switch>
+        </Router>
+	);
 }
 
+const CommingSoon = () => {
+    return(
+        <div className="ch-container">
+    <Alert style={{
+        position: 'absolute', left: '50%', top: '50%',
+        transform: 'translate(-50%, -50%)'
+    }} severity="error" > 404 Not Found </Alert>
+  </div>
+            
+    );
+}
 export default App;
