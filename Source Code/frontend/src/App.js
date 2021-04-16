@@ -1,7 +1,8 @@
-import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Quiz from "./components/quiz/Quiz";
 import HomePage from './components/Home/HomePage'
 import CodeUI from './components/Coding/CodeUI';
+import CreateCodingQuetion from './components/Coding/CreateCodingQuetion';
 import Creator from './components/quiz/QuizCreation/QuizCreator'
 import CreateRoom from './components/OE/CreateRoom'
 import Room from "./components/OE/Room";
@@ -21,8 +22,8 @@ import TeacherProfile from './components/Profile/TeacherProfile';
 import { Alert } from '@material-ui/lab';
 import MalpracticeGallary from './components/quiz/MalpracticeGallary';
 function App() {
-	return(
-		<Router>
+    return (
+        <Router>
             <Switch>
                 <Route path="/" exact component={Login} />
                 <Route path="/home" exact component={HomePage} />
@@ -35,14 +36,14 @@ function App() {
                 <Route path="/teacher/quiz/malpractices/:quizID/:userID" exact component={MalpracticeGallary} />
 
                 {/* Student */}
-                <Route path="/student/profile" exact component={StudentProfile}/>
+                <Route path="/student/profile" exact component={StudentProfile} />
 
                 {/* Video Calling */}
-                <Route path="/OE" exact component={CreateRoom}/>
-                <Route path="/room/:roomID" component={Room}/>
+                <Route path="/OE" exact component={CreateRoom} />
+                <Route path="/room/:roomID" component={Room} />
 
                 {/* Create POE */}
-                <Route path="/teacher/createPOE" exact component={CommingSoon} />
+                <Route path="/teacher/createPOE" exact component={CreateCodingQuetion} />
                 <Route path="/test" exact component={CodeUI} />
 
                 {/* Admin */}
@@ -53,24 +54,24 @@ function App() {
                 <Route path="/assignCourse" exact component={AssignCourse} />
 
                 {/* Teacher */}
-                <Route path="/teacher/profile" exact component={TeacherProfile}/>
+                <Route path="/teacher/profile" exact component={TeacherProfile} />
                 <Route path="/course/:courseName" exact component={CourseHome} />
                 <Route path="/course/teacher/:courseName" exact component={TeacherCourseHome} />
                 <Route path="/teacher/createQuiz/:courseID" exact component={Creator} />
             </Switch>
         </Router>
-	);
+    );
 }
 
 const CommingSoon = () => {
-    return(
+    return (
         <div className="ch-container">
-    <Alert style={{
-        position: 'absolute', left: '50%', top: '50%',
-        transform: 'translate(-50%, -50%)'
-    }} severity="error" > 404 Not Found </Alert>
-  </div>
-            
+            <Alert style={{
+                position: 'absolute', left: '50%', top: '50%',
+                transform: 'translate(-50%, -50%)'
+            }} severity="error" > 404 Not Found </Alert>
+        </div>
+
     );
 }
 export default App;
