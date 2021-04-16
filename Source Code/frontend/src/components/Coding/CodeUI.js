@@ -60,10 +60,11 @@ const CodeUI = () => {
 
     }
     document.oncontextmenu = new Function("return false;");
+
     return (
         <div className='ch-container'>
             <div style={{padding:'5px'}}>
-                    <AppBar position='static' className='Appbar'>
+                    <AppBar position='static' className='Appbar' style={{width:'98vw'}}>
                         <Grid container style={{justifyContent:'space-between',position:'relative'}}>
                             <Grid item style={{display:'flex',justifyContent:'space-between'}}>
                                 <img src='logo_trans.png' className='logo'></img>
@@ -74,9 +75,9 @@ const CodeUI = () => {
                         </Grid>
                     </AppBar>
                 </div>
-            
+        
             <form  onSubmit={SubmitForm}>
-                <Grid style={{marginTop: '11vh'}} className="ch-container" container >
+                <Grid style={{marginTop: '15vh'}} className="ch-container" container >
                     <Grid item xs={8}>
                         <Editor
                         value = {Code}
@@ -92,9 +93,9 @@ const CodeUI = () => {
                     <Grid item xs={4}>
                         <Grid  container item direction="column" justify="center" alignItems="center">
                             <Grid item xs={12} fullWidth>
-                                <FormControl fullWidth>
-                                    <InputLabel id="language" >Language</InputLabel>
-                                    <Select value={language} onChange={(e)=>{setLanguage(e.target.value)}} labelId="language" label="Language">
+                                <FormControl variant="outlined" fullWidth>
+                                    <InputLabel id="language" style={{color:'white'}}>Language</InputLabel>
+                                    <Select style={{color:'white',backgroundColor:'#4c5f7a',height:40}} value={language} onChange={(e)=>{setLanguage(e.target.value)}} labelId="language" label="Language">
                                         <MenuItem value={"C"}>C</MenuItem>
                                         <MenuItem value={"Cpp"}>Cpp</MenuItem>
                                         <MenuItem value={"Java"}>Java</MenuItem>
@@ -103,10 +104,10 @@ const CodeUI = () => {
                                 </FormControl>
                             </Grid>
                             <Grid item xs={12}>
-                                 <Typography variant='subtitle1' color="secondary"> Problem Statement </Typography>
+                                 <Typography variant='subtitle1' style={{fontWeight:'bold'}} color="primary"> Problem Statement </Typography>
                             </Grid>
                             <Grid item xs={12}>
-                                <Typography variant='body1' color="primary"> Write a Program to add 2 Numbers </Typography>
+                                <Typography variant='body1' style={{color:'white'}}> Write a Program to add 2 Numbers </Typography>
                             </Grid>
                             <Grid container item alignContents="center" alignItems="center" justify="center" >
                                 <Grid item xs={12}>
@@ -124,7 +125,7 @@ const CodeUI = () => {
                                 readOnly
                                 className = 'terminal-textArea'
                                 rows="24"
-                                cols = "50"
+                                cols = "40"
                                 />
                             </Grid>
                         </Grid>
@@ -136,6 +137,85 @@ const CodeUI = () => {
 }
 
 export default CodeUI;
+
+// Till 10 April 2021 Latest
+
+//     return (
+//         <div className='ch-container'>
+//             <div style={{padding:'5px'}}>
+//                     <AppBar position='static' className='Appbar'>
+//                         <Grid container style={{justifyContent:'space-between',position:'relative'}}>
+//                             <Grid item style={{display:'flex',justifyContent:'space-between'}}>
+//                                 <img src='logo_trans.png' className='logo'></img>
+//                                 <div style={{display:'inline-block',verticalAlign:'middle',textAlign:'center',color:'#fec14e'}}>
+//                                     <h1 style={{position:'relative',top:'50%',transform: 'translateY(-50%)'}}>Proctor</h1>
+//                                 </div>
+//                             </Grid>
+//                         </Grid>
+//                     </AppBar>
+//                 </div>
+            
+//             <form  onSubmit={SubmitForm}>
+//                 <Grid style={{marginTop: '11vh'}} className="ch-container" container >
+//                     <Grid item xs={8}>
+//                         <Editor
+//                         value = {Code}
+//                         onChange ={(e)=> {setCode(e)}}
+//                         marginLeft='100px'
+//                         height='80vh'
+//                         theme='vs-dark'
+//                         defaultLanguage="Java"
+//                         fontSize = '30px'
+//                         options = {{"fontSize": "19"}}
+//                         />
+//                     </Grid>
+//                     <Grid item xs={4}>
+//                         <Grid  container item direction="column" justify="center" alignItems="center">
+//                             <Grid item xs={12} fullWidth>
+//                                 <FormControl fullWidth>
+//                                     <InputLabel id="language" >Language</InputLabel>
+//                                     <Select value={language} onChange={(e)=>{setLanguage(e.target.value)}} labelId="language" label="Language">
+//                                         <MenuItem value={"C"}>C</MenuItem>
+//                                         <MenuItem value={"Cpp"}>Cpp</MenuItem>
+//                                         <MenuItem value={"Java"}>Java</MenuItem>
+//                                         <MenuItem value={"Python3"}>Python</MenuItem>
+//                                     </Select>
+//                                 </FormControl>
+//                             </Grid>
+//                             <Grid item xs={12}>
+//                                  <Typography variant='subtitle1' color="secondary"> Problem Statement </Typography>
+//                             </Grid>
+//                             <Grid item xs={12}>
+//                                 <Typography variant='body1' color="primary"> Write a Program to add 2 Numbers </Typography>
+//                             </Grid>
+//                             <Grid container item alignContents="center" alignItems="center" justify="center" >
+//                                 <Grid item xs={12}>
+//                                     {isLoading? <CircularProgress />:<Button type="submit" color="primary">Run</Button>}
+//                                 </Grid>
+//                                 <Grid item xs={12}>
+//                                     <Button color="primary">Submit</Button>
+//                                 </Grid>
+//                             </Grid>
+//                             <Grid item xs={12}>
+//                                 <Typography variant='subtitle1' color="secondary"> Output </Typography>
+//                             </Grid>
+//                             <Grid item >
+//                                 <textarea onChange={(e) => setOutput(e.target.value)} value={Output}
+//                                 readOnly
+//                                 className = 'terminal-textArea'
+//                                 rows="24"
+//                                 cols = "50"
+//                                 />
+//                             </Grid>
+//                         </Grid>
+//                     </Grid>
+//                 </Grid>
+//             </form>
+//         </div>
+//     );
+// }
+
+// export default CodeUI;
 
 // const render = 
 // <Grid className="ch-container" container >

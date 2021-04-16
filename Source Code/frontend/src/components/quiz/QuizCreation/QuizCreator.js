@@ -2,9 +2,11 @@ import {useState, useEffect} from "react"
 import {useDispatch, useSelector} from 'react-redux';
 import {TextField,Grid,Button,Checkbox,FormControlLabel, CircularProgress} from '@material-ui/core';
 import {Alert, AlertTitle} from '@material-ui/lab'
+import {useHistory} from 'react-router-dom'
 
 const QuizCreator = (props) => {
     const dispatch = useDispatch();
+	const history = useHistory();
     const state = useSelector(state => state.quizCreator);
 	const courseID = props.match.params.courseID;
 	const [isLoading, setLoading] = useState(false);
@@ -42,6 +44,7 @@ const QuizCreator = (props) => {
 				else{
 					setSuccess(true);
 					setLoading(false);
+					history.go(-1);
 				}
 			}
 		)).catch(err => console.log(err))

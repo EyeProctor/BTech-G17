@@ -4,7 +4,6 @@ import { useSelector,useDispatch } from "react-redux";
 import { useHistory } from "react-router";
 import CustomBox from '../../Helper/CustomBox';
 import ProfileMenu from "../../Login/ProfileMenu.js";
-import ProfileMenu from "../../Login/profile_menu.js";
 
 
 const TeacherHome = () => {
@@ -47,7 +46,8 @@ const TeacherHome = () => {
                             return(
                                 <Grid item xs={4} key={idx}>
                                     <CustomBox innerText={val.courseName} onClick={()=>{
-                                        history.push(`/course/teacher/${val._id}`)
+                                        dispatch({type: "SET_CURRENT_COURSE", payload: val});
+                                        history.push(`/course/teacher/${val._id}`);
                                     }}/>
                                 </Grid>
                             );

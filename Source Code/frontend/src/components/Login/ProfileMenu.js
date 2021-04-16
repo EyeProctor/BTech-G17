@@ -57,8 +57,9 @@ const ProfileMenu = () => {
   };
 
   const LogOut = () => {
-    history.replace('/');
+    console.log("Clearing Local Storage")
     localStorage.clear();
+    history.replace('/');
   }
 
   const handleClick = (event) => {

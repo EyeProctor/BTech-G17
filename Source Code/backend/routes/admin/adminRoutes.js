@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Course = require('../../schema/course/CourseSchema');
-const Teacher = require('../../schema/users/TeacherSchema')
+const Teacher = require('../../schema/users/TeacherSchema');
 
 
 
@@ -53,7 +53,7 @@ router.post('/assignTeacher', (req,res)=>{
     console.log(teacherID);
 
     if(!teacherID || !courseID)
-        return res.body({msg: "Enter all Fields"})
+        return res.status(400).body({msg: "Enter all Fields"})
     
     // Teacher.findOne({_id: teacherID}).then(data=>
     //     {
@@ -91,6 +91,10 @@ router.get('/allCourses', (req,res)=>{
         console.log(err);
         return res.status(500).json({msg: "Internal Error"})
     })
+})
+
+
+router.get('/cleanDatabase', (req,res) => {
 })
 
 module.exports = router;

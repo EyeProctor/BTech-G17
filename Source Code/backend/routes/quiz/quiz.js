@@ -1,5 +1,6 @@
 const express = require('express');
 const MainQuiz = require('../../schema/quiz/MainQuiz');
+const QuizMalpractice = require('../../schema/quiz/QuizMalpractice');
 const QuizAnswer = require('../../schema/quiz/QuizAnswer');
 const QuizQuestion = require('../../schema/quiz/QuizQuestions');
 const QuizResult = require('../../schema/quiz/QuizResult');
@@ -63,7 +64,7 @@ router.post('/addQuiz',(req,res) => {
         console.log(data);
         const toadd = {quizID: data._id, subject}
         Course.findByIdAndUpdate(courseID, 
-            { $addToSet: { quizes : toadd } },
+            { $addToSet: { "quizes" : toadd } },
             function (err, updatedDoc) {
                 if (err) {
                     //console.log(err);
@@ -132,6 +133,7 @@ router.get('/userChoices/:userID/:quizID', (req,res)=> {
     const quizID = req.params.quizID;
 
     UserChoices.findOne({userID,quizID}).then(doc =>{
+        console.log(doc)
         if(doc)
             return res.status(200).json(doc);
         else
@@ -150,6 +152,8 @@ router.post("/submitQuiz", (req,res)=>{
     const attemptedQ = Object.keys(userChoices)
     const finishedAt = Date.now();
     console.log(attemptedQ);
+    console.log(userChoices)
+    console.log(qArray[0].options);
     for (let i = 0; i < attemptedQ.length; i++) {
         const optionsArray = qArray[parseInt(attemptedQ[i])-1].options;
         const correctAnswer = optionsArray.filter((e)=> e.ans)[0].qs;
@@ -191,8 +195,16 @@ router.get('/getAll/:quizID', (req,res)=>{
     const quizID = req.params.quizID;
     QuizResult.find({qID: quizID}).then(
         results =>{
-            if(results)
-                return res.status(200).json(results);
+            if(results){
+                console.log(results);
+                var newRes = []
+                results.forEach(r => {
+                    newRes.push({...r._doc, logs: `localhost:3000/teacher/quiz/malpractices/${quizID}/${r.userID}`})
+                });
+                console.log(newRes);
+                return res.status(200).json(newRes);
+
+            }
             else
                 return res.status(200).json(results);
         }
@@ -203,10 +215,74 @@ router.get('/getAll/:quizID', (req,res)=>{
 });
 
 
+// TODO
+router.post('/deleteQuiz',(req,res)=>{
+    const { quizID, courseID } = req.body;
+
+    if(!quizID || !courseID)
+        return res.status(400).json({msg: "Bad Request"});
+
+    MainQuiz.deleteOne({_id: quizID}).then(
+        data =>{
+            console.log(data);
+            Course.updateOne({_id: courseID}, {$pullAll: { quizes: [courseID] }}).then(courseDoc => {
+                console.log(courseDoc);
+                res.status(200).json(courseDoc)
+            }).catch(err => {
+                console.log(err);
+                res.status(500).json({msg: "Server Error"})
+            })
+        }
+    ).catch(err =>{
+        console.log(err);
+        res.status(500).json({msg: "Server Error"})
+
+    })
+})
+
+
+// Save Malpractices
+
+router.post('/malpracticeLog', (req,res)=>{
+    const { quizID, userID, image } = req.body;
+
+    if(!quizID || !userID || !image )
+        return res.status(400).json({msg: "Bad Request"});
+    
+    quizMalpractice = new QuizMalpractice({
+        qID: quizID, userID, image
+    })
+
+    quizMalpractice.save().then( data => {
+        res.status(200).json(data);
+    }).catch(err => {
+        console.error(err);
+        res.status(500).json({msg: "Server Error"})
+    })
+    
+})
+
+// Get All Malpractice of particular user
+
+router.get('/malpracticeLog/:userID/:quizID', (req,res) => {
+    const userID = req.params.userID;
+    const quizID = req.params.quizID;
+
+    if(!userID || !quizID)
+        return res.status(400).json({msg: "Bad Request"})
+    
+    QuizMalpractice.find({userID, qID: quizID}).then(
+        logList =>{
+            console.log(logList);
+            res.status(200).json(logList);
+        }
+    ).catch(err => {
+        console.error(err);
+        res.status(500).json({msg: "Server Error"})
+    })
+})
 
 
 module.exports = router;
 
-
-// TODOs: SUBMIT QUIZ
 

@@ -10,12 +10,12 @@ const QuizLandingPage = (props) => {
     const quizID = props.match.params.quizID;
     //console.log(quizID)
     const [quizData,setQuizData] = useState({})
-    const [isAvailable, setAvailable] = useState(true);
+    const [isAvailable, setAvailable] = useState(false);
     const dispatch = useDispatch();
     const quizState = useSelector(state => state.quiz);
     const fromStore = quizState.userChoices;
     const userID = useSelector(state => state.auth.user.id);
-    const [status, setStatus] = useState(false);
+    const [status, setStatus] = useState(true);
     const history = useHistory();
 
     useEffect(
@@ -30,6 +30,8 @@ const QuizLandingPage = (props) => {
                     if(startDate > Date.now() || endDate < Date.now())
                     {
                         setAvailable(false);
+                    }else{
+                        setAvailable(true);
                     }
                 })
             );
@@ -43,7 +45,7 @@ const QuizLandingPage = (props) => {
                  setStatus(newData.status);
              })).catch(err => console.log(err))
         }, []
-    );
+        );
     const takeQuiz = () => {
         // Save Current Quiz Data to Store
         dispatch({type:"SET_QUIZDATA", payload: quizData});
@@ -74,11 +76,12 @@ const QuizLandingPage = (props) => {
 
 
                     }
-
                     // Saved Instance on Database
                     else{
                         
                         console.log(JSON.stringify(newData));
+                        const questions = newData.questions[0];
+                        newData = {...newData, questions: questions};
                         history.push(`${quizID}/${userID}`);
                         // Set Start Date from Database
                         dispatch({type: "SAVE_USERCHOICES", payload: newData})
