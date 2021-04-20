@@ -7,6 +7,7 @@ const socket = require('socket.io')
 const userRoutes = require('./routes/user/userRoutes');
 const adminRoutes = require('./routes/admin/adminRoutes');
 const codingRoutes = require('./routes/code/codingRoutes');
+const codingCreation = require('./routes/code/codingCreation');
 const courseRoutes = require('./routes/course/courseRoutes');
 const teacherRoutes = require('./routes/teacher/teacherRoutes');
 
@@ -26,6 +27,7 @@ app.use(express.json());
 app.use(cors());
 app.use("/user", userRoutes);
 app.use("/code", codingRoutes);
+app.use("/poe", codingCreation);
 app.use('/quiz',QuizRoutes );
 app.use('/admin',adminRoutes );
 app.use('/course',courseRoutes );

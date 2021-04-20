@@ -51,7 +51,7 @@ router.post('/addQuiz',(req,res) => {
     });
 
     const newQuiz = MainQuiz({
-        subject,proctored, startDate, endDate, duration, questions: questionsArray
+        subject, proctored, startDate, endDate, duration, questions: questionsArray
     });
 
     // console.log("Question",questions)

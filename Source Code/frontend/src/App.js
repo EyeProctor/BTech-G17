@@ -43,7 +43,7 @@ function App() {
                 <Route path="/room/:roomID" component={Room} />
 
                 {/* Create POE */}
-                <Route path="/teacher/createPOE" exact component={CreateCodingQuetion} />
+                <Route path="/teacher/createPOE/:courseID" exact component={CreateCodingQuetion} />
                 <Route path="/test" exact component={CodeUI} />
 
                 {/* Admin */}

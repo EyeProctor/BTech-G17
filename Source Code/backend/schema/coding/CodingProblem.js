@@ -4,11 +4,7 @@ const codingProblem = mongoose.Schema(
     {
         title: String,
         statement: String,
-        courseID: String,
-        testcases: [{
-            input: String,
-            output: String
-        }],
+        testcases: [],
         languages: {
             c: {type: Boolean, default: true},
             cpp: {type: Boolean, default: true},
@@ -18,6 +14,6 @@ const codingProblem = mongoose.Schema(
     }
 )
 
-const codingProblem = mongoose.model('CodingProblem', codingProblem);
+const CodingProblem = mongoose.model('CodingProblem', codingProblem);
 
 module.exports = CodingProblem;

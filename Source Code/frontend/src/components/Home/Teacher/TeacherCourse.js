@@ -44,7 +44,7 @@ const TeacherCourseHome = (props) => {
                 </Grid>
                 {(poes.length === 0)?<Grid  item xs={12} style={{width:'50%'}}><Alert severity="error">No Active Practicals</Alert></Grid>:<></>}
                 <Grid container justify="center" alignContent="center" alignItems="center" item xs={12}>
-                   <Button onClick={()=>{ history.push('/teacher/createPOE') }} variant="contained" color="primary">Create New Practical</Button>
+                   <Button onClick={()=>{ history.push(`/teacher/createPOE/${courseID}`) }} variant="contained" color="primary">Create New Practical</Button>
                  </Grid>
                 <Box border={1} />
                 

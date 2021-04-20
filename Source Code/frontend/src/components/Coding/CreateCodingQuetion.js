@@ -36,28 +36,28 @@ const CreateCodingQuetion = (props) => {
 
         console.log(JSON.stringify(state));
 
-        alert(JSON.stringify(state));
+        //alert(JSON.stringify(state));
 
-        // fetch("/quiz/addCodingAssignment", {
-        //     method: "POST",
-        //     headers: {
-        //         "Content-Type": "application/json",
-        //     },
-        //     body: JSON.stringify(state)
-        // }).then(data => data.json().then((newData) => {
-        //     console.log(JSON.stringify(newData));
-        //     if (newData.msg) {
-        //         setBad(true);
-        //         setLoading(false);
-        //         setErrMessage(newData.msg);
-        //     }
-        //     else {
-        //         setSuccess(true);
-        //         setLoading(false);
-        //         history.go(-1);
-        //     }
-        // }
-        // )).catch(err => console.log(err))
+        fetch("/poe/addCodingAssignment", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(state)
+        }).then(data => data.json().then((newData) => {
+            console.log(JSON.stringify(newData));
+            if (newData.msg) {
+                setBad(true);
+                setLoading(false);
+                setErrMessage(newData.msg);
+            }
+            else {
+                setSuccess(true);
+                setLoading(false);
+                history.go(-1);
+            }
+        }
+        )).catch(err => console.log(err))
 
     }
 
@@ -229,7 +229,7 @@ const CreateCodingQuetion = (props) => {
 
                 <Grid item xs={12}>
                     <Button variant="contained" color="secondary" onClick={addProblem}>+ Add Problem</Button>
-                    {isLoading ? <CircularProgress /> : <Button type="submit" variant="contained" color="primary">Create Quiz</Button>}
+                    {isLoading ? <CircularProgress /> : <Button type="submit" variant="contained" color="primary">Create Assignment</Button>}
                 </Grid>
                 <Grid container item xs={12} justify="center" alignItems="center">
                     {isBad ? <Alert severity="error"><AlertTitle>Error</AlertTitle>{errMessage}</Alert> : <></>}
