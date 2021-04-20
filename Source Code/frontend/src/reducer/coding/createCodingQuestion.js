@@ -1,93 +1,101 @@
 const initialState = {
     courseID: "",
-    subject: null,
+    title: null,
     proctored: false,
     startDate: null,
     endDate: null,
     duration: null,
-    questions: []
+    problems: []
 }
 
-var questionState = {
-    qNo: null,
-    qType: 1,
-    question: "",
-    options: []
+var problemState = {
+    title: "",
+    statement: "",
+    testcases: [],
+    languages: {
+        c: true,
+        cpp: true,
+        java: true,
+        python: true
+    }
 }
 
-const optionsState = {
-    qs: "",
-    ans: false
-};
+const testState = {
+    input: "",
+    output: ""
+}
 
+var PIndex, TIndex, PArray;
 
-
-var QIndex, OIndex, QArray;
-
-const quizCreatorReducer = (state = initialState, action) => {
+const createCodingReducer = (state = initialState, action) => {
 
     switch (action.type) {
-        case "SET_QUIZCOURSE":
+        case "SET_CODING_COURSE":
             return { ...state, courseID: action.payload }
 
-        case "ADD_QUESTION_TEMPLATE":
-            QArray = [...state.questions];
-            const newQuestionState = { ...questionState, qNo: QArray.length + 1 }
-            QArray.push(newQuestionState)
-            return { ...state, questions: QArray }
+        case "ADD_PROBLEM_TEMPLATE":
+            PArray = [...state.problems];
+            const newProblemState = { ...problemState }
+            PArray.push(newProblemState)
+            return { ...state, problems: PArray }
 
-        case 'ADD_QUESTION':
-            QArray = [...state.questions];
-            QIndex = action.payload.QIndex;
-            QArray[QIndex].question = action.payload.question;
-            return { ...state, questions: QArray }
+        
+        case "ADD_PROBLEM_TITLE":
+            PArray = [...state.problems];
+            PIndex = action.payload.PIndex;
+            PArray[PIndex].title = action.payload.title;
+            return { ...state, problems: PArray }
 
-        case "ADD_OPTION_TEMPLATE":
-            QArray = [...state.questions];
-            var op = QArray[action.payload.QIndex]
-            op.options = [...op.options, { qs: "", ans: false }]
-            return { ...state, questions: QArray }
+        case 'ADD_STATEMENT':
+            PArray = [...state.problems];
+            PIndex = action.payload.PIndex;
+            PArray[PIndex].statement = action.payload.statement;
+            return { ...state, problems: PArray }
 
-        case 'ADD_OPTION':
-            QArray = [...state.questions];
-            QIndex = action.payload.QIndex;
-            OIndex = action.payload.OIndex;
-            QArray[QIndex].options[OIndex] = { ...optionsState, qs: action.payload.option }
-            return { ...state, questions: QArray }
+        case "SET_PROBLEM_LANGUAGES":
+            PArray = [...state.problems];
+            PIndex = action.payload.PIndex;
+            var key = action.payload.lang;
+            PArray[PIndex].languages[key] = action.payload.flag;
+            return { ...state, problems: PArray }
 
-        case 'SET_ANSWER':
-            QArray = [...state.questions];
-            QIndex = action.payload.QIndex;
-            OIndex = action.payload.OIndex;
-            var op = QArray[QIndex]
+        case "ADD_TESTCASE_TEMPLATE":
+            PArray = [...state.problems];
+            var test = PArray[action.payload.PIndex]
+            test.testcases = [...test.testcases, { input: "", output: "" }]
+            return { ...state, problems: PArray }
 
-            if (op.options[OIndex].ans) {
+        case 'ADD_TESTCASE_INPUT':
+            PArray = [...state.problems];
+            PIndex = action.payload.PIndex;
+            TIndex = action.payload.TIndex;
+            // PArray[PIndex].testcases[TIndex] = { ...testState, input: action.payload.input }
+            PArray[PIndex].testcases[TIndex].input = action.payload.input;
+            return { ...state, problems: PArray }
 
-                QArray[QIndex].options[OIndex].ans = false;
-                return { ...state, questions: QArray }
-            }
-            op.options.forEach(O => {
-                if (O.ans) {
-                    O.ans = false;
-                }
-            });
+        case 'ADD_TESTCASE_OUTPUT':
+            PArray = [...state.problems];
+            PIndex = action.payload.PIndex;
+            TIndex = action.payload.TIndex;
+            // PArray[PIndex].testcases[TIndex] = { ...testState, output: action.payload.output }
+            PArray[PIndex].testcases[TIndex].output = action.payload.output;
+            return { ...state, problems: PArray }
 
-            QArray[QIndex].options[OIndex] = { ...op.options[OIndex], ans: true }
-            return { ...state, questions: QArray }
-
-        case "SET_QUIZ_SUBJECT":
-            return { ...state, subject: action.payload }
+        case "SET_ASSIGNMENT_TITLE":
+            return { ...state, title: action.payload }
+        case "SET_PROCTORED":
+            return { ...state, proctored: action.payload }
         case "SET_STARTDATE":
             return { ...state, startDate: action.payload }
         case "SET_ENDDATE":
             return { ...state, endDate: action.payload }
         case "SET_DURATION":
             return { ...state, duration: action.payload }
-        case "RESET_QUIZCREATION":
+        case "RESET_CODING_CREATION":
             return initialState;
         default:
             return state;
     }
 }
 
-export default quizCreatorReducer;
+export default createCodingReducer;

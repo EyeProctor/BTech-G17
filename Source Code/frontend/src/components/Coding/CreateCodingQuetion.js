@@ -1,14 +1,10 @@
 import { useState, useEffect, React } from "react";
 import { useDispatch, useSelector } from 'react-redux';
-import { TextField, Grid, Button, Box, FormControl, CircularProgress } from '@material-ui/core';
-import { border } from '@material-ui/system';
-import Checkbox from "@material-ui/core/Checkbox";
-import { Alert, AlertTitle } from '@material-ui/lab'
-import { useHistory } from 'react-router-dom'
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import FormLabel from "@material-ui/core/FormLabel";
-import FormGroup from "@material-ui/core/FormGroup";
-import FormHelperText from "@material-ui/core/FormHelperText";
+import { useHistory } from 'react-router-dom';
+import { TextField, Grid, Button, Box, FormControl, CircularProgress,
+         Checkbox, FormControlLabel, FormLabel, FormGroup } from "@material-ui/core";
+import { Alert, AlertTitle } from '@material-ui/lab';
+
 
 /**
  * Question
@@ -16,13 +12,17 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 const CreateCodingQuetion = (props) => {
     const dispatch = useDispatch();
     const history = useHistory();
-    const state = useSelector(state => state.quizCreator);
+    const state = useSelector(state => state.CodingCreator);
     const courseID = props.match.params.courseID;
     const [isLoading, setLoading] = useState(false);
     const [isBad, setBad] = useState(false);
     const [isSuccess, setSuccess] = useState(false);
     const [errMessage, setErrMessage] = useState("");
     console.log(courseID);
+
+    useEffect(() => {
+        //dispatch({ type: "RESET_CODING_CREATION" })
+    }, []);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -32,67 +32,68 @@ const CreateCodingQuetion = (props) => {
         setErrMessage("");
         // Do Simple form Check
 
-        dispatch({ type: "SET_QUIZCOURSE", payload: courseID })
+        dispatch({ type: "SET_CODING_COURSE", payload: courseID })
 
         console.log(JSON.stringify(state));
 
-        fetch("/quiz/addQuiz", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(state)
-        }).then(data => data.json().then((newData) => {
-            console.log(JSON.stringify(newData));
-            if (newData.msg) {
-                setBad(true);
-                setLoading(false);
-                setErrMessage(newData.msg);
-            }
-            else {
-                setSuccess(true);
-                setLoading(false);
-                history.go(-1);
-            }
-        }
-        )).catch(err => console.log(err))
+        alert(JSON.stringify(state));
+
+        // fetch("/quiz/addCodingAssignment", {
+        //     method: "POST",
+        //     headers: {
+        //         "Content-Type": "application/json",
+        //     },
+        //     body: JSON.stringify(state)
+        // }).then(data => data.json().then((newData) => {
+        //     console.log(JSON.stringify(newData));
+        //     if (newData.msg) {
+        //         setBad(true);
+        //         setLoading(false);
+        //         setErrMessage(newData.msg);
+        //     }
+        //     else {
+        //         setSuccess(true);
+        //         setLoading(false);
+        //         history.go(-1);
+        //     }
+        // }
+        // )).catch(err => console.log(err))
 
     }
 
 
-    const addQuestion = () => {
-        dispatch({ type: "ADD_QUESTION_TEMPLATE" });
+    const addProblem = () => {
+        dispatch({ type: "ADD_PROBLEM_TEMPLATE" });
     }
-    const addOption = (QIndex) => {
-        dispatch({ type: "ADD_OPTION_TEMPLATE", payload: { QIndex } });
+    const addTestcase = (PIndex) => {
+        dispatch({ type: "ADD_TESTCASE_TEMPLATE", payload: { PIndex } });
     }
-
-
 
     // Checkbox Group
-    const [language, setLanguages] = useState({
-        c: true,
-        cpp: true,
-        java: true,
-        python: true,
-    });
+    // const [language, setLanguages] = useState({
+    //     c: true,
+    //     cpp: true,
+    //     java: true,
+    //     python: true,
+    // });
 
-    const handleChange = (event) => {
-        setLanguages({ ...language, [event.target.name]: event.target.checked });
+    const handleLangChange = (event, idx) => {
+        dispatch({ type: "SET_PROBLEM_LANGUAGES", payload: { PIndex: idx, lang: [event.target.name], flag: event.target.checked} })
+        // setLanguages({ ...language, [event.target.name]: event.target.checked });
     };
 
     return (
         <form onSubmit={handleSubmit} noValidate autoComplete="off" center="true" margin="20px">
             <Grid container spacing={3} alignItems="center" style={{ padding: 50, backgroundColor: "beige" }} xs={12}>
                 <Grid item xs={12}>
-                    <TextField onChange={(e) => { dispatch({ type: "SET_QUIZ_SUBJECT", payload: e.target.value }) }} id="quizsub" label="Assignment Title" variant="outlined" fullWidth />
+                    <TextField onChange={(e) => { dispatch({ type: "SET_ASSIGNMENT_TITLE", payload: e.target.value }) }} value={state.title} id="a_title" label="Assignment Title" variant="outlined" fullWidth />
                 </Grid>
                 <Grid item xs={6}>
                     <TextField fullWidth
                         id="datetime-start"
                         label="Start Date Time"
                         type="datetime-local"
-                        defaultValue="2017-05-24T00:00"
+                        // defaultValue="2017-05-24T00:00"
                         onChange={(e) => { dispatch({ type: "SET_STARTDATE", payload: new Date(e.target.value) }) }}
                         InputLabelProps={{
                             shrink: true,
@@ -103,18 +104,30 @@ const CreateCodingQuetion = (props) => {
                         id="datetime-end"
                         label="End Date Time"
                         type="datetime-local"
-                        defaultValue="2020-01-24T00:00"
+                        // defaultValue="2020-01-24T00:00"
                         onChange={(e) => { dispatch({ type: "SET_ENDDATE", payload: new Date(e.target.value) }) }}
                         InputLabelProps={{
                             shrink: true,
                         }} />
                 </Grid>
                 <Grid item xs={6}>
-                    <TextField onChange={(e) => { dispatch({ type: "SET_DURATION", payload: e.target.value }) }} type="number" id="dur" label="Duration in minutes" variant="outlined" fullWidth />
+                    <TextField onChange={(e) => { dispatch({ type: "SET_DURATION", payload: e.target.value }) }} value={state.duration} type="number" id="dur" label="Duration in minutes" variant="outlined" fullWidth />
+                </Grid>
+                <Grid item xs={6}>
+                    <FormControlLabel
+                            control={
+                            <Checkbox
+                                checked={state.proctored}
+                                onChange={ (event) => { dispatch({ type: "SET_PROCTORED", payload: event.target.checked }) } }
+                                name="Proctored"
+                            />
+                            }
+                            label="Proctored"
+                    />
                 </Grid>
                 {
-                    state.questions.map((val, idx) => {
-                        let queId = `que-${idx + 1}`
+                    state.problems.map((val, idx) => {
+                        let probId = `prob-${idx + 1}`
                         return (
                             <Grid item xs={12}>
 
@@ -123,10 +136,10 @@ const CreateCodingQuetion = (props) => {
                                         <Grid container spacing={3} alignItems="center" border={1}>
 
                                             <Grid item xs={12}>
-                                                <TextField onChange={(e) => { dispatch({ type: "SET_QUIZ_SUBJECT", payload: e.target.value }) }} id="quizsub" label="Problem title" variant="outlined" fullWidth />
+                                                <TextField onChange={(e) => { dispatch({ type: "ADD_PROBLEM_TITLE", payload: { PIndex: idx, title: e.target.value } }) }} value={val.title} id="probtitle" label="Problem title" variant="outlined" fullWidth />
                                             </Grid>
                                             <Grid item xs={12}>
-                                                <TextField onChange={(e) => { dispatch({ type: "SET_QUIZ_SUBJECT", payload: e.target.value }) }} id="quizsub" label="Problem Statement" variant="outlined" fullWidth />
+                                                <TextField onChange={(e) => { dispatch({ type: "ADD_STATEMENT", payload: { PIndex: idx, statement: e.target.value } }) }} value={val.statement} id="probsub" label="Problem Statement" variant="outlined" fullWidth />
                                             </Grid>
                                             {/* <Grid item xs={10}><TextField fullWidth
                                             label={"Languages" + idx}
@@ -144,10 +157,20 @@ const CreateCodingQuetion = (props) => {
                                                     <FormLabel component="legend">Pick Languages</FormLabel>
                                                     <FormGroup row>
                                                         <FormControlLabel
+                                                                control={
+                                                                <Checkbox
+                                                                    checked={state.problems[idx].languages.c}
+                                                                    onChange={ (event) => { dispatch({ type: "SET_PROBLEM_LANGUAGES", payload: { PIndex: idx, lang: event.target.name, flag: event.target.checked} }) } }
+                                                                    name="c"
+                                                                />
+                                                                }
+                                                                label="c"
+                                                        />
+                                                        <FormControlLabel
                                                             control={
                                                                 <Checkbox
-                                                                    checked={state.cpp}
-                                                                    onChange={handleChange}
+                                                                    checked={state.problems[idx].languages.cpp}
+                                                                    onChange={ (event) => { dispatch({ type: "SET_PROBLEM_LANGUAGES", payload: { PIndex: idx, lang: event.target.name, flag: event.target.checked} }) } }
                                                                     name="cpp"
                                                                 />
                                                             }
@@ -156,50 +179,36 @@ const CreateCodingQuetion = (props) => {
                                                         <FormControlLabel
                                                             control={
                                                                 <Checkbox
-                                                                    checked={state.python}
-
-                                                                    onChange={handleChange}
-                                                                    name="python"
-                                                                />
-                                                            }
-                                                            label="python"
-                                                        />
-                                                        <FormControlLabel
-                                                            control={
-                                                                <Checkbox
-                                                                    checked={state.c}
-
-                                                                    onChange={handleChange}
-                                                                    name="c"
-                                                                />
-                                                            }
-                                                            label="c"
-                                                        />
-                                                        <FormControlLabel
-                                                            control={
-                                                                <Checkbox
-                                                                    checked={state.java}
-
-                                                                    onChange={handleChange}
+                                                                    checked={state.problems[idx].languages.java}
+                                                                    onChange={ (event) => { dispatch({ type: "SET_PROBLEM_LANGUAGES", payload: { PIndex: idx, lang: event.target.name, flag: event.target.checked} }) } }
                                                                     name="java"
                                                                 />
                                                             }
                                                             label="java"
                                                         />
+                                                        <FormControlLabel
+                                                            control={
+                                                                <Checkbox
+                                                                    checked={state.problems[idx].languages.python}
+                                                                    onChange={ (event) => { dispatch({ type: "SET_PROBLEM_LANGUAGES", payload: { PIndex: idx, lang: event.target.name, flag: event.target.checked} }) } }
+                                                                    name="python"
+                                                                />
+                                                            }
+                                                            label="python"
+                                                        />
                                                     </FormGroup>
                                                 </FormControl>
                                             </Grid>
-
                                         </Grid>
 
                                         {
-                                            state.questions[idx].options.map((val, oIdx) => {
+                                            state.problems[idx].testcases.map((v, TIdx) => {
 
                                                 return (
                                                     <Grid container spacing={3} alignItems="center" border={1}>
-                                                        <Grid item xs={12} spacing={3} key={oIdx}>
-                                                            <TextField fullWidth label={`Input: ${oIdx + 1}`} value={val.qs} variant='outlined' onChange={(e) => { dispatch({ type: "ADD_INPUT", payload: { QIndex: idx, OIndex: oIdx, option: e.target.value } }) }} /><br /><br />
-                                                            <TextField fullWidth label={`Output: ${oIdx + 1}`} value={val.qs} variant='outlined' onChange={(e) => { dispatch({ type: "ADD_OUTPUT", payload: { QIndex: idx, OIndex: oIdx, option: e.target.value } }) }} />
+                                                        <Grid item xs={12} spacing={3} key={TIdx}>
+                                                            <TextField fullWidth label={`Input: ${TIdx + 1}`} value={v.input} variant='outlined' onChange={(e) => { dispatch({ type: "ADD_TESTCASE_INPUT", payload: { PIndex: idx, TIndex: TIdx, input: e.target.value } }) }} /><br /><br />
+                                                            <TextField fullWidth label={`Output: ${TIdx + 1}`} value={v.output} variant='outlined' onChange={(e) => { dispatch({ type: "ADD_TESTCASE_OUTPUT", payload: { PIndex: idx, TIndex: TIdx, output: e.target.value } }) }} />
                                                         </Grid>
                                                     </Grid>
 
@@ -209,7 +218,7 @@ const CreateCodingQuetion = (props) => {
                                     </div>
                                     < br />
                                     <Grid item xs={12}>
-                                        <Button label="+Add Option" variant="outlined" onClick={() => addOption(idx)}>+ Add Test Case</Button>
+                                        <Button label="+Add TestCase" variant="outlined" onClick={() => addTestcase(idx)}>+ Add Test Case</Button>
                                     </Grid>
                                 </Box>
                             </Grid>
@@ -219,7 +228,7 @@ const CreateCodingQuetion = (props) => {
 
 
                 <Grid item xs={12}>
-                    <Button variant="contained" color="secondary" onClick={addQuestion}>+ Add Question</Button>
+                    <Button variant="contained" color="secondary" onClick={addProblem}>+ Add Problem</Button>
                     {isLoading ? <CircularProgress /> : <Button type="submit" variant="contained" color="primary">Create Quiz</Button>}
                 </Grid>
                 <Grid container item xs={12} justify="center" alignItems="center">

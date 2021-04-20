@@ -4,6 +4,7 @@ import uiReducer from './UI/uiReducers';
 import quizCreatorReducer from './quiz/quizCreator';
 import courseReducer from './course/courseReducer';
 import currentCourseReducer from './course/currentCourseReducer';
+import createCodingReducer from './coding/createCodingQuestion';
 
 import {combineReducers} from 'redux';
 
@@ -13,6 +14,7 @@ const appReducer = combineReducers({
     auth: authReducer,
     ui: uiReducer,
     quizCreator: quizCreatorReducer,
+    CodingCreator: createCodingReducer,
     course: courseReducer,
     currentCourse: currentCourseReducer,
 });
