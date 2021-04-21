@@ -63,7 +63,7 @@ class Quiz extends React.Component {
 							id="datetime-start"
 							label="Start Date Time"
 							type="datetime-local"
-							defaultValue="2017-05-24T00:00"
+							defaultValue="2021-04-24T00:00"
 							InputLabelProps={{
 							shrink: true,}}/>
 					</Grid>

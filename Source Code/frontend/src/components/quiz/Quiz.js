@@ -7,15 +7,15 @@ import Countdown from 'react-countdown';
 import userData from '../../service/userData.js';
 import {  useState, useEffect } from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import { saveUserChoices } from '../../reducer/quiz/quiz'
+import { saveUserChoices, autoSubmitQuiz } from '../../reducer/quiz/quiz'
 import { useHistory } from 'react-router';
 
 function Quiz(props) {
 	const quizDataFromStore = useSelector(state => state.quiz);
+	const warnings = quizDataFromStore.warnings;
 	const userName = useSelector(state => state.auth)
 	var startDate = 0;
 	const history = useHistory();
-	console.log(JSON.stringify(quizDataFromStore))
 	if(quizDataFromStore.startedAt === null)
 		startDate = Date.now()
 	else
@@ -29,8 +29,8 @@ function Quiz(props) {
 	const dispatch = useDispatch();
 	
 	const fromStore = quizDataFromStore.userChoices;
-	const userID = props.match.params.userID;
-	const quizID = props.match.params.quizID;
+	const userID = props.userID;
+	const quizID = props.quizID;
 	const questionBank = quizDataFromStore.questions;
 	// const [quizData, setQuizData] = useState([])
 	var [attempted, updateAttempted] = useState(quizDataFromStore.attempted);
@@ -38,7 +38,6 @@ function Quiz(props) {
 	const [flagged, updateFlagged] = useState(quizDataFromStore.flagged);
 	const [currentQ, updateCurrentQ] = useState(1);
 	var endDate = startDate + parseInt(questionBank.duration)*60000;
-	console.log("Start Date", startDate);
 	
 	const handleAttempted = () => {
 		attempted = [...new Set(attempted)];
@@ -46,7 +45,6 @@ function Quiz(props) {
 			arr => [...arr, currentQ]
 			
 		);
-		console.log('AttemptedArray',attempted);
 		
 	}
 	const handleFlagged = () => {
@@ -76,6 +74,26 @@ function Quiz(props) {
 	}
 
 	var [userChoices, updateUserChoice] = useState(quizDataFromStore.userChoices);
+	function autoSubmit(){
+		const {firstName, lastName, middleName} = userName.studentDoc;
+		const quizName = quizDataFromStore.questions.subject;
+		const startedAt = startDate;
+		console.log("Auto Submitting");
+		fetch('/quiz/submitQuiz',{
+			method: "POST",
+			mode: 'cors',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({userID, qID: quizID, userChoices, questions: questionBank.questions, firstName, middleName, lastName, startedAt, quizName})
+		 }).then(data => data.json().then(newData => {
+			 if(newData.msg){
+				 alert("Error");
+			 }else{
+				//dispatch({type: "QUIZ_RESET"})
+				window.history.replace('/home');
+				 
+			 }
+		 })).catch(err => console.log(err))
+	}
 	useEffect(()=> {
 		const data = {
 			userID: userID,
@@ -85,15 +103,16 @@ function Quiz(props) {
     		userChoices: userChoices,
     		startedAt: startDate,
 			questions: questionBank,
+			warnings
 		}
-
+		// Updates on Redux Store
+		dispatch({type: "SAVE_USERCHOICES", payload: data});
 		// Updates on Backend
 		dispatch(saveUserChoices());
 
-		// Updates on Redux Store
-		dispatch({type: "SAVE_USERCHOICES", payload: data});
-
 	}, [attempted, flagged, userChoices,dispatch]);
+
+	
 
 	const handleSubmit = (e) => {
 		const {firstName, lastName, middleName} = userName.studentDoc;
@@ -106,9 +125,9 @@ function Quiz(props) {
 				method: "POST",
 				mode: 'cors',
 				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({userID, qID: quizID, userChoices, questions: questionBank.questions, firstName, middleName, lastName, startedAt, quizName})
+				body: JSON.stringify({userID, qID: quizID, userChoices, questions: questionBank.questions, firstName, middleName, lastName, startedAt, quizName, warnings})
 			 }).then(data => data.json().then(newData => {
-				console.log(JSON.stringify(newData));
+				
 				 if(newData.msg){
 					 alert("Error");
 				 }else{
@@ -125,7 +144,7 @@ function Quiz(props) {
     <div>
       <Grid container justify={'center'} spacing={2}>
         <Grid item xs={12} >
-        	<QuizHeader prn={userData.prn} status="Valid"/>
+        	<QuizHeader />
         </Grid>
 		<Grid item container spacing={2} xs={12}>
 			<Grid item xs={8}>
@@ -156,7 +175,7 @@ function Quiz(props) {
         </Button>
 				</Grid>
 				<Grid item xs={8}>
-				<Countdown onComplete={handleSubmit} date={endDate} />
+				<Countdown onComplete={()=>{dispatch(autoSubmitQuiz)}} date={endDate} />
 				</Grid>
 			</Grid>
         </Grid>

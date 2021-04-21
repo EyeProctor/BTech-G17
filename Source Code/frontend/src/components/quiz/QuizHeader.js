@@ -9,7 +9,8 @@ import * as faceapi from 'face-api.js';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css'; 
 import blankProfile from './blankProfile';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { autoSubmitQuiz } from '../../reducer/quiz/quiz'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -32,6 +33,7 @@ const useStyles = makeStyles((theme) => ({
 const QuizHeader = (props) => {
   const userData = useSelector(state => state.auth.user);
   const quizSubject = useSelector(state => state.quiz.questions.subject);
+  const dispatch = useDispatch();
   const quizID = useSelector(state => state.quiz.quizID);
   useEffect(() => {
     faceapi.nets.tinyFaceDetector.loadFromUri('/models').then(()=> {console.log(
@@ -46,7 +48,7 @@ const QuizHeader = (props) => {
         buttons: [
           {
             label: 'OK',
-            onClick: () => document.documentElement.requestFullscreen().catch((e) => {console.log(e)})
+            onClick: () => document.documentElement.requestFullscreen().catch((e) => {console.log(e); window.history.go(-1)})
           }
         ]
       });
@@ -66,26 +68,32 @@ const QuizHeader = (props) => {
         },
         body: JSON.stringify(reqBody)
       }).then( data => {
-        console.log(data);
+        console.log("Malpractice uploaded");
       }).catch(err => {
         console.error(err);
       })
 
     }
     const faceProcessingFunction = (faceData,img) => {
-      console.log(faceData.length)
       if(faceData.length === 0){
         warn("No Face Detected")
+        dispatch({type:"INCREMENT_WARNING"});
         saveLog(img);
+        if(remaining < 1){
+          dispatch(autoSubmitQuiz());
+        }
       }
       else if(faceData.length > 1){
-        warn("Multiple Face Detected")
+        warn("Multiple Face Detected");
+        dispatch({type:"INCREMENT_WARNING"});
         saveLog(img);
+        if(remaining < 1){
+          dispatch(autoSubmitQuiz());
+        }
       }
     }
-
-    const userPRN = props.prn;
-    const status = props.status;
+    const status =  useSelector(state => state.quiz.warnings);
+    const remaining = useSelector(state => state.quiz.questions.threshold) - status;
     //const profile = props.profile;
     const classes = useStyles();
     const [ImgSrc,setImgSrc]= useState(blankProfile);
@@ -111,11 +119,13 @@ const QuizHeader = (props) => {
             </Grid>
 
             <Grid item xs={3} style={{marginTop:'0.3%'}}>
-              <Typography display="inline" style={{marginLeft:15}} varient="h6">username : </Typography>
+              <Typography display="inline" style={{marginLeft:15}} varient="h6">Username : </Typography>
               <Typography display="inline" style={{marginLeft:5}} varient="h6">{userData.name}</Typography>
               <br/>
-              <Typography display="inline" style={{marginLeft:15}} varient="h6">Status : </Typography>
-              <Typography display="inline" style={{marginLeft:5,color:'#22D400',fontWeight:600}} varient="h6">{status}</Typography>
+              <Typography display="inline" style={{marginLeft:15}} varient="h6">Warnings : </Typography>
+              {(remaining > 5)?
+              <Typography display="inline" style={{marginLeft:5,color:'#22D400',fontWeight:600}} varient="h6">{`${status} ( Remaining: ${remaining} )` }</Typography>:
+              <Typography display="inline" style={{marginLeft:5,color:'#ff0000',fontWeight:600}} varient="h6">{`${status} ( Remaining: ${remaining} )` }</Typography>}
             </Grid>
             <Grid xs={1}>
               <Capture setImgSrc={updateImgSrc}/>

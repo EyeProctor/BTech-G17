@@ -2,6 +2,7 @@ import React from 'react';
 import {Button, Dialog, DialogActions, DialogTitle, Slide, IconButton, Menu, MenuItem, ListItemIcon, ListItemText} from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import MenuIcon from '@material-ui/icons/Menu';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { useHistory } from 'react-router';
 import { useSelector } from 'react-redux';
@@ -80,7 +81,7 @@ const ProfileMenu = () => {
   return (
     <>
         <IconButton aria-label="profile" onClick={handleClick} style={{marginRight:'10px',height:'50px',width:'50px'}}>
-            <AccountCircleIcon fontSize='large' />
+            <MenuIcon fontSize='large' />
         </IconButton>
         <Dialog
             open={open}

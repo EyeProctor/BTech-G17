@@ -1,4 +1,4 @@
-import { Box, Button, Grid, Typography, AppBar } from '@material-ui/core';
+import { Box, Button, Grid, AppBar } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
@@ -20,6 +20,7 @@ const QuizLandingPage = (props) => {
 
     useEffect(
         () => {
+            dispatch({type: "RESET_QUIZEXTRA"})
             fetch(`/quiz/getQuiz/${quizID}`).then(
                 data => data.json().then(newData => {
                     //console.log(JSON.stringify(newData));
@@ -70,6 +71,7 @@ const QuizLandingPage = (props) => {
                                 userChoices: {},
                                 startedAt: null,
                                 questions: quizData,
+                                warnings: 0,
                         }
                         dispatch({type: "SAVE_USERCHOICES", payload: newUserChoices})
                         history.push(`${quizID}/${userID}`);
@@ -82,9 +84,11 @@ const QuizLandingPage = (props) => {
                         console.log(JSON.stringify(newData));
                         const questions = newData.questions[0];
                         newData = {...newData, questions: questions};
-                        history.push(`${quizID}/${userID}`);
                         // Set Start Date from Database
                         dispatch({type: "SAVE_USERCHOICES", payload: newData})
+                        history.push(`${quizID}/${userID}`);
+                        
+                        
 
                     }
                 })

@@ -1,7 +1,8 @@
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
-import Quiz from "./components/quiz/Quiz";
+import QuizWrapper from "./components/quiz/QuizWrapper";
 import HomePage from './components/Home/HomePage'
 import CodeUI from './components/Coding/CodeUI';
+// import PracticalCreator from './components/Coding/PracticalCreator';
 import Creator from './components/quiz/QuizCreation/QuizCreator'
 import CreateRoom from './components/OE/CreateRoom'
 import Room from "./components/OE/Room";
@@ -20,6 +21,8 @@ import StudentProfile from './components/Profile/StudentProfile';
 import TeacherProfile from './components/Profile/TeacherProfile';
 import { Alert } from '@material-ui/lab';
 import MalpracticeGallary from './components/quiz/MalpracticeGallary';
+
+import Practice from './components/practice/practice';
 function App() {
 	return(
 		<Router>
@@ -30,7 +33,7 @@ function App() {
                 {/* QUIZ */}
                 <Route path="/course/quiz/:quizID" exact component={QuizLandingPage} />
                 <Route path="/course/quiz/:quizID/:userID" exact component={TempLanding} />
-                <Route path="/quiz/:quizID/:userID" exact component={Quiz} />
+                <Route path="/quiz/:quizID/:userID" exact component={QuizWrapper} />
                 <Route path="/teacher/quiz/:quizID" exact component={TeacherQuizLanding} />
                 <Route path="/teacher/quiz/malpractices/:quizID/:userID" exact component={MalpracticeGallary} />
 
@@ -43,7 +46,8 @@ function App() {
 
                 {/* Create POE */}
                 <Route path="/teacher/createPOE" exact component={CommingSoon} />
-                <Route path="/test" exact component={CodeUI} />
+                <Route path="/code" exact component={CodeUI} />
+                <Route path="/test" exact component={Practice} />
 
                 {/* Admin */}
                 <Route path="/admin" exact component={AdminHome} />

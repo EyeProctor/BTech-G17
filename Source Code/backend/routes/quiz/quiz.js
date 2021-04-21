@@ -33,7 +33,7 @@ router.get('/getQuiz/:id', (req,res) => {
 // METHOD: POST
 // desc: Add Quiz
 router.post('/addQuiz',(req,res) => {
-    const {courseID,subject, proctored, startDate, endDate, duration, questions} = req.body;
+    const {courseID,subject, proctored, startDate, endDate, duration, questions, threshold} = req.body;
 
     console.log(courseID);
     var questionsArray = []
@@ -51,7 +51,7 @@ router.post('/addQuiz',(req,res) => {
     });
 
     const newQuiz = MainQuiz({
-        subject,proctored, startDate, endDate, duration, questions: questionsArray
+        subject,proctored, startDate, endDate, duration, questions: questionsArray, threshold
     });
 
     // console.log("Question",questions)
@@ -68,10 +68,22 @@ router.post('/addQuiz',(req,res) => {
             function (err, updatedDoc) {
                 if (err) {
                     //console.log(err);
-                    return res.status(500).json({msg : "Server Error"});
+                    Course.findByIdAndUpdate(courseID,{$addToSet: {"quizes": toadd}},
+                    (err2,updatedDoc2)=>{
+                        if(err2)
+                            return res.status(500).json({msg : "Server Error"});
+                        else{
+                            console.log(updatedDoc);
+                        return res.status(200).json(updatedDoc2)
+                        }
+                            
+                    })
                 }
-            console.log(updatedDoc);
+                else{
+                    console.log(updatedDoc);
             return res.status(200).json(updatedDoc)
+                }
+            
         })
     }).catch((err)=> {
         return res.status(500).json({msg: err.message});
@@ -82,7 +94,7 @@ router.post('/addQuiz',(req,res) => {
 
 
 router.post('/saveUserChoices',(req,res)=>{
-    const {userID, attempted,flagged,userChoices,startedAt , quizID, questions} = req.body;
+    const {userID, attempted,flagged,userChoices,startedAt , quizID, questions, warnings} = req.body;
     console.log(userID);
     console.log(attempted);
     console.log(quizID);
@@ -92,7 +104,7 @@ router.post('/saveUserChoices',(req,res)=>{
     UserChoices.findOne({userID,quizID}).then(prevDoc =>
         {
             if(prevDoc){
-                prevDoc.updateOne({userID,quizID,userChoices,attempted,flagged,status,warnings: 0, startedAt, questions}).then(
+                prevDoc.updateOne({userID,quizID,userChoices,attempted,flagged,status,warnings, startedAt, questions}).then(
                     savedDoc => {
                         return res.status(200).json(savedDoc);
                     }
@@ -105,7 +117,7 @@ router.post('/saveUserChoices',(req,res)=>{
             else{
 
                 newUserChoices = new UserChoices({
-                    userID, quizID, userChoices, attempted, flagged, status, warnings: 0, startedAt, questions
+                    userID, quizID, userChoices, attempted, flagged, status, warnings, startedAt, questions
                 });
             
                 newUserChoices.save().then(savedDoc =>{
@@ -122,9 +134,6 @@ router.post('/saveUserChoices',(req,res)=>{
             return res.status(500).json({msg: "Server error"})
         })
     
-
-
-
 })
 
 router.get('/userChoices/:userID/:quizID', (req,res)=> {
@@ -145,6 +154,7 @@ router.get('/userChoices/:userID/:quizID', (req,res)=> {
 })
 
 router.post("/submitQuiz", (req,res)=>{
+    console.log("Quiz Submission")
     const {userID,studentID, qID ,userChoices,questions, firstName, lastName, middleName, quizName, startedAt} = req.body;
 
     var correct = 0, incorrect = 0;

@@ -1,6 +1,6 @@
 
 var initialState = {
-    loading: true,
+    loading: false,
     fetching: false,
     fetched: false,
     err: null,

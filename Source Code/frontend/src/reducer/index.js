@@ -2,6 +2,7 @@ import quizReducer from './quiz/quiz';
 import authReducer from './auth/authReducers';
 import uiReducer from './UI/uiReducers';
 import quizCreatorReducer from './quiz/quizCreator';
+import quizExtraReducer from './quiz/quizExtra';
 import courseReducer from './course/courseReducer';
 import currentCourseReducer from './course/currentCourseReducer';
 
@@ -15,6 +16,7 @@ const appReducer = combineReducers({
     quizCreator: quizCreatorReducer,
     course: courseReducer,
     currentCourse: currentCourseReducer,
+    quizExtra: quizExtraReducer,
 });
 
 const allReducer = (state, action) => {

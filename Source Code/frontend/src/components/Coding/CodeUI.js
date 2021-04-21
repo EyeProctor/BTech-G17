@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useState,useEffect} from 'react';
 import {Typography, FormControl, Select, MenuItem, InputLabel, Grid, CircularProgress, AppBar } from '@material-ui/core';
 import Editor from "@monaco-editor/react";
 import Button from '@material-ui/core/Button';
@@ -11,6 +11,13 @@ const CodeUI = () => {
     const [Output, setOutput] = useState("Type and Click on Run");
     const [isLoading, setLoading] = useState(false);
 
+    
+
+    useEffect(() => {
+        document.documentElement.requestFullscreen().catch((e) => {console.log(e)})
+        
+        //setStartDate( );
+}, []);
     function fetchResult(sid) {
         fetch("/code/fetchResult",
             {
@@ -63,7 +70,7 @@ const CodeUI = () => {
     return (
         <div className='ch-container'>
             <div style={{padding:'5px'}}>
-                    <AppBar position='static' className='Appbar'>
+                    <AppBar position='static' className='Appbar' style={{width:'98vw'}}>
                         <Grid container style={{justifyContent:'space-between',position:'relative'}}>
                             <Grid item style={{display:'flex',justifyContent:'space-between'}}>
                                 <img src='logo_trans.png' className='logo'></img>
@@ -74,9 +81,9 @@ const CodeUI = () => {
                         </Grid>
                     </AppBar>
                 </div>
-            
+        
             <form  onSubmit={SubmitForm}>
-                <Grid style={{marginTop: '11vh'}} className="ch-container" container >
+                <Grid style={{marginTop: '15vh'}} className="ch-container" container >
                     <Grid item xs={8}>
                         <Editor
                         value = {Code}
@@ -92,9 +99,9 @@ const CodeUI = () => {
                     <Grid item xs={4}>
                         <Grid  container item direction="column" justify="center" alignItems="center">
                             <Grid item xs={12} fullWidth>
-                                <FormControl fullWidth>
-                                    <InputLabel id="language" >Language</InputLabel>
-                                    <Select value={language} onChange={(e)=>{setLanguage(e.target.value)}} labelId="language" label="Language">
+                                <FormControl variant="outlined" fullWidth>
+                                    <InputLabel id="language" style={{color:'white'}}>Language</InputLabel>
+                                    <Select style={{color:'white',backgroundColor:'#4c5f7a',height:40}} value={language} onChange={(e)=>{setLanguage(e.target.value)}} labelId="language" label="Language">
                                         <MenuItem value={"C"}>C</MenuItem>
                                         <MenuItem value={"Cpp"}>Cpp</MenuItem>
                                         <MenuItem value={"Java"}>Java</MenuItem>
@@ -103,10 +110,10 @@ const CodeUI = () => {
                                 </FormControl>
                             </Grid>
                             <Grid item xs={12}>
-                                 <Typography variant='subtitle1' color="secondary"> Problem Statement </Typography>
+                                 <Typography variant='subtitle1' style={{fontWeight:'bold'}} color="primary"> Problem Statement </Typography>
                             </Grid>
                             <Grid item xs={12}>
-                                <Typography variant='body1' color="primary"> Write a Program to add 2 Numbers </Typography>
+                                <Typography variant='body1' style={{color:'white'}}> Write a Program to add 2 Numbers </Typography>
                             </Grid>
                             <Grid container item alignContents="center" alignItems="center" justify="center" >
                                 <Grid item xs={12}>
@@ -124,7 +131,7 @@ const CodeUI = () => {
                                 readOnly
                                 className = 'terminal-textArea'
                                 rows="24"
-                                cols = "50"
+                                cols = "40"
                                 />
                             </Grid>
                         </Grid>
@@ -136,63 +143,3 @@ const CodeUI = () => {
 }
 
 export default CodeUI;
-
-// const render = 
-// <Grid className="ch-container" container >
-//     <Grid item xs={8}>
-//         <Editor
-//         value = {Code}
-//         onChange ={(e)=> {setCode(e)}}
-//         marginLeft='100px'
-//         height='100vh'
-//         theme='vs-dark'
-//         defaultLanguage="Java"
-//         width='75vw'
-//         fontSize = '30px'
-//         options = {{"fontSize": "19"}}
-//         />
-//     </Grid>
-//     <Grid item xs={4}>
-//         <Grid  container direction="column" justify="space-evenly" alignItems="flex-start">
-//             <Grid item xs={8}>
-//                 <FormControl required fullWidth variant="outlined">
-//                     <InputLabel id="language" >Language</InputLabel>
-//                     <Select value={language} onChange={(e)=>{setLanguage(e.target.value)}} labelId="language" label="Language">
-//                         <MenuItem value={"C"}>C</MenuItem>
-//                         <MenuItem value={"Cpp"}>Cpp</MenuItem>
-//                         <MenuItem value={"Java"}>Java</MenuItem>
-//                         <MenuItem value={"Python3"}>Python</MenuItem>
-//                     </Select>
-//                 </FormControl>
-//             </Grid>
-//             <Grid item xs={12}>
-//                 <Box borderBottom={1}>
-//                      <Typography> Problem Statement </Typography>
-//                 </Box>
-//             </Grid>
-//             <Grid item xs={12}>
-//                 <Box borderBottom={1}>
-//                     <Typography> Write a Program to add 2 Numbers </Typography>
-//                 </Box>
-//             </Grid>
-//             <Grid item xs={12}>
-//                 <Box borderBottom={1}>
-//                     <Typography> Write a Program to add 2 Numbers </Typography>
-//                 </Box>
-//             </Grid>
-//             <Grid container direction="row" justify="space-evenly" alignItems="flex-start">
-//                 <Grid item xs={6}>
-//                     <Button variant="contained" color="primary">Run</Button>
-//                 </Grid>
-//                 <Grid item xs={6}>
-//                     <Button variant="contained" color="primary">Submit</Button>
-//                 </Grid>
-//             </Grid>
-//             <Grid item xs={12}>
-//                 <Box mt={4} border={1}>
-//                     <Typography> Output </Typography>
-//                 </Box>
-//             </Grid>
-//         </Grid>
-//     </Grid>
-// </Grid>

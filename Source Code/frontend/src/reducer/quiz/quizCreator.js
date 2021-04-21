@@ -5,6 +5,7 @@ const initialState = {
     startDate: null,
     endDate: null,
     duration: null,
+    threshold: null,
     questions: []
 }
 
@@ -45,7 +46,11 @@ const quizCreatorReducer = (state= initialState, action) => {
         case "ADD_OPTION_TEMPLATE":
             QArray = [...state.questions];
             var op = QArray[action.payload.QIndex]
-            op.options = [...op.options, {qs: "",ans: false}]
+            console.log("REDUCER", op.options.length)
+            if(op.options.length === 0)
+                op.options = [...op.options, {qs: "",ans: true}]
+            else
+                op.options = [...op.options, {qs: "",ans: false}]
             return {...state, questions: QArray}
 
         case 'ADD_OPTION':
@@ -83,6 +88,8 @@ const quizCreatorReducer = (state= initialState, action) => {
             return {...state, endDate: action.payload}
         case "SET_DURATION":
             return {...state, duration: action.payload}
+        case "SET_THRESHOLD":
+            return {...state, threshold: action.payload}
         case "RESET_QUIZCREATION":
             return initialState;
         default:

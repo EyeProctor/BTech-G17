@@ -33,7 +33,8 @@ const Login = () =>  {
         dispatch({ type:"RESET_STORE"});
     },[])
 
-    function onSuccess(resData){setLoading(false);
+    function onSuccess(resData){
+        setLoading(false);
         if(resData.msg){
             setBad(true);
             setErrMessage(resData.msg);
@@ -49,22 +50,30 @@ const Login = () =>  {
         setLoading(true);
         e.preventDefault();
         // alert(userName + " " + password);
-        fetch(
-            "/user/login",
-            {
-                method: "POST",
-                mode: 'cors',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(
-                    {
-                        userName,
-                        password,
-                    }
-                )
-            }
-        ).then(
-            response => response.json().then( data => onSuccess(data))
-        ).catch((err) => {console.error(err)});
+        if(userName === "" || password === ""){
+            setLoading(false);
+            setBad(true);
+            setErrMessage("Please Enter all the fields");
+            return;
+        }
+        else{
+            fetch(
+                "/user/login",
+                {
+                    method: "POST",
+                    mode: 'cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(
+                        {
+                            userName,
+                            password,
+                        }
+                    )
+                }
+            ).then(
+                response => response.json().then( data => onSuccess(data))
+            ).catch((err) => {console.error(err)});
+        }
     }
 
     return(
