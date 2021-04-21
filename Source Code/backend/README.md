@@ -14,7 +14,7 @@ You will also see any lint errors in the console.
 
 ### Main Packages
 
-EXPRESS: to handle Requests
-MONGOOSE: database
-BCRYPT: encrypting Data (Password and other confidential data)
-JWT: for Access control of data
+* EXPRESS: to handle Requests 
+* MONGOOSE: database
+* BCRYPT: encrypting Data (Password and other confidential data)
+* JWT: for Access control of data
