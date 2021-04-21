@@ -1,4 +1,4 @@
-import {TextField, FormControl, Select, MenuItem, InputLabel, Grid, Button, Box, CircularProgress} from '@material-ui/core'
+import {TextField, FormControl, Select, MenuItem, InputLabel, Grid, Button, Box, CircularProgress, Container, AppBar} from '@material-ui/core'
 import {Alert, AlertTitle} from '@material-ui/lab'
 import {useState} from 'react';
 
@@ -78,6 +78,14 @@ const CreateCourse = () => {
             );
     }
     return(
+        <Container maxWidth="xlg">
+            <AppBar position='static' className='Appbar'>
+                <Grid container style={{justifyContent:'center',position:'relative'}}>
+                    <Grid item style={{fontSize:'30px',fontWeight:'bold',padding:'20px'}}>
+                        Create Course
+                    </Grid>
+                </Grid>
+            </AppBar>
         <div>
             <form onSubmit={handleSubmit}>
                 <Grid container style={ {flexGrow: 1, marginTop: 25, padding: 10} } spacing={2}>
@@ -143,6 +151,7 @@ const CreateCourse = () => {
                 </Grid>
             </form>
         </div>
+        </Container>
     );
 }
 

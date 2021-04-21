@@ -1,4 +1,4 @@
-import {FormControl,Select, MenuItem, InputLabel, Grid, Button, Box, CircularProgress} from '@material-ui/core'
+import {FormControl,Select, MenuItem, InputLabel, Grid, Button, Box, CircularProgress, Container, AppBar} from '@material-ui/core'
 import {useEffect, useState} from 'react';
 import {Alert, AlertTitle} from '@material-ui/lab'
 const AssignCourse = () => {
@@ -66,55 +66,64 @@ const AssignCourse = () => {
     }
 
     return(
-        <div>
-            <form onSubmit={handleSubmit}>
-                <Grid container style={ { marginTop: 25, padding: 10} } spacing={2}>
-                    <Grid item md={6} xs={12}>
-                        <FormControl required fullWidth variant="outlined">
-                            <InputLabel id="teacher" >Teacher</InputLabel>
-                            <Select value={teacherID} onChange={changeCourseList} labelId="teacher" label="Teacher">
-                                {
-                                    teachers.map((val)=>{
-                                        const nametoDisplay = `${val.firstName} ${val.middleName[0]} ${val.lastName} (${val.branch})`
-                                        return(
-                                            <MenuItem key={val._id} value={val._id}>{nametoDisplay}</MenuItem>
-                                        );
-                                    })
-                                }
-                            </Select>
-                        </FormControl>
-                    </Grid>
-                    
-                    <Grid item md={6} xs={12}>
-                        <FormControl required fullWidth variant="outlined">
-                            <InputLabel id="course">Course</InputLabel>
-                            <Select value={courseID} onChange={(e)=>{setCourseID(e.target.value)}} labelId="course" label="Course">
-                            {
-                                    branchCourses.map((val)=>{
-                                        
-                                        return(
-                                            <MenuItem key={val._id} value={val._id}>{val.courseName}</MenuItem>
-                                        );
-                                    })
-                                }
-                            </Select>
-                        </FormControl>
-                    </Grid>
-
-                    <Grid container item justify="center" alignItems="center">
-                        <Box p={5}>
-                        {isLoading ?<CircularProgress />:<Button type="submit" variant="contained" color="primary">Assign</Button>}
-                        </Box>
-                    </Grid>
-                    <Grid container item xs={12} justify="center" alignItems="center">
-                            {isBad ?<Alert severity="error"><AlertTitle>Error</AlertTitle>{errMessage}</Alert>:<></>}
-                    </Grid>
-                    <Grid container item justify="center" alignItems="center">
-                            {isSuccess ?<Alert variant="filled" severity="success">Assigned!</Alert>:<></>}
+        <Container maxWidth="xlg">
+            <AppBar position='static' className='Appbar'>
+                <Grid container style={{justifyContent:'center',position:'relative'}}>
+                    <Grid item style={{fontSize:'30px',fontWeight:'bold',padding:'20px'}}>
+                        Assign Course
                     </Grid>
                 </Grid>
-            </form>
-        </div>
+            </AppBar>
+            <div>
+                <form onSubmit={handleSubmit}>
+                    <Grid container style={ { marginTop: 25, padding: 10} } spacing={2}>
+                        <Grid item md={6} xs={12}>
+                            <FormControl required fullWidth variant="outlined">
+                                <InputLabel id="teacher" >Teacher</InputLabel>
+                                <Select value={teacherID} onChange={changeCourseList} labelId="teacher" label="Teacher">
+                                    {
+                                        teachers.map((val)=>{
+                                            const nametoDisplay = `${val.firstName} ${val.middleName[0]} ${val.lastName} (${val.branch})`
+                                            return(
+                                                <MenuItem key={val._id} value={val._id}>{nametoDisplay}</MenuItem>
+                                            );
+                                        })
+                                    }
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                        
+                        <Grid item md={6} xs={12}>
+                            <FormControl required fullWidth variant="outlined">
+                                <InputLabel id="course">Course</InputLabel>
+                                <Select value={courseID} onChange={(e)=>{setCourseID(e.target.value)}} labelId="course" label="Course">
+                                {
+                                        branchCourses.map((val)=>{
+                                            
+                                            return(
+                                                <MenuItem key={val._id} value={val._id}>{val.courseName}</MenuItem>
+                                            );
+                                        })
+                                    }
+                                </Select>
+                            </FormControl>
+                        </Grid>
+
+                        <Grid container item justify="center" alignItems="center">
+                            <Box p={5}>
+                            {isLoading ?<CircularProgress />:<Button type="submit" variant="contained" color="primary">Assign</Button>}
+                            </Box>
+                        </Grid>
+                        <Grid container item xs={12} justify="center" alignItems="center">
+                                {isBad ?<Alert severity="error"><AlertTitle>Error</AlertTitle>{errMessage}</Alert>:<></>}
+                        </Grid>
+                        <Grid container item justify="center" alignItems="center">
+                                {isSuccess ?<Alert variant="filled" severity="success">Assigned!</Alert>:<></>}
+                        </Grid>
+                    </Grid>
+                </form>
+            </div>
+        </Container>
     );
 }
 

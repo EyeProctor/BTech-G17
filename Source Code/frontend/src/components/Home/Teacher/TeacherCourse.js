@@ -42,9 +42,10 @@ const TeacherCourseHome = (props) => {
                         Practicals
                     </Box>
                 </Grid>
-                {(poes.length === 0)?<Grid  item xs={12} style={{width:'50%'}}><Alert severity="error">No Active Practicals</Alert></Grid>:<></>}
+                {(poes.length === 0)?<Grid  item xs={12} style={{width:'50%'}}><Alert severity="error">No Active Practicals</Alert></Grid>:
+                poes.map((poeObj)=> <CustomBox key={poeObj.poeID} innerText={poeObj.title} onClick={()=> {history.push(`/teacher/poe/${poeObj.poeID}`)}}/>)}
                 <Grid container justify="center" alignContent="center" alignItems="center" item xs={12}>
-                   <Button onClick={()=>{ history.push('/teacher/createPOE') }} variant="contained" color="primary">Create New Practical</Button>
+                   <Button onClick={()=>{  history.push(`/teacher/createPOE/${courseID}`) }} variant="contained" color="primary">Create New Practical</Button>
                  </Grid>
                 <Box border={1} />
                 

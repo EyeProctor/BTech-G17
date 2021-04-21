@@ -1,5 +1,9 @@
 const express = require('express');
 const fetch = require('node-fetch')
+const CodingAssignment = require('../../schema/coding/CodingAssignment');
+const CodingProblem = require('../../schema/coding/CodingProblem');
+const CodingTestcase = require('../../schema/coding/CodingTestcase');
+const Course = require('../../schema/course/CourseSchema');
 
 const router = express.Router();
 
@@ -81,6 +85,68 @@ router.post('/fetchResult',(req,res) => {
 
 })
 
+
+// METHOD: POST
+// desc: Add CodingAssignment
+router.post('/addCodingAssignment',(req,res) => {
+    const {courseID, title, proctored, startDate, endDate, duration, problems} = req.body;
+    
+    if(!courseID || !title || !proctored || !startDate || !endDate || !duration || !problems)
+        return res.status(400).json({msg: "Bad Request"});
+
+    console.log("courseID= " + courseID);
+    var problemsArray = []
+    problems.forEach(prob => {
+        var testArray = []
+        prob.testcases.forEach( test => {
+            testArray.push(new CodingTestcase({
+                input: test.input,
+                output: test.output
+            }));
+        })
+        problemsArray.push(new CodingProblem({
+            title: prob.title,
+            statement: prob.statement,
+            testcases: testArray,
+            languages: prob.languages
+        }));
+    });
+
+    const newCodingAssignment = CodingAssignment({
+        title, proctored, startDate, endDate, duration, problems: problemsArray
+    });
+    
+    newCodingAssignment.save().then(data => {
+        console.log(data);
+        const toadd = { poeID: data._id, title }
+        Course.findByIdAndUpdate(courseID, 
+            { $addToSet: { "poes" : toadd } },
+            function (err, updatedDoc) {
+                if (err) {
+                    //console.log(err);
+                    return res.status(500).json({msg : "Server Error"});
+                }
+            console.log("updated Doc= " +updatedDoc);
+            return res.status(200).json(updatedDoc)
+        })
+    }).catch((err)=> {
+        return res.status(500).json({msg: err.message});
+    })
+
+    
+})
+
+router.get('/getCodingAssignment/:codeID',(req,res)=>{
+
+    const codeID = req.params.codeID;
+
+    CodingAssignment.findOne({_id: codeID}).then(assignment =>{
+        res.status(200).json(assignment);
+    }).catch(err =>{
+        console.log(err);
+        res.status(500).json({msg: "Server Error"});
+    })
+})
 
 
 module.exports = router;
