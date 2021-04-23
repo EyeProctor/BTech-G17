@@ -48,8 +48,8 @@
 }
 
 .ch-container{
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    min-height: 100vh;
     background-color:#182835;
     position: absolute;
     top: 0;
@@ -65,12 +65,12 @@
 }
 
 .terminal-textArea {
-        background-color: #000;
-        border: 1px solid #000;
-        color: #00ff00;
-        padding: 8px;
-        font-family: courier new;
-        resize: none;
+    background-color: #000;
+    border: 1px solid #000;
+    color: #00ff00;
+    padding: 8px;
+    font-family: courier new;
+    resize: none;
 }
 
 .center {
@@ -78,4 +78,59 @@
     align-items: center;
     justify-content: center;
     transform: translateY(50vh);
+}
+
+.options-btns{
+    margin-right: 5px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.options-btns .MuiButtonBase-root,.options-btns select{
+    background-color: #fec14e;
+    transform: translateY(0);
+    margin: 5px;
+    color: black;
+    border-radius: 7pt;
+    font-size: 12px;
+    font-weight: bold;
+    border: 4px solid #364755;
+    min-width: 70px;
+    max-height: 36px;
+    padding: 0;
+    justify-content: center;
+    letter-spacing: 0.5px;
+    top: 0;
+}
+
+.options-btns .MuiButton-label{
+    color: black;
+    min-width: auto;
+    padding: 5px;
+}
+
+.PSBody{
+    outline: none;
+    font-size: 17px;
+    box-sizing: border-box;
+    width: 100%;
+    user-select: none;
+    background-color: transparent;
+    color: white;
+    border: none;
+    resize: none;
+}
+
+div.MuiCircularProgress-colorPrimary {
+    color: #fec14e;
+    height: 33px !important;
+    width: 33px !important;
+}
+
+.buttonWrap{
+    min-width: 80px;
+    min-height: 38px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

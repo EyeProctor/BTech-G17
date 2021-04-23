@@ -4,7 +4,6 @@ import { useSelector,useDispatch } from "react-redux";
 import { useHistory } from "react-router";
 import CustomBox from '../../Helper/CustomBox';
 import ProfileMenu from "../../Login/ProfileMenu.js";
-import ProfileMenu from "../../Login/profile_menu.js";
 
 
 const TeacherHome = () => {

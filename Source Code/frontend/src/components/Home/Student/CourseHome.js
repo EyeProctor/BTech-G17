@@ -25,9 +25,6 @@ const CourseHome = (props) => {
             <Grid className='cor' style={{margin:'0'}} container>
                 <Grid item xs={12} style={{textAlign: 'center',marginTop:'5vh'}}>
                     <Box p={2} boxShadow={5} borderBottom={1}>
-            <Grid style={{marginTop: 60}} container spacing={2}>
-                <Grid item xs={12} style={{textAlign: 'center'}}>
-                    <Box p={2} boxShadow={3} bgcolor="background.paper" borderBottom={1}>
                         Quizes
                     </Box>
                 </Grid>
@@ -46,5 +43,3 @@ const CourseHome = (props) => {
 }
 
 export default CourseHome;
-
-

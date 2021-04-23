@@ -6,7 +6,6 @@ import {useDispatch, useSelector} from 'react-redux'
 import {useEffect,useState} from 'react';
 import {useHistory} from 'react-router-dom'
 import ProfileMenu from "../../Login/ProfileMenu.js";
-import ProfileMenu from "../../Login/profile_menu.js";
 
 const StudentHome = () => {
     const studentData = useSelector(state => state.auth.studentDoc);
