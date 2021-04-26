@@ -35,7 +35,8 @@ const CourseHome = (props) => {
                         Practicals
                     </Box>
                 </Grid>
-                {(poes.length === 0)?<Grid  item xs={12}><Alert severity="error" >Nothing Here</Alert></Grid>:<></>}
+                {(poes.length === 0)?<Grid  item xs={12}><Alert severity="error" >Nothing Here</Alert></Grid>
+                :poes.map((poeObj)=> <CustomBox key={poeObj.poeID} innerText={poeObj.title} onClick={()=> {history.push(`/student/poe/${poeObj.poeID}`)}}/>)}
 
             </Grid>
         </div>
