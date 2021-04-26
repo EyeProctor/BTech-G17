@@ -1,0 +1,128 @@
+import React from 'react';
+import {Button, Dialog, DialogActions, DialogTitle, Slide, IconButton, Menu, MenuItem, ListItemIcon, ListItemText} from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import MenuIcon from '@material-ui/icons/Menu';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import { useHistory } from 'react-router';
+import { useSelector } from 'react-redux';
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+
+const StyledMenu = withStyles({
+    paper: {
+      border: '1px solid #d3d4d5',
+    },
+  })((props) => (
+    <Menu
+      elevation={0}
+      getContentAnchorEl={null}
+      anchorOrigin={{
+        vertical: 'bottom',
+        horizontal: 'center',
+      }}
+      transformOrigin={{
+        vertical: 'top',
+        horizontal: 'center',
+      }}
+      {...props}
+    />
+  ));
+  
+  const StyledMenuItem = withStyles((theme) => ({
+    root: {
+      '&:focus': {
+        backgroundColor: theme.palette.primary.main,
+        '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
+          color: theme.palette.common.white,
+        },
+      },
+    },
+  }))(MenuItem);
+
+const ProfileMenu = () => {
+  const history = useHistory();
+  const [open, setOpen] = React.useState(false);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const userType = useSelector(state => state.auth.user.userType)
+
+  const handleOpen = () => {
+    setOpen(true);
+    handleClose(null);
+  };
+
+  const handleDClose = () => {
+    setOpen(false);
+  };
+
+  const LogOut = () => {
+    console.log("Clearing Local Storage")
+    localStorage.clear();
+    history.replace('/');
+  }
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const goToProfile = () =>{
+    if(userType === "Student")
+      history.push('/student/profile');
+    else
+      history.push('/teacher/profile');
+  } 
+
+  return (
+    <>
+        <IconButton aria-label="profile" onClick={handleClick} style={{marginRight:'10px',height:'50px',width:'50px'}}>
+            <MenuIcon fontSize='large' />
+        </IconButton>
+        <Dialog
+            open={open}
+            TransitionComponent={Transition}
+            keepMounted
+            onClose={handleClose}
+            aria-labelledby="alert-dialog-slide-title"
+            aria-describedby="alert-dialog-slide-description">
+            <DialogTitle id="alert-dialog-slide-title">{"Are you sure you want to log out?"}</DialogTitle>
+            <DialogActions>
+                <Button onClick={LogOut} color="default">
+                    Confirm
+                </Button>
+                <Button onClick={handleDClose} color="default">
+                    Cancel
+                </Button>
+            </DialogActions>
+        </Dialog>
+
+        <StyledMenu
+        id="customized-menu"
+        anchorEl={anchorEl}
+        keepMounted
+        open={Boolean(anchorEl)}
+        onClose={handleClose}>
+        
+        <StyledMenuItem onClick={goToProfile}>
+            <ListItemIcon>
+                <AccountCircleIcon fontSize="large" />
+            </ListItemIcon>
+            <ListItemText primary="Profile" />
+        </StyledMenuItem>
+        <StyledMenuItem onClick={handleOpen}>
+            <ListItemIcon>
+                <ExitToAppIcon fontSize="large" />
+            </ListItemIcon>
+            <ListItemText primary="Logout"/>
+        </StyledMenuItem>
+      </StyledMenu>
+    </>
+  );
+}
+
+export default ProfileMenu;

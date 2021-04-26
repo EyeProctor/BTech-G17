@@ -16,7 +16,7 @@ class Capture extends Component {
         this.capture = setInterval(() => {
             const imageSrc = this.state.webcamRef.current.getScreenshot();
             this.props.setImgSrc(imageSrc);
-            }, 5000);
+            }, 1000);
     }
   
     componentWillUnmount() {
@@ -28,6 +28,9 @@ class Capture extends Component {
         <>
             <div style={{height:"0", width:"0", overflow:"hidden"}} >
                 <Webcam
+                onUserMediaError = {()=>{
+                    this.props.history.push("/home"); 
+                }}
                 audio={false}
                 ref={this.state.webcamRef}
                 screenshotFormat="image/jpeg"

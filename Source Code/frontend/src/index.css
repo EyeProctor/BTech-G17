@@ -7,3 +7,130 @@
 #root{
     font-family: 'Roboto';
 }
+
+.logo{
+	width: 70px;
+	height: auto;
+    margin: 5px;
+}
+
+.Appbar{
+    position: fixed;
+    width: 95vw;
+    box-shadow: 0 0 5px 5px black;
+    border-radius: 3pt;
+    background-color: #364755 !important;
+}
+
+.Appbar .MuiButtonBase-root,.Appbar .MuiButton-label{
+    background-color: #fec14e !important;
+    font-weight: bolder;
+}
+.Appbar .MuiButtonBase-root{
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.cor .MuiGrid-root .MuiButtonBase-root,.cor .MuiGrid-root .MuiButton-label{
+    background-color: #fec14e;
+    margin: 5px;
+}
+
+#customized-menu svg.MuiSvgIcon-root{
+    height: 30px;
+    width: 30px;
+}
+
+.MuiButtonBase-root.MuiIconButton-root{
+    padding: 5px;
+}
+
+.ch-container{
+    width: 100%;
+    min-height: 100vh;
+    background-color:#182835;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.ch-container .MuiBox-root,.ch-container .MuiButton-label{
+    background-color: #4c5f7a;
+    color: white;
+    border-radius: 3pt;
+    border: none;
+    min-width: 110px;
+}
+
+.terminal-textArea {
+    background-color: #000;
+    border: 1px solid #000;
+    color: #00ff00;
+    padding: 8px;
+    font-family: courier new;
+    resize: none;
+}
+
+.center {
+	display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: translateY(50vh);
+}
+
+.options-btns{
+    margin-right: 5px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.options-btns .MuiButtonBase-root,.options-btns select{
+    background-color: #fec14e;
+    transform: translateY(0);
+    margin: 5px;
+    color: black;
+    border-radius: 7pt;
+    font-size: 12px;
+    font-weight: bold;
+    border: 4px solid #364755;
+    min-width: 70px;
+    max-height: 36px;
+    padding: 0;
+    justify-content: center;
+    letter-spacing: 0.5px;
+    top: 0;
+}
+
+.options-btns .MuiButton-label{
+    color: black;
+    min-width: auto;
+    padding: 5px;
+}
+
+.PSBody{
+    outline: none;
+    font-size: 17px;
+    box-sizing: border-box;
+    width: 100%;
+    user-select: none;
+    background-color: transparent;
+    color: white;
+    border: none;
+    resize: none;
+    max-lines: 50;
+}
+
+div.MuiCircularProgress-colorPrimary {
+    color: #fec14e;
+    height: 33px !important;
+    width: 33px !important;
+}
+
+.buttonWrap{
+    min-width: 80px;
+    min-height: 38px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
