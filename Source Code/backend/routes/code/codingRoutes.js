@@ -4,6 +4,7 @@ const CodingAssignment = require('../../schema/coding/CodingAssignment');
 const CodingProblem = require('../../schema/coding/CodingProblem');
 const CodingTestcase = require('../../schema/coding/CodingTestcase');
 const Course = require('../../schema/course/CourseSchema');
+const CodingSolution = require('../../schema/coding/CodingSolution');
 
 const router = express.Router();
 
@@ -148,6 +149,21 @@ router.get('/getCodingAssignment/:codeID',(req,res)=>{
     })
 })
 
+// Saving User Typed Code on backend incase of any interruption
+router.post('/saveUserCode',(req,res)=>{
+
+})
+
+
+// Retriving User Typed Code to Continue the interrupted Session
+router.get('/userCode',(req,res)=>{
+
+})
+
+// Submiting the Assignment
+router.post('/submitCodeSolution',(req,res)=>{
+
+})
 
 module.exports = router;
 

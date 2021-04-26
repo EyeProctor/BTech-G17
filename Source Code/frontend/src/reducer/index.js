@@ -6,6 +6,7 @@ import quizExtraReducer from './quiz/quizExtra';
 import courseReducer from './course/courseReducer';
 import currentCourseReducer from './course/currentCourseReducer';
 import createCodingReducer from './coding/createCodingQuestion';
+import codingReducer from './coding/codingReducer';
 
 import {combineReducers} from 'redux';
 
@@ -19,6 +20,7 @@ const appReducer = combineReducers({
     course: courseReducer,
     currentCourse: currentCourseReducer,
     quizExtra: quizExtraReducer,
+    coding: codingReducer,
 });
 
 const allReducer = (state, action) => {

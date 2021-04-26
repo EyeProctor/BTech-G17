@@ -13,6 +13,6 @@ const codingSolution = mongoose.Schema(
     }
 )
 
-const codingSolution = mongoose.model('CodingSolution', codingSolution);
+const CodingSolution = mongoose.model('CodingSolution', codingSolution);
 
 module.exports = CodingSolution;

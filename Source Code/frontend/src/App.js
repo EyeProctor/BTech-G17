@@ -41,11 +41,13 @@ function App() {
 
                 {/* Student */}
                 <Route path="/student/profile" exact component={StudentProfile}/>
+                <Route path="/course/:courseName" exact component={CourseHome} />
+                <Route path="/student/poe/:codeID" exact component={CodingLandingPageStudent} />
+                <Route path="/student/poe/:codeID/:userID" exact component={CodeUI} />
 
                 {/* Video Calling */}
                 <Route path="/OE" exact component={CreateRoom}/>
                 <Route path="/room/:roomID" component={Room}/>
-                <Route path="/student/poe/:codeID" exact component={CodingLandingPageStudent} />
 
                 {/* Create POE */}
                 <Route path="/teacher/createPOE/:courseID" exact component={CreateCodingQuestion} />
@@ -61,7 +63,6 @@ function App() {
 
                 {/* Teacher */}
                 <Route path="/teacher/profile" exact component={TeacherProfile}/>
-                <Route path="/course/:courseName" exact component={CourseHome} />
                 <Route path="/course/teacher/:courseName" exact component={TeacherCourseHome} />
                 <Route path="/teacher/createQuiz/:courseID" exact component={Creator} />
                 <Route path="/teacher/poe/:codeID" exact component={CodingLandingPageTeacher} />

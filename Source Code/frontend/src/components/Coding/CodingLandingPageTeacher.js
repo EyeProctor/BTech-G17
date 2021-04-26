@@ -1,4 +1,4 @@
-import { AppBar, Container, Grid, Typography } from "@material-ui/core";
+import { AppBar, Container, Grid } from "@material-ui/core";
 import { useEffect, useState } from "react";
 
 const CodingLandingPageTeacher = (props) => {
@@ -9,17 +9,14 @@ const CodingLandingPageTeacher = (props) => {
         fetch(`/code/getCodingAssignment/${codeID}`).then(data => data.json().then(resData =>{
             setCodeAssignment(resData);
         }
-
-
         ))
-
     },[])
     return(
         <Container maxWidth="xlg">
             <AppBar position='static' className='Appbar'>
                 <Grid container style={{justifyContent:'center',position:'relative'}}>
                     <Grid item style={{fontSize:'30px',fontWeight:'bold',padding:'20px'}}>
-                        {codeID}
+                        {codeAssignment.title}
                     </Grid>
                 </Grid>
             </AppBar>
