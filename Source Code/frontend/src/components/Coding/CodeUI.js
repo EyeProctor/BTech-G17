@@ -1,25 +1,70 @@
-import {useState, React} from 'react';
+import {useState, React, useEffect} from 'react';
 import {Typography, Grid, CircularProgress, AppBar, Modal, makeStyles, Divider } from '@material-ui/core';
 import Editor from "@monaco-editor/react";
 import Button from '@material-ui/core/Button';
 import Run from '@material-ui/icons/PlayArrowRounded';
 import Submit from '@material-ui/icons/PublishRounded';
 import Note from '@material-ui/icons/NotesRounded';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import Capture from '../quiz/Capture';
+import blankProfile from '../quiz/blankProfile';
+import * as faceapi from 'face-api.js';
+import { confirmAlert } from 'react-confirm-alert';
+import Countdown from 'react-countdown';
+import {saveCodeSolution,submitCodeSolution} from '../../reducer/coding/codingSolution';
 
+const useStyles = makeStyles((theme) => ({
+	paper: {
+		display: 'block',
+		marginTop: '5vw',
+		margin: 'auto',
+		width: '55%',
+		backgroundColor: '#182835',
+		border: '2px solid #000',
+		boxShadow: '0px 3px 1px #fec14e',
+		padding: theme.spacing(2, 4, 3),
+		color: '#fec14e',
+		border: '3px solid white',
+		borderRadius: '5pt',
+		maxHeight: '500px',
+		overflowY: 'auto',
+	},
+	
+userIcon:{
+	width: theme.spacing(12),
+	height: theme.spacing(12),
+	marginTop: theme.spacing(2),
+	borderRadius: '3rem'
+  }
+}));
 
 const CodeUI = () => {
     const codeAssignmentQuestions = useSelector(state => state.coding);
-    const [Code, setCode] = useState("print('Hi')");
-    const [language, setLanguage] = useState("Python3");
-    const [Output, setOutput] = useState("Type and Click on Run");
+	const codeSolution = useSelector(state => state.codeSolution);
+    const [Code, setCode] = useState(codeSolution.solution[0]);
+    const [language, setLanguage] = useState(codeSolution.language);
+    const [Output, setOutput] = useState("Type and Click on Run \n1. Choose your language from DropDown\n2. For Java Use Class Name as Solution");
     const [isLoading, setLoading] = useState(false);
+	const [testcaseCount, setTestCaseCount] = useState(0);
+	const endDate = codeSolution.startedAt + parseInt(codeAssignmentQuestions.duration)*60000;
 
+	const dispatch = useDispatch();
+
+	useEffect(()=>{
+		document.documentElement.requestFullscreen().catch((e) => {console.log(e)})
+	},[])
+
+	const handleCode = (e) => {
+		dispatch({type: "SET_SOLUTION", payload: {pNO: currentQ, code: e}});
+		setCode(e);
+	}
 	// Use this for Changing Question Number later
 	const totalQuestions = codeAssignmentQuestions.problems.length;
 	const [currentQ,setCurrentQ] = useState(0);
 
-    function fetchResult(sid) {
+    function fetchResult(sid,i,tC) {
+		console.log("Index", i);
+		setOutput("");
         fetch("/code/fetchResult",
             {
                 method: 'POST',
@@ -32,7 +77,7 @@ const CodeUI = () => {
         ).then(
             (res) => res.json().then(resData => {
                 if (resData.status === 'IN-QUEUE') {
-                    return fetchResult(sid);
+                    return fetchResult(sid,i,tC);
                 }
                 else if(resData.rntError){
 					setOutput(resData.rntError);
@@ -42,9 +87,15 @@ const CodeUI = () => {
 				}else{
                 // setOutput(resData.output);
 				if(codeAssignmentQuestions.problems[0].testcases[0].output === resData.output){
-					setOutput("Test Case Passed");
+					if(i===0)
+						setOutput(`Case Passed\nYour Output: ${resData.output}`);
+					else
+						setOutput(Output + `\nCase Passed\nYour Output: ${resData.output}`);
+					setTestCaseCount(testcaseCount+1);
+					tC += 1;
+					dispatch({type: "SET_CORRECTTESTCASE", payload:tC});
 				}else{
-					setOutput("Test Case Failed");
+					setOutput("Test Case Failed\nYour Output: "+ JSON.stringify({Output: resData.output}));
 				}
 				}
                 setLoading(false);
@@ -53,9 +104,12 @@ const CodeUI = () => {
         ).catch(err => console.log(err)).catch(err => { setLoading(false); setOutput("Server Error"); console.log(err)});
     }
     function SubmitForm(e) {
+		setTestCaseCount(0);
         setLoading(true);
+		setOutput("");
         e.preventDefault();
-        fetch("/code/compile",
+        for (let index = 0; index < codeSolution.totalTestcases; index++) {
+			fetch("/code/compile",
             {
                 method: 'POST',
                 mode: 'cors',
@@ -65,32 +119,18 @@ const CodeUI = () => {
                 body: JSON.stringify({
                     lang: language,
                     code: Code,
-                    input: codeAssignmentQuestions.problems[0].testcases[0].input,
+                    input: codeAssignmentQuestions.problems[index].testcases[index].input,
                     save: false
                 })
             }
         ).then(
-            (res) => res.json().then(resData => fetchResult(resData.sid))
+            (res) => res.json().then(resData => {fetchResult(resData.sid,index,0)})
         ).catch(err => console.log(err)).catch(err => console.log(err));
+			
+		}
     }
 
-	const useStyles = makeStyles((theme) => ({
-		paper: {
-			display: 'block',
-			marginTop: '5vw',
-			margin: 'auto',
-			width: '55%',
-			backgroundColor: '#182835',
-			border: '2px solid #000',
-			boxShadow: '0px 3px 1px #fec14e',
-			padding: theme.spacing(2, 4, 3),
-			color: '#fec14e',
-			border: '3px solid white',
-			borderRadius: '5pt',
-			maxHeight: '500px',
-			overflowY: 'auto',
-		},
-	}));
+	
 
 	const classes = useStyles();
 	const [open, setOpen] = useState(false);
@@ -120,15 +160,22 @@ const CodeUI = () => {
 			</textarea>
 		</div>
 	);
+	useEffect(()=>{
+		dispatch(saveCodeSolution());
+	},[Code,language,Output,language,dispatch])
+	const submitCode = () => {
+		dispatch(submitCodeSolution());
+	}
+
 	
-    document.oncontextmenu = new Function("return false;");
+    
     return (
         <div className='ch-container' style={{height:'auto'}}>
             <div style={{padding:'5px'}}>
 				<AppBar position='static' className='Appbar'>
 					<Grid container style={{justifyContent:'space-between',position:'relative'}}>
 						<Grid item style={{display:'flex',justifyContent:'space-between'}}>
-							<img src='logo_trans.png' className='logo' alt="Logo"/>
+							<img src='/logo_trans.png' className='code-logo' alt="Logo"/>
 							<div style={{display:'inline-block',verticalAlign:'middle',textAlign:'center',color:'#fec14e'}}>
 								<h1 style={{position:'relative',top:'50%',transform: 'translateY(-50%)'}}>Proctor</h1>
 							</div>
@@ -137,13 +184,15 @@ const CodeUI = () => {
 							<div style={{display:'block',color:'#fec14e'}}>
 									<h3 style={{position:'relative',top:'50%',transform: 'translateY(-50%)',marginRight:'5px'}}>
 										CODING GROUND v0.5
+										<Countdown style={{color: "black"}} data={endDate}/>
 									</h3>
 							</div>
+							<CodeCapture />
 						</Grid>
 					</Grid>
 					<Divider variant='inset'/>
 					<div>
-						<div class='options-btns'>
+						<div className='options-btns'>
 							<div className='buttonWrap'>
 								<Button onClick={handleOpen}><Note fontSize='small' color='white'/> Problem Statement </Button>
 							</div>
@@ -166,7 +215,7 @@ const CodeUI = () => {
 							</div>
 
 							<div className='buttonWrap'>
-								<Button form='code' color="primary"><Submit/>Submit</Button>
+								<Button onClick={submitCode} form='code' color="primary"><Submit/>Submit</Button>
 							</div>
 
 							<Modal
@@ -187,13 +236,13 @@ const CodeUI = () => {
 					<form id='code' onSubmit={SubmitForm}>
 						<Editor
 							value = {Code}
-							onChange ={(e)=> {setCode(e)}}
-							height='80vh'
+							onChange ={handleCode}
+							height='75vh'
 							theme='vs-dark'
 							defaultLanguage="java"
 							fontSize = '30px'
 							margin = 'auto'
-							options = {{"fontSize": "19",autoIndent:"advanced"}}
+							options = {{"fontSize": "19","autoIndent":"advanced","fontFamily":"dank mono"}}
 						/>
 					</form>
 				</div>
@@ -215,4 +264,86 @@ const CodeUI = () => {
     );
 }
 
+const CodeCapture = () => {
+	// Initialise faceapi
+	// Warnings
+	// Post Malapractice images
+	const classes = useStyles();
+	const [imgSrc, setImgSrc] = useState(blankProfile);
+	const userID = useSelector(state => state.auth.user.id);
+	const quizID = useSelector(state => state.coding._id);
+	const dispatch = useDispatch();
+
+	function saveLog(img){
+		const reqBody = {
+		  image: img,
+		  userID,
+		  quizID
+		}
+  
+		fetch('/quiz/malpracticeLog', {
+		  method: "POST",
+		  headers: {
+			"Content-Type": "application/json",
+		  },
+		  body: JSON.stringify(reqBody)
+		}).then( data => {
+		  console.log("Malpractice uploaded");
+		}).catch(err => {
+		  console.error(err);
+		})
+  
+	  }
+
+
+	function warn(message){
+		confirmAlert({
+		  title: 'Warning',
+		  message: message,
+		  buttons: [
+			{
+			  label: 'OK',
+			  onClick: () => document.documentElement.requestFullscreen().catch((e) => {console.log(e); window.history.go(-1)})
+			}
+		  ]
+		});
+	  };
+	const faceProcessingFunction = (faceData,img) => {
+		if(faceData.length === 0){
+		  //warn("No Face Detected")
+		  //dispatch({type:"INCREMENT_CODEWARNING"});
+		//   dispatch(saveCodeSolution());
+		//   saveLog(img);
+		//   if(remaining < 1){
+		// 	dispatch(autoSubmitQuiz());
+		//   }
+		}
+		else if(faceData.length > 1){
+		//   warn("Multiple Face Detected");
+		//   dispatch({type:"INCREMENT_CODEWARNING"});
+		//   saveLog(img);
+		//   if(remaining < 1){
+		// 	dispatch(autoSubmitQuiz());
+		//   }
+		}
+	  }
+
+	  const updateImgSrc = (img) => {
+		setImgSrc(img);
+		faceapi.detectAllFaces("codeImg", new faceapi.TinyFaceDetectorOptions()).then((data) => faceProcessingFunction(data,img)).catch((err)=> console.error(err))
+	  }
+
+	useEffect(()=>{
+		faceapi.nets.tinyFaceDetector.loadFromUri('/models').then(()=> {console.log(
+			"Face API Started"
+		  )}).catch((err) => console.log("Error Starting FACE API", err.message));
+	},[])
+	return(
+		<>
+			<Capture setImgSrc={updateImgSrc}/>
+			<img id="codeImg" src={imgSrc} className={classes.userIcon}/>
+		</>
+
+	);
+}
 export default CodeUI;

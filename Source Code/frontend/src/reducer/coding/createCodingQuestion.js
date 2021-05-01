@@ -1,7 +1,7 @@
 const initialState = {
     courseID: "",
     title: null,
-    proctored: false,
+    threshold: 0,
     startDate: null,
     endDate: null,
     duration: null,
@@ -83,7 +83,7 @@ const createCodingReducer = (state = initialState, action) => {
 
         case "SET_ASSIGNMENT_TITLE":
             return { ...state, title: action.payload }
-        case "SET_PROCTORED":
+        case "SET_CODETHRESHOLD":
             return { ...state, proctored: action.payload }
         case "SET_STARTDATE":
             return { ...state, startDate: action.payload }

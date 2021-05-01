@@ -5,6 +5,7 @@ const CodingProblem = require('../../schema/coding/CodingProblem');
 const CodingTestcase = require('../../schema/coding/CodingTestcase');
 const Course = require('../../schema/course/CourseSchema');
 const CodingSolution = require('../../schema/coding/CodingSolution');
+const CodingSession = require('../../schema/coding/CodingSession');
 
 const router = express.Router();
 
@@ -90,9 +91,9 @@ router.post('/fetchResult',(req,res) => {
 // METHOD: POST
 // desc: Add CodingAssignment
 router.post('/addCodingAssignment',(req,res) => {
-    const {courseID, title, proctored, startDate, endDate, duration, problems} = req.body;
+    const {courseID, title, threshold, startDate, endDate, duration, problems} = req.body;
     
-    if(!courseID || !title || !proctored || !startDate || !endDate || !duration || !problems)
+    if(!courseID || !title || !threshold || !startDate || !endDate || !duration || !problems)
         return res.status(400).json({msg: "Bad Request"});
 
     console.log("courseID= " + courseID);
@@ -114,7 +115,7 @@ router.post('/addCodingAssignment',(req,res) => {
     });
 
     const newCodingAssignment = CodingAssignment({
-        title, proctored, startDate, endDate, duration, problems: problemsArray
+        title, threshold, startDate, endDate, duration, problems: problemsArray, courseID
     });
     
     newCodingAssignment.save().then(data => {
@@ -151,18 +152,96 @@ router.get('/getCodingAssignment/:codeID',(req,res)=>{
 
 // Saving User Typed Code on backend incase of any interruption
 router.post('/saveUserCode',(req,res)=>{
+    const { codeID, solution, correctTestcases, totalTestcases, language,
+    startedAt,warnings,userID} = req.body;
+    CodingSession.findOne({userID,codeID}).then(
+        session => {
+            if(session){
 
+                session.updateOne({
+                    codeID,userID,solution,correctTestcases,totalTestcases, language,startedAt,warnings
+                }).then(savedDoc =>{
+                    console.log("Updating")
+                    return res.status(200).json(savedDoc);
+                }).catch(err => {
+                    console.log(err);
+                   return  res.status(500).json({msg: "Internal Server Error While Updating"});
+                })
+            }else{
+                const newSession = CodingSession({
+                    codeID,userID,solution,correctTestcases,totalTestcases, language,startedAt,warnings
+                })
+
+                newSession.save().then(newSess => {
+                    return res.status(200).json(newSess);
+                }).catch(err => {
+                    console.log(err);
+                   return  res.status(500).json({msg: "Internal Server Error"});
+                })
+            }
+        }
+    ).catch();
+    
 })
 
 
 // Retriving User Typed Code to Continue the interrupted Session
-router.get('/userCode',(req,res)=>{
-
+router.get('/getUserCode/:codeID/:userID',(req,res)=>{
+    const codeID = req.params.codeID;
+    const userID = req.params.userID;
+    CodingSession.findOne({codeID,userID}).then(
+        data =>{
+            if(data)
+                return res.status(200).json(data);
+            else{
+                return res.status(200).json({msg: "New Session"});
+            }
+        }
+    ).catch(
+        err => {
+            res.status(500).json({msg: "Server Error"});
+        }
+    )
 })
 
 // Submiting the Assignment
 router.post('/submitCodeSolution',(req,res)=>{
+    const { codeID, solution, correctTestcases, totalTestcases, language,
+        startedAt,warnings,userID} = req.body;
 
+        res.status(200).json({msg: "ToDO"});
+    
+})
+
+router.get('/submitStatus/:codeID/:userID', (req,res)=> {
+    console.log("Checking Submission Status");
+    const codeID = req.params.codeID;
+    const userID = req.params.userID;
+    CodingSolution.findOne({codeID,userID}).then(data => {
+        if(data){
+            return res.status(200).json({found: true});
+        }
+        else
+            return res.status(200).json({found: false})
+    }).catch(err => {
+        console.log(err);
+        return res.status(500).json({msg: "Error"});
+    })
+})
+
+router.get('/getAll/:codeID',(req,res)=> {
+    const codeID = req.params.codeID;
+
+    CodingSolution.find({codeID}).then(resData => {
+        if(resData){
+            return res.status(200).json(resData);
+        }
+        else
+            return res.status(200).json([]);
+    }).catch(err=> {
+        console.log(err);
+        return res.status(500).json({msg: "Server Error"});
+    })
 })
 
 module.exports = router;

@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const codingAssignment = mongoose.Schema(
     {
         title: String,
-        proctored: {type: Boolean, default: false},
+        threshold: {type: Number, default: 10},
         problems: [], //{problemID: String}
         duration: Number,
         startDate: Date,

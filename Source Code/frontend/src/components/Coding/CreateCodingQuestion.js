@@ -102,16 +102,8 @@ const CreateCodingQuetion = (props) => {
                     <TextField onChange={(e) => { dispatch({ type: "SET_DURATION", payload: e.target.value }) }} value={state.duration} type="number" id="dur" label="Duration in minutes" variant="outlined" fullWidth />
                 </Grid>
                 <Grid item xs={6}>
-                    <FormControlLabel
-                            control={
-                            <Checkbox
-                                checked={state.proctored}
-                                onChange={ (event) => { dispatch({ type: "SET_PROCTORED", payload: event.target.checked }) } }
-                                name="Proctored"
-                            />
-                            }
-                            label="Proctored"
-                    />
+                <TextField onChange={(e) => { dispatch({ type: "SET_CODETHRESHOLD", payload: e.target.value }) }} value={state.threshold} type="number" id="dur" label="Warnings Threshold Value" variant="outlined" fullWidth />
+                    
                 </Grid>
                 {
                     state.problems.map((val, idx) => {
@@ -223,7 +215,7 @@ const CreateCodingQuetion = (props) => {
                     {isBad ? <Alert severity="error"><AlertTitle>Error</AlertTitle>{errMessage}</Alert> : <></>}
                 </Grid>
                 <Grid container item justify="center" alignItems="center">
-                    {isSuccess ? <Alert variant="filled" severity="success">Quiz Created!</Alert> : <></>}
+                    {isSuccess ? <Alert variant="filled" severity="success">POE Created!</Alert> : <></>}
                 </Grid>
             </Grid>
         </form >
