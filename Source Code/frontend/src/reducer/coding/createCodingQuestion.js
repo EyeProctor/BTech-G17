@@ -13,10 +13,10 @@ var problemState = {
     statement: "",
     testcases: [],
     languages: {
-        c: true,
-        cpp: true,
-        java: true,
-        python: true
+        C: true,
+        Cpp: true,
+        Java: true,
+        Python3: true
     }
 }
 
@@ -84,7 +84,7 @@ const createCodingReducer = (state = initialState, action) => {
         case "SET_ASSIGNMENT_TITLE":
             return { ...state, title: action.payload }
         case "SET_CODETHRESHOLD":
-            return { ...state, proctored: action.payload }
+            return { ...state, threshold: action.payload }
         case "SET_STARTDATE":
             return { ...state, startDate: action.payload }
         case "SET_ENDDATE":

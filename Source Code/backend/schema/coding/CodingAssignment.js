@@ -7,7 +7,8 @@ const codingAssignment = mongoose.Schema(
         problems: [], //{problemID: String}
         duration: Number,
         startDate: Date,
-        endDate: Date
+        endDate: Date,
+        courseID: String,
     }
 )
 

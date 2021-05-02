@@ -2,7 +2,7 @@ import { AppBar, Grid } from "@material-ui/core";
 import React, { useEffect, useState } from 'react';
 import { useSelector } from "react-redux";
 import CustomBox from '../Helper/CustomBox';
-import QuizDownload from '../quiz/QuizDownload';
+import CodingSolutionDownload from "./CodingSolutionDownload";
 
 const CodingLandingPageTeacher = (props) => {
     const codeID = props.match.params.codeID;
@@ -30,7 +30,7 @@ const CodingLandingPageTeacher = (props) => {
             </div>
                 <Grid style={{marginTop: '10vh'}} container>
                     <Grid item xs={2}>
-                        <QuizDownload codeData={codeData} subject={""} />
+                        <CodingSolutionDownload codeData={codeData} subject={"POE RESULT"} />
                     </Grid>
                     <Grid>
                         <CustomBox innerText="Delete POE" />

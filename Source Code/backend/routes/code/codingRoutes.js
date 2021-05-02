@@ -209,7 +209,16 @@ router.post('/submitCodeSolution',(req,res)=>{
     const { codeID, solution, correctTestcases, totalTestcases, language,
         startedAt,warnings,userID} = req.body;
 
-        res.status(200).json({msg: "ToDO"});
+        const finishedAt = Date().toString();
+        console.log(finishedAt);
+
+        const newSubmission = new CodingSolution({codeID,solution,correctTestcases, totalTestcases, language,startedAt, warnings,userID,finishedAt});
+
+        newSubmission.save().then( resData => {
+             res.status(200).json(resData);
+        } ).catch(err => {
+            return res.status(500).json({msg: "Server Error"});
+        })
     
 })
 
@@ -232,16 +241,49 @@ router.get('/submitStatus/:codeID/:userID', (req,res)=> {
 router.get('/getAll/:codeID',(req,res)=> {
     const codeID = req.params.codeID;
 
-    CodingSolution.find({codeID}).then(resData => {
-        if(resData){
-            return res.status(200).json(resData);
+    CodingSolution.find({codeID}).then(results => {
+        if(results){
+            console.log(results);
+            var newRes = []
+            results.forEach(r => {
+                newRes.push({...r._doc, logs: `localhost:3000/teacher/quiz/malpractices/${codeID}/${r.userID}`})
+            });
+            console.log(newRes);
+            return res.status(200).json(newRes);
+
         }
         else
-            return res.status(200).json([]);
+            return res.status(200).json(results);
     }).catch(err=> {
         console.log(err);
         return res.status(500).json({msg: "Server Error"});
     })
+})
+
+
+router.get('/delete/:codeID/:courseID', (req,res) => {
+    const codeID = req.params.codeID;
+    const courseID = req.params.courseID;
+    CodingAssignment.findById(codeID).then(
+        data => {
+            if(data){
+                Course.findByIdAndUpdate(courseID, { $pullAll: {poeID: codeID}}).then(
+                    updatedDoc => {
+                        if(updatedDoc){
+                            data.delete().then(newData => {
+                                if(newData)
+                                    return res.status(200).json({success: "Deleted"});
+                            }).catch(err =>
+                                res.status(500).json({msg: "Failed"})
+                            )
+                        }
+                    }
+                ).catch(err =>
+                    res.status(500).json({msg: "Failed"})
+                )
+            }
+        }
+    );
 })
 
 module.exports = router;

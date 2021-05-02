@@ -102,7 +102,7 @@ const CreateCodingQuetion = (props) => {
                     <TextField onChange={(e) => { dispatch({ type: "SET_DURATION", payload: e.target.value }) }} value={state.duration} type="number" id="dur" label="Duration in minutes" variant="outlined" fullWidth />
                 </Grid>
                 <Grid item xs={6}>
-                <TextField onChange={(e) => { dispatch({ type: "SET_CODETHRESHOLD", payload: e.target.value }) }} value={state.threshold} type="number" id="dur" label="Warnings Threshold Value" variant="outlined" fullWidth />
+                <TextField onChange={(e) => { dispatch({ type: "SET_CODETHRESHOLD", payload: e.target.value }) }} value={state.threshold} type="number" id="tre" label="Warnings Threshold Value" variant="outlined" fullWidth />
                     
                 </Grid>
                 {
@@ -141,40 +141,40 @@ const CreateCodingQuetion = (props) => {
                                                                 <Checkbox
                                                                     checked={state.problems[idx].languages.c}
                                                                     onChange={ (event) => { dispatch({ type: "SET_PROBLEM_LANGUAGES", payload: { PIndex: idx, lang: event.target.name, flag: event.target.checked} }) } }
-                                                                    name="c"
+                                                                    name="C"
                                                                 />
                                                                 }
-                                                                label="c"
+                                                                label="C"
                                                         />
                                                         <FormControlLabel
                                                             control={
                                                                 <Checkbox
                                                                     checked={state.problems[idx].languages.cpp}
                                                                     onChange={ (event) => { dispatch({ type: "SET_PROBLEM_LANGUAGES", payload: { PIndex: idx, lang: event.target.name, flag: event.target.checked} }) } }
-                                                                    name="cpp"
+                                                                    name="Cpp"
                                                                 />
                                                             }
-                                                            label="cpp"
+                                                            label="Cpp"
                                                         />
                                                         <FormControlLabel
                                                             control={
                                                                 <Checkbox
                                                                     checked={state.problems[idx].languages.java}
                                                                     onChange={ (event) => { dispatch({ type: "SET_PROBLEM_LANGUAGES", payload: { PIndex: idx, lang: event.target.name, flag: event.target.checked} }) } }
-                                                                    name="java"
+                                                                    name="Java"
                                                                 />
                                                             }
-                                                            label="java"
+                                                            label="Java"
                                                         />
                                                         <FormControlLabel
                                                             control={
                                                                 <Checkbox
                                                                     checked={state.problems[idx].languages.python}
                                                                     onChange={ (event) => { dispatch({ type: "SET_PROBLEM_LANGUAGES", payload: { PIndex: idx, lang: event.target.name, flag: event.target.checked} }) } }
-                                                                    name="python"
+                                                                    name="Python3"
                                                                 />
                                                             }
-                                                            label="python"
+                                                            label="Python"
                                                         />
                                                     </FormGroup>
                                                 </FormControl>

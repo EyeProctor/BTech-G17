@@ -71,8 +71,9 @@ export const submitCodeSolution = () => async (dispatch, getState) => {
     const userID = getState().auth.user.id;
     const codeID = getState().coding._id;
     // const courseID = getState().coding.courseID;
+    const finishedAt = Date().toString();
     const temp = getState().codeSolution;
-    const solution = {...temp, userID,codeID};
+    const solution = {...temp, userID,codeID, finishedAt};
 
     await fetch("/code/submitCodeSolution", {
         method: "POST",

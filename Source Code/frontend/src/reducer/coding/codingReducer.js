@@ -1,7 +1,7 @@
 const initialState = {
     courseID: "",
     title: null,
-    proctored: false,
+    threshold: 0,
     startDate: null,
     endDate: null,
     duration: null,

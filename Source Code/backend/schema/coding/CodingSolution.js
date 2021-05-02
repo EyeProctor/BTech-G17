@@ -8,6 +8,8 @@ const codingSolution = mongoose.Schema(
         courseID: String,
         correctTestcases: Number,
         totalTestcases: Number,
+        startedAt: Number,
+        finishedAt: String,
         language: String //c, cpp, java, python
     }
 )

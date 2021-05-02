@@ -38,16 +38,21 @@ userIcon:{
   }
 }));
 
+
+var remaining = 0;
 const CodeUI = () => {
     const codeAssignmentQuestions = useSelector(state => state.coding);
 	const codeSolution = useSelector(state => state.codeSolution);
+	remaining = codeAssignmentQuestions.threshold - codeSolution.warnings;
     const [Code, setCode] = useState(codeSolution.solution[0]);
     const [language, setLanguage] = useState(codeSolution.language);
     const [Output, setOutput] = useState("Type and Click on Run \n1. Choose your language from DropDown\n2. For Java Use Class Name as Solution");
     const [isLoading, setLoading] = useState(false);
 	const [testcaseCount, setTestCaseCount] = useState(0);
+	const [failedCases, setFailedCases] = useState("");
 	const endDate = codeSolution.startedAt + parseInt(codeAssignmentQuestions.duration)*60000;
-
+	var gTC = 0;
+	var inQueueCount = 0;
 	const dispatch = useDispatch();
 
 	useEffect(()=>{
@@ -62,7 +67,7 @@ const CodeUI = () => {
 	const totalQuestions = codeAssignmentQuestions.problems.length;
 	const [currentQ,setCurrentQ] = useState(0);
 
-    function fetchResult(sid,i,tC) {
+    function fetchResult(sid,i,tIn) {
 		console.log("Index", i);
 		setOutput("");
         fetch("/code/fetchResult",
@@ -77,7 +82,12 @@ const CodeUI = () => {
         ).then(
             (res) => res.json().then(resData => {
                 if (resData.status === 'IN-QUEUE') {
-                    return fetchResult(sid,i,tC);
+					inQueueCount += 1;
+					if(inQueueCount < 20)
+                    	return fetchResult(sid,i,tIn);
+					else{
+						setOutput("Error: Time Out");
+					}
                 }
                 else if(resData.rntError){
 					setOutput(resData.rntError);
@@ -86,16 +96,17 @@ const CodeUI = () => {
 					setOutput(resData.cmpError);
 				}else{
                 // setOutput(resData.output);
-				if(codeAssignmentQuestions.problems[0].testcases[0].output === resData.output){
+				if(codeAssignmentQuestions.problems[0].testcases[i].output === resData.output){
+					gTC += 1;
 					if(i===0)
 						setOutput(`Case Passed\nYour Output: ${resData.output}`);
 					else
-						setOutput(Output + `\nCase Passed\nYour Output: ${resData.output}`);
+						setOutput(Output + `\nCase Passed\nYour Output: ${resData.output}` + `\n ${gTC} / ${codeSolution.totalTestcases} Cases Passed`);
 					setTestCaseCount(testcaseCount+1);
-					tC += 1;
-					dispatch({type: "SET_CORRECTTESTCASE", payload:tC});
+					dispatch({type: "SET_CORRECTTESTCASE", payload:gTC});
 				}else{
-					setOutput("Test Case Failed\nYour Output: "+ JSON.stringify({Output: resData.output}));
+					setOutput(Output + "\nTest Case Failed\nYour Output: "+ JSON.stringify({Output: resData.output}) + " for input: "+ codeAssignmentQuestions.problems[0].testcases[i].input);
+					
 				}
 				}
                 setLoading(false);
@@ -108,6 +119,8 @@ const CodeUI = () => {
         setLoading(true);
 		setOutput("");
         e.preventDefault();
+		gTC = 0;
+		inQueueCount = 0;
         for (let index = 0; index < codeSolution.totalTestcases; index++) {
 			fetch("/code/compile",
             {
@@ -119,12 +132,12 @@ const CodeUI = () => {
                 body: JSON.stringify({
                     lang: language,
                     code: Code,
-                    input: codeAssignmentQuestions.problems[index].testcases[index].input,
+                    input: codeAssignmentQuestions.problems[0].testcases[index].input,
                     save: false
                 })
             }
         ).then(
-            (res) => res.json().then(resData => {fetchResult(resData.sid,index,0)})
+            (res) => res.json().then(resData => {fetchResult(resData.sid,index,gTC,codeAssignmentQuestions.problems[0].testcases[index].input)})
         ).catch(err => console.log(err)).catch(err => console.log(err));
 			
 		}
@@ -164,10 +177,21 @@ const CodeUI = () => {
 		dispatch(saveCodeSolution());
 	},[Code,language,Output,language,dispatch])
 	const submitCode = () => {
-		dispatch(submitCodeSolution());
+		if (window.confirm('Confirm Submission'))
+			dispatch(submitCodeSolution());
+		else{
+			document.documentElement.requestFullscreen().catch((e) => {console.log(e); window.history.go(-1)})
+		}
 	}
 
-	
+	const renderer = ({ hours, minutes, seconds, completed }) => {
+		if (completed) {
+		  return <>Completed</>;
+		} else {
+		  // Render a countdown
+		  return <span>{hours}:{minutes}:{seconds}</span>;
+		}
+	  };
     
     return (
         <div className='ch-container' style={{height:'auto'}}>
@@ -183,11 +207,12 @@ const CodeUI = () => {
 						<Grid item style={{display:'flex',justifyContent:'space-between'}}>
 							<div style={{display:'block',color:'#fec14e'}}>
 									<h3 style={{position:'relative',top:'50%',transform: 'translateY(-50%)',marginRight:'5px'}}>
-										CODING GROUND v0.5
-										<Countdown style={{color: "black"}} data={endDate}/>
+										Warnings : {codeSolution.warnings + ` Remaining: ${remaining} `} 
+										<Countdown date={endDate} onComplete={()=> {dispatch(submitCodeSolution())}} />
 									</h3>
 							</div>
 							<CodeCapture />
+							
 						</Grid>
 					</Grid>
 					<Divider variant='inset'/>
@@ -265,14 +290,12 @@ const CodeUI = () => {
 }
 
 const CodeCapture = () => {
-	// Initialise faceapi
-	// Warnings
-	// Post Malapractice images
 	const classes = useStyles();
 	const [imgSrc, setImgSrc] = useState(blankProfile);
 	const userID = useSelector(state => state.auth.user.id);
 	const quizID = useSelector(state => state.coding._id);
 	const dispatch = useDispatch();
+	const [Proctor, setProctor] = useState(false);
 
 	function saveLog(img){
 		const reqBody = {
@@ -310,21 +333,21 @@ const CodeCapture = () => {
 	  };
 	const faceProcessingFunction = (faceData,img) => {
 		if(faceData.length === 0){
-		  //warn("No Face Detected")
-		  //dispatch({type:"INCREMENT_CODEWARNING"});
-		//   dispatch(saveCodeSolution());
-		//   saveLog(img);
-		//   if(remaining < 1){
-		// 	dispatch(autoSubmitQuiz());
-		//   }
+		  warn("No Face Detected")
+		  dispatch({type:"INCREMENT_CODEWARNING"});
+		  dispatch(saveCodeSolution());
+		  saveLog(img);
+		  if(remaining < 1){
+			dispatch(submitCodeSolution());
+		  }
 		}
 		else if(faceData.length > 1){
-		//   warn("Multiple Face Detected");
-		//   dispatch({type:"INCREMENT_CODEWARNING"});
-		//   saveLog(img);
-		//   if(remaining < 1){
-		// 	dispatch(autoSubmitQuiz());
-		//   }
+		  warn("Multiple Face Detected");
+		  dispatch({type:"INCREMENT_CODEWARNING"});
+		  saveLog(img);
+		  if(remaining < 1){
+			dispatch(submitCodeSolution());
+		  }
 		}
 	  }
 
@@ -334,16 +357,27 @@ const CodeCapture = () => {
 	  }
 
 	useEffect(()=>{
-		faceapi.nets.tinyFaceDetector.loadFromUri('/models').then(()=> {console.log(
+		Promise.all([
+			faceapi.nets.tinyFaceDetector.loadFromUri('/models'),
+			faceapi.nets.faceLandmark68Net.loadFromUri('/models'),
+			faceapi.nets.faceRecognitionNet.loadFromUri('/models'),
+		]).then(()=> {
+			setProctor(true);
+			console.log(
 			"Face API Started"
 		  )}).catch((err) => console.log("Error Starting FACE API", err.message));
 	},[])
-	return(
-		<>
-			<Capture setImgSrc={updateImgSrc}/>
-			<img id="codeImg" src={imgSrc} className={classes.userIcon}/>
-		</>
+	if(Proctor)
+		return(
+			<>
+				<Capture setImgSrc={updateImgSrc}/>
+				<img id="codeImg" src={imgSrc} className={classes.userIcon}/>
+			</>
 
-	);
+		);
+	else
+		return(<></>)
 }
+
+
 export default CodeUI;
