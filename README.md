@@ -22,4 +22,4 @@
 <br>
 <br>
 
-## A website which will provide online proctoring features like Proctored Quiz and a Coding Platform to conduct Online Coding Examinations.
+## A webapp which will provide online proctoring features for Online Quizzes and a Coding Platform to conduct practical Coding Examinations.
