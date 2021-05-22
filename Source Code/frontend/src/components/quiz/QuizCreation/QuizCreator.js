@@ -72,10 +72,10 @@ const QuizCreator = (props) => {
                 <form  onSubmit={handleSubmit} noValidate autoComplete="off" center="true">
                         <Grid container spacing={3} alignItems="center" style={{padding:50 ,backgroundColor:"beige"}}>
                             <Grid item xs={12}>
-                                <TextField onChange = {(e)=> {dispatch({type:"SET_QUIZ_SUBJECT", payload: e.target.value})}} id="quizsub" label="Quiz Subject" variant="outlined" fullWidth/>
+                                <TextField required onChange = {(e)=> {dispatch({type:"SET_QUIZ_SUBJECT", payload: e.target.value})}} id="quizsub" label="Quiz Subject" variant="outlined" fullWidth/>
                             </Grid>
                             <Grid item xs={6}>
-                                <TextField fullWidth
+                                <TextField required fullWidth
                                     id="datetime-start"
                                     label="Start Date Time"
                                     type="datetime-local"
@@ -85,7 +85,7 @@ const QuizCreator = (props) => {
                                     shrink: true,}}/>
                             </Grid>
                             <Grid item xs={6}>
-                                <TextField fullWidth
+                                <TextField required fullWidth
                                     id="datetime-end"
                                     label="End Date Time"
                                     type="datetime-local"
@@ -95,10 +95,10 @@ const QuizCreator = (props) => {
                                     shrink: true,}}/>
                             </Grid>
                             <Grid item xs={6}>
-                                <TextField onChange = {(e)=> {dispatch({type:"SET_DURATION", payload: e.target.value})}} type="number" id="dur" label="Duration" variant="outlined" fullWidth helperText="Quiz Duration in Minutes"/>
+                                <TextField required onChange = {(e)=> {dispatch({type:"SET_DURATION", payload: e.target.value})}} type="number" id="dur" label="Duration" variant="outlined" fullWidth helperText="Quiz Duration in Minutes"/>
                             </Grid>
                             <Grid item xs={6}>
-                                <TextField onChange = {(e)=> {dispatch({type:"SET_THRESHOLD", payload: e.target.value})}} type="number" id="threshold" label="Threshold" variant="outlined" fullWidth helperText="Threshold is Number of Warnings allowed for Students"/>
+                                <TextField required onChange = {(e)=> {dispatch({type:"SET_THRESHOLD", payload: e.target.value})}} type="number" id="threshold" label="Threshold" variant="outlined" fullWidth helperText="Threshold is Number of Warnings allowed for Students"/>
                             </Grid>
                                 {
                                     state.questions.map((val, idx)=> {
@@ -107,7 +107,7 @@ const QuizCreator = (props) => {
                                             <Grid item xs={10}>
                                             <div key={idx}>
                                             <Grid container spacing={3} alignItems="center">
-                                                <Grid item xs={10}><TextField fullWidth
+                                                <Grid item xs={10}><TextField fullWidth required
                                                 label={"Question#"+idx}
                                                 type="text"
                                                 name={queId}
@@ -134,7 +134,7 @@ const QuizCreator = (props) => {
                                                 <Checkbox checked={val.ans} onChange={()=> dispatch({type: "SET_ANSWER", payload: {QIndex: idx, OIndex: oIdx}})} color="primary" inputProps={{ 'aria-label': 'secondary checkbox' }} />
                                                 
                                                 } label={
-                                                    <TextField fullWidth label={`Option No.${oIdx+1}`} value={val.qs} onChange={(e)=> {dispatch({type:"ADD_OPTION", payload:{QIndex: idx, OIndex: oIdx, option: e.target.value}})}}/>
+                                                    <TextField required fullWidth label={`Option No.${oIdx+1}`} value={val.qs} onChange={(e)=> {dispatch({type:"ADD_OPTION", payload:{QIndex: idx, OIndex: oIdx, option: e.target.value}})}}/>
                                                 } />
                                                     
                                                 </Grid>

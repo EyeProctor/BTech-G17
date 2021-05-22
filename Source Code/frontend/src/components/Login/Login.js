@@ -91,14 +91,14 @@ const Login = () =>  {
                 <Grid container spacing={8} alignItems="flex-end">
                     {/* <Grid item md={3}>Username</Grid> */}
                     <Grid item md={12} sm={12} xs={12}>
-                        <TextField onChange={(e)=> {setUserName(e.target.value)}} value={userName} id="usrn" margin="normal" variant="outlined" label="Username" type="text" fullWidth required />
+                        <TextField required onChange={(e)=> {setUserName(e.target.value)}} value={userName} id="usrn" margin="normal" variant="outlined" label="Username" type="text" fullWidth required />
 
                     </Grid>
                 </Grid>
                 <Grid container spacing={8} alignItems="flex-end">
                     {/* <Grid item md={3}>Password</Grid> */}
                     <Grid item md={12} sm={12} xs={12}>
-                        <TextField onChange={(e)=> {setPassword(e.target.value)}} value={password} id="pswd" margin="normal" variant="outlined" label="Password" type="password" fullWidth required />
+                        <TextField required onChange={(e)=> {setPassword(e.target.value)}} value={password} id="pswd" margin="normal" variant="outlined" label="Password" type="password" fullWidth required />
      </Grid>
                 </Grid>
                 <Grid container alignItems="center" justify="space-between" style={{marginTop:'5vh'}}>
