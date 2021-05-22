@@ -79,7 +79,6 @@ const QuizCreator = (props) => {
                                     id="datetime-start"
                                     label="Start Date Time"
                                     type="datetime-local"
-                                    defaultValue="2017-05-24T00:00"
                                     onChange = {(e)=> {dispatch({type:"SET_STARTDATE", payload: new Date(e.target.value)})}}
                                     InputLabelProps={{
                                     shrink: true,}}/>
@@ -89,7 +88,6 @@ const QuizCreator = (props) => {
                                     id="datetime-end"
                                     label="End Date Time"
                                     type="datetime-local"
-                                    defaultValue="2020-01-24T00:00"
                                     onChange = {(e)=> {dispatch({type:"SET_ENDDATE", payload: new Date(e.target.value)})}}
                                     InputLabelProps={{
                                     shrink: true,}}/>
@@ -134,7 +132,7 @@ const QuizCreator = (props) => {
                                                 <Checkbox checked={val.ans} onChange={()=> dispatch({type: "SET_ANSWER", payload: {QIndex: idx, OIndex: oIdx}})} color="primary" inputProps={{ 'aria-label': 'secondary checkbox' }} />
                                                 
                                                 } label={
-                                                    <TextField required fullWidth label={`Option No.${oIdx+1}`} value={val.qs} onChange={(e)=> {dispatch({type:"ADD_OPTION", payload:{QIndex: idx, OIndex: oIdx, option: e.target.value}})}}/>
+                                                    <TextField require fullWidth label={`Option No.${oIdx+1}`} value={val.qs} onChange={(e)=> {dispatch({type:"ADD_OPTION", payload:{QIndex: idx, OIndex: oIdx, option: e.target.value}})}}/>
                                                 } />
                                                     
                                                 </Grid>

@@ -32,9 +32,6 @@ const TeacherQuizLanding = (props) => {
                     <Grid item xs={2}>
                         <QuizDownload quizData={quizData} subject={subject} />
                     </Grid>
-                    <Grid>
-                        <CustomBox innerText="Delete Quiz" />
-                    </Grid>
                     
                 </Grid>
             </div>

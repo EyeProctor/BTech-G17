@@ -263,7 +263,10 @@ router.post('/malpracticeLog', (req,res)=>{
         qID: quizID, userID, image
     })
 
+    
     quizMalpractice.save().then( data => {
+        console.log("ImaageData")
+
         res.status(200).json(data);
     }).catch(err => {
         console.error(err);
@@ -283,7 +286,7 @@ router.get('/malpracticeLog/:userID/:quizID', (req,res) => {
     
     QuizMalpractice.find({userID, qID: quizID}).then(
         logList =>{
-            console.log(logList);
+            console.log(logList.length);
             res.status(200).json(logList);
         }
     ).catch(err => {

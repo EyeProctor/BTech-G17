@@ -9,6 +9,7 @@ const adminRoutes = require('./routes/admin/adminRoutes');
 const codingRoutes = require('./routes/code/codingRoutes');
 const courseRoutes = require('./routes/course/courseRoutes');
 const teacherRoutes = require('./routes/teacher/teacherRoutes');
+var bodyParser = require('body-parser')
 
 
 // -------------------------TODO-------------------------------
@@ -22,7 +23,7 @@ const io = socket(server)
 
 
 // Middlewares
-app.use(express.json());
+app.use(bodyParser.json({ limit: "50mb" }));
 app.use(cors());
 app.use("/user", userRoutes);
 app.use("/code", codingRoutes);
