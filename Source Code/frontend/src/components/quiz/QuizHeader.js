@@ -35,17 +35,17 @@ const QuizHeader = (props) => {
   const quizSubject = useSelector(state => state.quiz.questions.subject);
   const dispatch = useDispatch();
   const quizID = useSelector(state => state.quiz.quizID);
-  useEffect(()=>{
-		Promise.all([
+  useEffect(() => {
+    Promise.all([
 			faceapi.nets.tinyFaceDetector.loadFromUri('/models'),
 			faceapi.nets.faceLandmark68Net.loadFromUri('/models'),
 			faceapi.nets.faceRecognitionNet.loadFromUri('/models'),
 		]).then(()=> {
-			setProctor(true);
 			console.log(
 			"Face API Started"
 		  )}).catch((err) => console.log("Error Starting FACE API", err.message));
-	},[])
+    
+    }, [])
     function warn(message){
       confirmAlert({
         title: 'Warning',
