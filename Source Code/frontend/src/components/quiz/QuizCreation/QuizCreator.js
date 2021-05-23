@@ -39,7 +39,7 @@ const QuizCreator = (props) => {
 				if(newData.msg){
 					setBad(true);
 					setLoading(false);
-					setErrMessage(newData.msg);
+					//setErrMessage(newData.msg);
 				}
 				else{
 					setSuccess(true);
@@ -106,7 +106,7 @@ const QuizCreator = (props) => {
                                             <div key={idx}>
                                             <Grid container spacing={3} alignItems="center">
                                                 <Grid item xs={10}><TextField fullWidth required
-                                                label={"Question#"+idx}
+                                                label={"Question#"+ idx+1}
                                                 type="text"
                                                 name={queId}
                                                 data-id={idx}
