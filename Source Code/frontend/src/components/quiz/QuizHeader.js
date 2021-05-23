@@ -45,7 +45,7 @@ const QuizHeader = (props) => {
 			"Face API Started"
 		  )}).catch((err) => console.log("Error Starting FACE API", err.message));
     
-    }, []);
+    }, [])
     function warn(message){
       confirmAlert({
         title: 'Warning',

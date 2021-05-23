@@ -20,7 +20,7 @@ const MalpracticeGallary = (props) => {
                         setErr(true);
                     }else{
                         setImages(resData);
-                        console.log(JSON.stringify(resData))
+                        console.log(resData.length);
                     }
                 })
             }

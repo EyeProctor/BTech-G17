@@ -1,7 +1,6 @@
 import { AppBar, Grid } from "@material-ui/core";
 import React, { useEffect, useState } from 'react';
 import { useSelector } from "react-redux";
-import CustomBox from '../Helper/CustomBox';
 import CodingSolutionDownload from "./CodingSolutionDownload";
 
 const CodingLandingPageTeacher = (props) => {
@@ -31,9 +30,6 @@ const CodingLandingPageTeacher = (props) => {
                 <Grid style={{marginTop: '10vh'}} container>
                     <Grid item xs={2}>
                         <CodingSolutionDownload codeData={codeData} subject={"POE RESULT"} />
-                    </Grid>
-                    <Grid>
-                        <CustomBox innerText="Delete POE" />
                     </Grid>
                     
                 </Grid>

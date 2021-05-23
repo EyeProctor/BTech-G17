@@ -29,7 +29,7 @@ class Capture extends Component {
             <div style={{height:"0", width:"0", overflow:"hidden"}} >
                 <Webcam
                 onUserMediaError = {()=>{
-                    this.props.history.push("/home"); 
+                    //this.props.history.push("/home"); 
                 }}
                 audio={false}
                 ref={this.state.webcamRef}
