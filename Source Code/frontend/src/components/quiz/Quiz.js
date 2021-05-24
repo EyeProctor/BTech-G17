@@ -133,10 +133,11 @@ function Quiz(props) {
 				 }else{
 					//dispatch({type: "QUIZ_RESET"})
 					history.replace('/home');
-					 
 				 }
 			 })).catch(err => console.log(err))
 
+		}else{
+			document.documentElement.requestFullscreen().catch((e) => {console.log(e)})
 		}
 	}
 

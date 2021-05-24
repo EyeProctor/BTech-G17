@@ -17,17 +17,52 @@ const CodingLandingPageStudent = (props) => {
         fetch(`/code/getCodingAssignment/${codeID}`).then(data => data.json().then(resData =>{
             setCodeAssignment(resData);
             dispatch({type: "SET_CODING", payload: resData});
-            setStartDate(new Date(resData.startDate));
-            setEndDate(new Date(resData.endDate));
+            const tempSD = new Date(resData.startDate);
+            const tempED = new Date(resData.endDate);
+            const totalTestcases = resData.problems[0].testcases.length;
+            setStartDate(tempSD);
+            setEndDate(tempED);
 
             // Check StartDate and EndDate and then SetAvailable
+            if(tempSD.getTime() > Date.now() || tempED.getTime() > Date.now())
+            {   
+                // Check Submission Status
+                fetch(`/code/submitStatus/${codeID}/${userID}`).then(
+                    resData => resData.json().then(
+                        data => {
+                            if(data.msg){
+                                console.log("error Fetching Results");
+                            }
+                            else{
+                                if(!data.found){
+
+                                    fetch(`/code/getUserCode/${codeID}/${userID}`).then(
+                                        resData => resData.json().then(data => {
+                                            if(data.msg){
+                                                dispatch({type: "RESET_CODESOLUTION"})
+                                                dispatch({type: "SET_TOTALTESTCASE", payload: totalTestcases})
+                                                setAvailable(true);
+                                            }else{
+                                                dispatch({type:"LOAD_CODESOLUTION", payload: data});
+                                                dispatch({type: "SET_TOTALTESTCASE", payload: totalTestcases})
+                                                setAvailable(true);
+                                            }
+                                        })
+                                    )
+                                }
+                            }
+                            
+                        }
+                    )
+                )
+                
+            }
             
-            setAvailable(true);
         }
         ))
     },[])
     return(
-        <Container maxWidth="xlg">
+        <Container className="grid-container" maxWidth="xl">
             <AppBar position='static' className='Appbar'>
                 <Grid container style={{justifyContent:'center',position:'relative'}}>
                     <Grid item style={{fontSize:'30px',fontWeight:'bold',padding:'20px'}}>
@@ -35,7 +70,7 @@ const CodingLandingPageStudent = (props) => {
                     </Grid>
                 </Grid>
             </AppBar>
-            <Grid container spacing={3}  style={{marginTop: 10}} justify="center" alignContent="center" direction='column'>
+            <Grid  container spacing={3}  style={{marginTop: 10}} justify="center" alignContent="center" direction='column'>
                 <Grid item xs={6}>
                     <strong>Start Date:</strong> {startDate.toString()}
                 </Grid>

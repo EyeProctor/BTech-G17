@@ -36,11 +36,16 @@ const QuizHeader = (props) => {
   const dispatch = useDispatch();
   const quizID = useSelector(state => state.quiz.quizID);
   useEffect(() => {
-    faceapi.nets.tinyFaceDetector.loadFromUri('/models').then(()=> {console.log(
-      "Face API Started"
-    )}).catch((err) => console.log("Error Starting FACE API", err.message));
+    Promise.all([
+			faceapi.nets.tinyFaceDetector.loadFromUri('/models'),
+			faceapi.nets.faceLandmark68Net.loadFromUri('/models'),
+			faceapi.nets.faceRecognitionNet.loadFromUri('/models'),
+		]).then(()=> {
+			console.log(
+			"Face API Started"
+		  )}).catch((err) => console.log("Error Starting FACE API", err.message));
     
-    }, []);
+    }, [])
     function warn(message){
       confirmAlert({
         title: 'Warning',
